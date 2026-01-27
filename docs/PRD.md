@@ -14,10 +14,21 @@ Build a task management system where:
 - No server, accounts, or background services
 - No hidden indexes or binary storage
 - No proprietary or opaque formats
+- No Python, Node.js, or compiled languages
 
-## 3. Data Model (Canonical Format)
+## 3. Technology Stack
 
-### 3.1 Task Structure
+- **Bash** — all CLI commands are shell scripts
+- **ripgrep (rg)** — fast regex search across files
+- **sed/awk** — text transformations
+- **bats** — testing framework
+- **$EDITOR** — for edit command
+
+Zero dependencies beyond standard Unix tools + rg + bats.
+
+## 4. Data Model (Canonical Format)
+
+### 4.1 Task Structure
 
 ```md
 - [ ] TSK-123 Short task title
@@ -29,7 +40,7 @@ Build a task management system where:
   - [ ] subtask
 ````
 
-### 3.2 Rules
+### 4.2 Rules
 
 - Task start line: `^- \[[ x]\] [A-Z]+-\d+ `
 - ID is mandatory and comes immediately after the checkbox
@@ -37,7 +48,7 @@ Build a task management system where:
 - Empty lines are allowed inside the body
 - First non-indented non-empty line ends the task block
 
-### 3.3 Metadata (Inline Tokens)
+### 4.3 Metadata (Inline Tokens)
 
 Parsed only from the first body lines before `---`.
 
@@ -48,28 +59,23 @@ Parsed only from the first body lines before `---`.
 | Due date | `@due(YYYY-MM-DD)`   | Deadlines              |
 | Status   | `@status(blocked)`   | Extended state         |
 
-## 4. File Organization
+## 5. File Organization
 
-### Option A — Single File
-
-```text
-tasks.md
-````
-
-### Option B — Domain Files
+CLI always scans ALL `*.md` files recursively from current directory (including hidden directories).
 
 ```text
-tasks/
-  backend.md
-  infra.md
-  product.md
-````
+project/
+  README.md           # scanned
+  tasks.md            # scanned
+  docs/
+    notes.md          # scanned
+  .ralph/
+    plan.md           # scanned (hidden dir)
+```
 
-CLI scans recursively.
+## 6. CLI — Required Commands
 
-## 5. CLI — Required Commands
-
-### 5.1 View
+### 6.1 View
 
 - `mdtask list`
   - flat list
@@ -77,13 +83,13 @@ CLI scans recursively.
 - `mdtask view <ID>`
   - prints full task block
 
-### 5.2 Filters
+### 6.2 Filters
 
 - `mdtask list #tag`
 - `mdtask list !p1`
 - `mdtask list @due:today|week|overdue`
 
-### 5.3 Mutations
+### 6.3 Mutations
 
 - `mdtask new`
   - inserts task template
@@ -93,28 +99,28 @@ CLI scans recursively.
   - opens in `$EDITOR`
 - `mdtask move <ID> <file>`
 
-### 5.4 Subtasks
+### 6.4 Subtasks
 
 - part of description block
 - optional: auto-complete parent when all subtasks are `[x]`
 
-## 6. Task Identity
+## 7. Task Identity
 
-### 6.1 Source of Truth
+### 7.1 Source of Truth
 
 - Only header ID: `TSK-123`
 - Format: `[A-Z]+-\d+`
 - Must be globally unique across all files
 
-### 6.2 Forbidden
+### 7.2 Forbidden
 
 - `@id(...)`
 - positional indexes
 - hidden UUIDs
 
-## 7. Parsing
+## 8. Parsing
 
-### 7.1 Algorithm
+### 8.1 Algorithm
 
 1. Stream lines
 2. Detect task header via regex
@@ -122,26 +128,26 @@ CLI scans recursively.
 4. Parse metadata until `---`
 5. Remaining lines = description
 
-### 7.2 Requirements
+### 8.2 Requirements
 
 - O(n) over files
 - no Markdown AST
 - tolerant to malformed content
 
-## 8. Git Compatibility
+## 9. Git Compatibility
 
 - All operations are plain text edits
 - No auto-commits
 - Conflicts resolved manually in Markdown
 
-## 9. Extensions (Not MVP)
+## 10. Extensions (Not MVP)
 
 - `mdtask stats`
 - `mdtask board` (TUI kanban by tags)
 - `mdtask export json`
 - hooks for MCP / Cursor / LLM agents
 
-## 10. MVP Acceptance Criteria
+## 11. MVP Acceptance Criteria
 
 System is valid if:
 
@@ -150,7 +156,7 @@ System is valid if:
 - `rg` can extract full task blocks via regex
 - diffs are human-readable
 
-## 11. Core Principle
+## 12. Core Principle
 
 Markdown is not presentation — it is a structured table where:
 - line = index

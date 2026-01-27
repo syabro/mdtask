@@ -34,10 +34,17 @@ mdtask is a file-first markdown task management CLI:
   - [ ] subtask
 ```
 
+## Tech Stack
+
+- **Bash** — all CLI commands are shell scripts
+- **ripgrep (rg)** — fast regex search
+- **sed/awk** — text transformations
+- No Python, Node.js, or compiled languages
+
 ## Code Rules
 
 - Keep it simple, no over-engineering
-- Prefer pure functions
+- Use rg for searching, sed/awk for transformations
 - Handle edge cases gracefully
 - Make diffs human-readable
 

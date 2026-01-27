@@ -9,13 +9,18 @@ mdtask is a file-first markdown task management CLI:
 - No database, no daemon
 - Git is the only sync mechanism
 
+## Tech Stack
+
+- Bash scripts + rg/sed/awk
+- **bats** for testing (bats-core)
+
 ## Job
 
-1. Write tests for parser edge cases
+1. Write shell tests for edge cases
 2. Test CLI commands
 3. Validate format compliance
 4. Check git-friendliness of output
-5. Verify O(n) performance on large files
+5. Verify performance on large files
 
 ## Test Cases
 

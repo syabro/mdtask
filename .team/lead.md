@@ -28,9 +28,10 @@ mdtask is a file-first markdown task management CLI:
 
 ## Tech Stack
 
-- TypeScript or Rust (TBD)
-- No external dependencies for parsing
-- Minimal CLI framework
+- **Bash** — all CLI commands are shell scripts
+- **ripgrep (rg)** — fast regex search
+- **sed/awk** — text transformations
+- Zero dependencies beyond standard Unix tools + rg
 
 ## Behavior
 
