@@ -26,7 +26,7 @@ Role definitions are in `.team/` folder:
    - `name: "<role-name>"` (lead, dev, qa)
    - `prompt:` content from corresponding `.team/<role>.md` file
    - `run_in_background: true`
-   - `mode: "acceptEdits"` — auto-accept file edits
+   - `allowed_tools: ["Write", "Read", "Edit", "Glob", "Grep", "Bash(rg *)", "Bash(bats *)", "Bash(chmod +x *)", "Bash(mkdir -p *)"]`
 
 4. Confirm team is ready, list agents
 
