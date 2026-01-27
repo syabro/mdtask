@@ -32,8 +32,7 @@ Zero dependencies beyond standard Unix tools + rg + bats.
 
 ```md
 - [ ] TSK-123 Short task title
-  #backend #mcp !p1 @due(2026-02-01)
-  ---
+  #backend #mcp !p1 @status(blocked)
   Multi-line description.
   Links, code blocks, lists.
   - [ ] subtask
@@ -50,13 +49,12 @@ Zero dependencies beyond standard Unix tools + rg + bats.
 
 ### 4.3 Metadata (Inline Tokens)
 
-Parsed only from the first body lines before `---`.
+Parsed only from the second line after the header (before any empty line).
 
 | Type     | Format               | Purpose                |
 |----------|----------------------|------------------------|
 | Tag      | `#tag`               | Categories / filters   |
 | Priority | `!p1..p5`            | Sorting                |
-| Due date | `@due(YYYY-MM-DD)`   | Deadlines              |
 | Status   | `@status(blocked)`   | Extended state         |
 
 ## 5. File Organization
@@ -79,7 +77,7 @@ project/
 
 - `mdtask list`
   - flat list
-  - sortable by priority, due date
+  - sortable by priority
 - `mdtask view <ID>`
   - prints full task block
 
@@ -87,7 +85,6 @@ project/
 
 - `mdtask list #tag`
 - `mdtask list !p1`
-- `mdtask list @due:today|week|overdue`
 
 ### 6.3 Mutations
 
@@ -125,7 +122,7 @@ project/
 1. Stream lines
 2. Detect task header via regex
 3. Collect indented block
-4. Parse metadata until `---`
+4. Parse metadata from second line (before empty line)
 5. Remaining lines = description
 
 ### 8.2 Requirements
