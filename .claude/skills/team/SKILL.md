@@ -1,7 +1,7 @@
 ---
 name: team
 description: Create development team for mdtask with lead, dev, qa agents
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /team - Create development team
@@ -26,6 +26,7 @@ Role definitions are in `.team/` folder:
    - `name: "<role-name>"` (lead, dev, qa)
    - `prompt:` content from corresponding `.team/<role>.md` file
    - `run_in_background: true`
+   - `mode: "acceptEdits"` — auto-accept file edits
 
 4. Confirm team is ready, list agents
 
