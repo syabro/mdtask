@@ -65,9 +65,7 @@ When changing one — check the others for consistency.
 ```
 src/             — source code
 test/            — tests (vitest)
-docs/mdtask.md   — goals, architecture
-docs/cli.md      — CLI tasks
-docs/mvp.md      — parser + infrastructure tasks
+docs/            — documentation
 ```
 
 ## Sync

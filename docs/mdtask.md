@@ -18,7 +18,7 @@ Build a task management system where:
 ## 3. Technology Stack
 
 - **Node.js + TypeScript** — CLI implementation
-- **ripgrep (rg)** — fast file search (`rg --files -g '*.md'`)
+- **ripgrep (rg)** — fast file search (`rg --files -g '*.md' --hidden`)
 - **Vitest** — testing framework
 - **$EDITOR** — for edit command
 
@@ -30,7 +30,7 @@ See `docs/skills/mdtask/SKILL.md` — canonical reference for task format, metad
 
 ## 5. File Organization
 
-CLI always scans ALL `*.md` files recursively from current directory (including hidden directories).
+CLI always scans ALL `*.md` files recursively from current directory (including hidden directories). Excludes `node_modules` and `.git` by default.
 
 ```text
 project/
@@ -125,8 +125,8 @@ System is valid if:
 ## 12. Core Principle
 
 Markdown is not presentation — it is a structured table where:
-- line = index
-- indent = record boundary
+- line = record
+- indent = block boundary
 - inline tokens = columns
 
 CLI is only an interpreter, never the owner of data.

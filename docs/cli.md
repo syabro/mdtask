@@ -1,6 +1,6 @@
 # CLI Tasks — mdtask
 
-Задачи по CLI-командам. Требования к каждой команде описаны в теле задачи.
+CLI command tasks. Requirements for each command are described in the task body.
 
 ## View Commands
 
@@ -71,8 +71,7 @@
 
 - [ ] CLI-007 Command `mdtask open <ID>`		#cli #mutation
   Open file with task in `$EDITOR +N` at task line.
-  Use `$VISUAL` if set, fallback to `$EDITOR`.
-  If neither set — error, exit 1.
+  If `$EDITOR` not set — error, exit 1.
 
   Tests:
   - opens in $EDITOR

@@ -48,7 +48,7 @@ Step 1 — Combine and deduplicate results from both reviewers. Present as a lis
 - Add your own commentary: what it means, why it matters
 - Add your proposed action: what to fix and how
 
-Step 2 — Ask one question per finding via "Ask a User Question". Include severity, full context, commentary, proposed action, and options. After each answer, add it as a todo to track.
+Step 2 — Ask one question per finding via "Ask a User Question". Include severity, full context, commentary, proposed action, and options. After each answer, add a todo only if the resolution is to fix. One answer = one resolution = one todo.
 
 If the user has follow-up questions or needs clarification — continue asking and researching until each finding has a clear resolution: fix (and how) or don't fix.
 

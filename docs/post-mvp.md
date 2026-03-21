@@ -1,4 +1,4 @@
-# Post-MVP — MDTASK
+# Post-MVP — mdtask
 
 Deferred features and improvements. Not blocking MVP.
 
@@ -14,13 +14,6 @@ Deferred features and improvements. Not blocking MVP.
   `MDTASK_EXTENSION=*.todo.md` — search only in files with specific extension.
   Default `*.md`.
 
-## Exit Codes
-
-- [ ] POST-010 Standardize exit codes		#cli
-  - 0 — success
-  - 1 — error (invalid arguments, IO error)
-  - 2 — not found (task/file not found)
-
 ## Subtasks
 
 - [ ] POST-020 Auto-complete parent task		#parser
@@ -32,10 +25,6 @@ Deferred features and improvements. Not blocking MVP.
 - [ ] POST-030 Unknown priority tags		#parser
   Unknown `!` tags (not crit/high/low) — warning or ignore?
   Solution: parse any `!\w+`, validate in `mdtask validate` command.
-
-- [ ] POST-031 Empty tag		#parser
-  `# ` (hash + space) without tag name.
-  Show warning in `mdtask validate`.
 
 ## Security
 
@@ -50,9 +39,7 @@ Deferred features and improvements. Not blocking MVP.
 ## Edge Cases
 
 - [ ] POST-050 move edge cases		#cli
-  - move to same file — no-op or error?
   - move to read-only file — graceful error
-  - move to non-existent file — create or error?
   - source file becomes empty — keep or delete?
 
 - [ ] POST-051 Symlinks		#infra
