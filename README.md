@@ -2,6 +2,10 @@
 
 CLI task manager where Markdown is the single source of truth. No database, no server, no GUI.
 
+## Language
+
+English is the project language — docs, commit messages, code comments, and communication.
+
 ## Principle
 
 Markdown is not presentation — it is a structured table:
