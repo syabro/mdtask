@@ -6,15 +6,15 @@ disable-model-invocation: false
 
 # /check - Integration consistency check
 
-Run two parallel reviewers (General Agent + Gemini) to verify that all project documentation is consistent.
+Run two parallel reviewers (Subagent + Gemini) to verify that all project documentation is consistent.
 
 ## Execution
 
 Run these two checks **in parallel**:
 
-### 1. General Agent
+### 1. Subagent
 
-Launch an Agent (subagent_type: general-purpose) with this prompt:
+Launch a task (subagent_type: general) with this prompt:
 
 > 1. Read CLAUDE.md and README.md to understand what this project is.
 > 2. Explore the entire project — all files, not just markdown. Code, configs, scripts, skills, everything.
