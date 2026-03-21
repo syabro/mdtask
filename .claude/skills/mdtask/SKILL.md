@@ -8,10 +8,10 @@ disable-model-invocation: false
 
 ## How to use this skill
 
-When the user asks to list, find, or summarize tasks — run `rg` with the header regex to extract tasks from `.md` files:
+Always run `rg` from the project root (where the .git directory is). This ensures relative file paths in output.
 
 ```bash
-rg '^\- \[[ x]\] [A-Z]+-\d+' /path/to/project --no-heading
+rg '^\- \[[ x]\] [A-Z]+-\d+' . --no-heading
 ```
 
 Filter by status:
