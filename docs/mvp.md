@@ -2,12 +2,12 @@
 
 ## Parser
 
-- [ ] MVP-001 Implement regex for task header recognition
-  #parser
+- [ ] MVP-001 Implement regex for task header recognition		#parser
   Regex: `^- \[[ x]\] [A-Z]+-\d+ `
   Must correctly match:
   - `- [ ] TSK-123 Title`
   - `- [x] ABC-1 Done task`
+  Metadata tokens on header line after title (optional `\t\t` separator).
 
   Tests:
   - valid IDs of different formats
@@ -16,9 +16,10 @@
   - empty file
   - malformed headers (broken syntax, incomplete)
   - special characters in task title
+  - header with metadata on same line
+  - header with `\t\t` separator before metadata
 
-- [ ] MVP-002 Implement task body collection (indented block)
-  #parser
+- [ ] MVP-002 Implement task body collection (indented block)		#parser
   Collect all lines with ≥1 space indent after header.
   Empty lines within block are allowed.
   Block ends at first line with zero indent.
@@ -28,9 +29,9 @@
   - empty lines inside
   - correct block termination
 
-- [ ] MVP-003 Parse metadata from task body
-  #parser
-  Metadata = second line of task (immediately after header).
+- [ ] MVP-003 Parse metadata from header line		#parser
+  Metadata = tokens on header line after title.
+  First `#`, `!`, or `@` token marks start of metadata.
   Extract:
   - tags: `#tag` (including with digits: #v2, #123)
   - priority: `!p1..p5`
@@ -40,13 +41,14 @@
   - all token types
   - multiple tokens in one line
   - tags with digits #v2, #123
+  - metadata with `\t\t` separator
+  - metadata without separator
 
 ## CLI Commands
 
 ### View Commands
 
-- [ ] MVP-004 Command `mdtask list` — basic output
-  #cli
+- [ ] MVP-004 Command `mdtask list` — basic output		#cli
   Recursive search through `*.md` files.
   Use `rg` for search.
   By default show only open `[ ]` tasks.
@@ -66,16 +68,14 @@
   - --all flag shows [x]
   - colors on tty, no colors on pipe
 
-- [ ] MVP-005 Command `mdtask list` — sorting
-  #cli
+- [ ] MVP-005 Command `mdtask list` — sorting		#cli
   Flags:
   - `--sort=priority` (by !p1..p5)
 
   Tests:
   - sort by priority
 
-- [ ] MVP-006 Command `mdtask view <ID>`
-  #cli
+- [ ] MVP-006 Command `mdtask view <ID>`		#cli
   Print full task block by ID.
   If not found — error.
 
@@ -85,8 +85,7 @@
 
 ### Filter Commands
 
-- [ ] MVP-007 Filter by tag `mdtask list #tag`
-  #cli #filter
+- [ ] MVP-007 Filter by tag `mdtask list #tag`		#cli #filter
   Filter tasks by tag.
   Support multiple tags (AND logic).
 
@@ -94,8 +93,7 @@
   - filter by single tag
   - filter by multiple tags (AND)
 
-- [ ] MVP-008 Filter by priority `mdtask list !p1`
-  #cli #filter
+- [ ] MVP-008 Filter by priority `mdtask list !p1`		#cli #filter
   Filter tasks by priority.
 
   Tests:
@@ -103,8 +101,7 @@
 
 ### Mutation Commands
 
-- [ ] MVP-009 Command `mdtask done <ID>`
-  #cli #mutation
+- [ ] MVP-009 Command `mdtask done <ID>`		#cli #mutation
   Toggle `[ ]` ↔ `[x]` in task header.
   File modified in-place.
   Duplicate ID — error.
@@ -117,16 +114,14 @@
   - duplicate ID — error
   - repeated done — warning
 
-- [ ] MVP-010 Command `mdtask open <ID>`
-  #cli #mutation
+- [ ] MVP-010 Command `mdtask open <ID>`		#cli #mutation
   Open file with task in `$EDITOR +N` at task line.
 
   Tests:
   - opens in $EDITOR
   - non-existent ID
 
-- [ ] MVP-011 Command `mdtask move <ID> <file>`
-  #cli #mutation
+- [ ] MVP-011 Command `mdtask move <ID> <file>`		#cli #mutation
   Move task to another file.
   Remove from source, add to target.
 
@@ -137,8 +132,7 @@
   - move to non-existent file (error or create)
   - move to same file (no-op or error)
 
-- [ ] MVP-012 Command `mdtask validate`
-  #cli
+- [ ] MVP-012 Command `mdtask validate`		#cli
   Integrity check:
   - ID uniqueness
   - empty tags
@@ -152,8 +146,7 @@
 
 ## Infrastructure
 
-- [ ] MVP-013 Project structure and entry point
-  #infra
+- [ ] MVP-013 Project structure and entry point		#infra
   Create:
   - `bin/mdtask` — main entry point
   - `lib/` — helper scripts
@@ -163,8 +156,7 @@
   Tests:
   - entry point works
 
-- [ ] MVP-014 File search function
-  #infra
+- [ ] MVP-014 File search function		#infra
   Recursive search `*.md` including hidden directories.
   Use `rg --files -g '*.md' --hidden`.
   Exclude: node_modules, .git (default).
@@ -177,8 +169,7 @@
   - spaces in file names
   - special characters in path
 
-- [ ] MVP-015 Help system
-  #infra
+- [ ] MVP-015 Help system		#infra
   `mdtask --help` — list of commands.
   `mdtask <cmd> --help` — command help.
 
