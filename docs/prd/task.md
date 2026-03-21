@@ -2,8 +2,6 @@
 
 Parsing a single task from a markdown text block.
 
-## Header Recognition
-
 - [ ] TSK-001 Implement regex for task header recognition
   Regex: `^- \[[ x]\] [A-Z]+-\d+ `
   Must correctly match:
@@ -21,8 +19,6 @@ Parsing a single task from a markdown text block.
   - header with metadata on same line
   - header with `\t\t` separator before metadata
 
-## Body Collection
-
 - [ ] TSK-002 Implement task body collection (indented block)
   Collect all lines with ≥1 space indent after header.
   Empty lines within block are allowed.
@@ -32,8 +28,6 @@ Parsing a single task from a markdown text block.
   - multiline body
   - empty lines inside
   - correct block termination
-
-## Metadata
 
 - [ ] TSK-003 Parse metadata from header line
   Metadata = tokens on header line after title.
@@ -50,13 +44,9 @@ Parsing a single task from a markdown text block.
   - metadata with `\t\t` separator
   - metadata without separator
 
-## Subtasks
-
 - [ ] TSK-004 Auto-complete parent task
   When all subtasks are `[x]`, automatically mark parent as done.
   Requires parsing subtasks in description block.
-
-## Validation
 
 - [ ] TSK-005 Unknown priority tags
   Unknown `!` tags (not crit/high/low) — warning or ignore?

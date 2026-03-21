@@ -2,12 +2,9 @@
 
 ## Project Structure
 
-- `docs/mdtask.md` — goals, architecture (why + how)
-- `docs/prd/task.md` — task parsing PRD
-- `docs/prd/files.md` — file search & project structure PRD
-- `docs/prd/cli.md` — CLI commands PRD
-- `docs/prd/config.md` — search configuration PRD
-- `docs/skills/mdtask/SKILL.md` — canonical task format spec (what)
+- `docs/prd/` — PRDs (task, files, cli, config, project)
+- `docs/skills/` — skills (mdtask, check)
+- `docs/mdtask.md` — goals, architecture
 
 ## Before Committing
 

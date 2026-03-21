@@ -1,23 +1,8 @@
 # Files — mdtask
 
-Project structure, file search, and file operations.
+File search across project.
 
-## Project Structure
-
-- [ ] FLS-001 Project structure and entry point
-  Node.js + TypeScript project.
-  Create:
-  - `src/` — source code
-  - `test/` — vitest tests
-  - `package.json` — entry point, scripts
-  All errors to stderr.
-
-  Tests:
-  - entry point works
-
-## File Search
-
-- [ ] FLS-002 File search function
+- [ ] FLS-001 File search function
   Recursive search `*.md` including hidden directories.
   Use `rg --files -g '*.md' --hidden`.
   Exclude: node_modules, .git (default).
