@@ -126,7 +126,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Security
 
-- [ ] POST-040 Shell injection protection
+- [ ] CLI-012 Shell injection protection
   Check all places where user input reaches shell:
   - task ID in commands
   - file names
@@ -136,11 +136,11 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Edge Cases
 
-- [ ] POST-050 Move edge cases
+- [ ] CLI-013 Move edge cases
   - move to read-only file — graceful error
   - source file becomes empty — keep or delete?
 
-- [ ] POST-051 Symlinks
+- [ ] CLI-014 Symlinks
   How to handle:
   - symlink to md file
   - symlink to directory
@@ -150,7 +150,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Testing
 
-- [ ] POST-060 Mock $EDITOR in tests
+- [ ] CLI-015 Mock $EDITOR in tests
   Create mock-editor script:
   ```bash
   #!/bin/bash

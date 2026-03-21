@@ -4,7 +4,7 @@ Parsing a single task from a markdown text block.
 
 ## Header Recognition
 
-- [ ] MVP-001 Implement regex for task header recognition
+- [ ] TSK-001 Implement regex for task header recognition
   Regex: `^- \[[ x]\] [A-Z]+-\d+ `
   Must correctly match:
   - `- [ ] TSK-123 Title`
@@ -23,7 +23,7 @@ Parsing a single task from a markdown text block.
 
 ## Body Collection
 
-- [ ] MVP-002 Implement task body collection (indented block)
+- [ ] TSK-002 Implement task body collection (indented block)
   Collect all lines with ≥1 space indent after header.
   Empty lines within block are allowed.
   Block ends at first non-indented non-empty line.
@@ -35,7 +35,7 @@ Parsing a single task from a markdown text block.
 
 ## Metadata
 
-- [ ] MVP-003 Parse metadata from header line
+- [ ] TSK-003 Parse metadata from header line
   Metadata = tokens on header line after title.
   First `#`, `!`, or `@` token marks start of metadata.
   Extract:
@@ -52,12 +52,12 @@ Parsing a single task from a markdown text block.
 
 ## Subtasks
 
-- [ ] POST-020 Auto-complete parent task
+- [ ] TSK-004 Auto-complete parent task
   When all subtasks are `[x]`, automatically mark parent as done.
   Requires parsing subtasks in description block.
 
 ## Validation
 
-- [ ] POST-030 Unknown priority tags
+- [ ] TSK-005 Unknown priority tags
   Unknown `!` tags (not crit/high/low) — warning or ignore?
   Solution: parse any `!\w+`, validate in `mdtask validate` command.

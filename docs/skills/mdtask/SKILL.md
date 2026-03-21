@@ -45,7 +45,7 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 ```
 
 - Checkbox: `[ ]` (open) or `[x]` (done)
-- ID: `[A-Z]+-\d+` — mandatory, globally unique (e.g. `TSK-123`, `MVP-001`)
+- ID: `[A-Z]+-\d+` — mandatory, globally unique (e.g. `TSK-123`, `CLI-001`)
 - Title: free text until first metadata token or end of line
 - `\t\t` (double tab): optional visual separator before metadata
 
