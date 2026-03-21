@@ -4,55 +4,54 @@ description: Verify consistency across all project docs, specs, and the mdtask s
 disable-model-invocation: false
 ---
 
-# /check - Integration consistency check
+# /check — Consistency check
 
-Run two parallel reviewers (Subagent + Gemini) to verify that all project documentation is consistent.
+Runs two parallel reviewers to find contradictions across project files.
+
+## Prompt
+
+Both Subagent and Gemini use this exact prompt. Gemini needs `@` prefixes for file inclusion; Subagent ignores them.
+
+```
+Step 1: Read @README.md @CLAUDE.md (symlink to AGENTS.md, do not read AGENTS.md separately).
+Step 2: Read @./ the rest of the project files. Skip: .git/, .claude/.
+Step 3: Check docs against each other and against code. Find any inconsistency — contradictions, stale references, outdated paths, missing entries, mismatched terminology. Do NOT check code against code.
+
+For each finding:
+- <description> !blocker|!warning|!nit
+  Reference file locations as `file:line` (e.g., `README.md:7`, `cli.md:3`).
+  <proposed fix>
+
+Severities: !blocker (blocks merge), !warning (should fix), !nit (cosmetic).
+If no issues: "All docs consistent."
+Research only — do NOT edit files.
+```
 
 ## Execution
 
-Run these two checks **in parallel**:
+### Subagent
 
-### 1. Code Review Agent
+#### Claude Code — Launch an Agent (subagent_type: general-purpose)
 
-#### Claude Code
+#### opencode — Launch a subagent (subagent_type: general)
 
-Launch an Agent (subagent_type: general-purpose) with this prompt:
+Pass the prompt above as the task description.
 
-> 1. Read CLAUDE.md and README.md to understand what this project is.
-> 2. Explore the entire project — all files, not just markdown. Code, configs, scripts, skills, everything. Skip `.claude/` (symlinks only).
-> 3. Compare everything against each other. Find any places where one source says X and another says Y.
-> 4. Report every contradiction, inconsistency, or stale reference.
-> 5. Classify each finding as: blocker (blocks merge), warning (should fix), or nit (cosmetic).
-> This is research only — do NOT edit files.
+### Gemini
 
-#### opencode
-
-Launch a subagent (subagent_type: general) with the same prompt as above.
-
-### 2. Gemini
-
-Run via `~/.claude/skills/gemini/gemini-readonly.sh` passing the whole project directory.
-Gemini first reads the project to understand context, then compares everything.
-
-```bash
-~/.claude/skills/gemini/gemini-readonly.sh "@./ This is a project. First read CLAUDE.md and README.md to understand what it is. Then compare all files against each other — docs, code, configs, skills, everything. Skip .claude/ (symlinks only). Find any places where one source contradicts or is inconsistent with another. Classify each finding as: blocker (blocks merge), warning (should fix), or nit (cosmetic)."
-```
+Load the gemini skill and pass the prompt above.
 
 ## Output
 
-Combine and deduplicate results from both reviewers. Present each finding as a review item with your reply:
+Step 1 — Combine and deduplicate results from both reviewers. Present as a list. For each finding:
+- Show the full finding with context (do NOT shorten or summarize)
+- Add your own commentary: what it means, why it matters
+- Add your proposed action: what to fix and how
 
-```
-- <finding description> !blocker
-  <your analysis and proposed fix>
+Step 2 — Ask one question per finding via "Ask a User Question". Include severity, full context, commentary, proposed action, and options. After each answer, add it as a todo to track.
 
-- <finding description> !warning
-  <your analysis and proposed fix>
+If the user has follow-up questions or needs clarification — continue asking and researching until each finding has a clear resolution: fix (and how) or don't fix.
 
-- <finding description> !nit
-  <your analysis and proposed fix>
-```
+Step 3 — After all findings are resolved, apply fixes from todos and commit.
 
-Severities: **!blocker** (blocks merge), **!warning** (should fix), **!nit** (cosmetic).
-
-If no issues found — report "All docs consistent."
+If no issues: "All docs consistent."
