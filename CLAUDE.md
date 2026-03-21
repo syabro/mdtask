@@ -2,15 +2,16 @@
 
 ## Project Structure
 
-- `docs/PRD.md` — goals, CLI commands, architecture (why + how)
-- `docs/mvp.md` — MVP tasks
+- `docs/mdtask.md` — goals, architecture (why + how)
+- `docs/cli.md` — CLI tasks with requirements
+- `docs/mvp.md` — parser + infrastructure tasks
 - `docs/post-mvp.md` — deferred tasks
 - `.claude/skills/mdtask/SKILL.md` — canonical task format spec (what)
 
 ## Before Committing
 
-If `docs/PRD.md` changed — check if `.claude/skills/mdtask/SKILL.md` needs updating (and vice versa).
-The skill is the single source of truth for task format; PRD covers everything else.
+If `docs/mdtask.md` changed — check if `.claude/skills/mdtask/SKILL.md` needs updating (and vice versa).
+The skill is the single source of truth for task format; mdtask.md covers everything else.
 
 ## Task Delegation
 
@@ -18,5 +19,5 @@ The skill is the single source of truth for task format; PRD covers everything e
   - Describe WHAT needs to be done, not HOW
   - Never write code for the agent
   - Never provide ready-made solutions
-  - Point to specs (docs/mvp.md) — agent reads them
+  - Point to specs (docs/cli.md, docs/mvp.md) — agent reads them
   - Agent writes the code themselves

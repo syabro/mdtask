@@ -1,4 +1,4 @@
-# PRD — MDTASK (File-First Markdown Task System)
+# mdtask — File-First Markdown Task System
 
 ## 1. Goal
 
@@ -14,17 +14,15 @@ Build a task management system where:
 - No server, accounts, or background services
 - No hidden indexes or binary storage
 - No proprietary or opaque formats
-- No Python, Node.js, or compiled languages
 
 ## 3. Technology Stack
 
-- **Bash** — all CLI commands are shell scripts
-- **ripgrep (rg)** — fast regex search across files
-- **sed/awk** — text transformations
-- **bats** — testing framework
+- **Node.js + TypeScript** — CLI implementation
+- **ripgrep (rg)** — fast file search (`rg --files -g '*.md'`)
+- **Vitest** — testing framework
 - **$EDITOR** — for edit command
 
-Zero dependencies beyond standard Unix tools + rg + bats.
+Minimal dependencies: rg (required), Node.js (required).
 
 ## 4. Data Model (Canonical Format)
 
