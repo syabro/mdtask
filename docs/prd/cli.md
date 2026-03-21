@@ -2,8 +2,6 @@
 
 User-facing commands, security, edge cases, and testing infrastructure.
 
-## View Commands
-
 - [ ] CLI-001 Command `mdtask list` — basic output
   Recursive search through `*.md` files.
   Use `rg --files -g '*.md' --hidden` for file discovery.
@@ -39,8 +37,6 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - output full block
   - error on non-existent ID
 
-## Filter Commands
-
 - [ ] CLI-004 Filter by tag `mdtask list #tag`
   Filter tasks by tag.
   Support multiple tags (AND logic).
@@ -54,8 +50,6 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
   Tests:
   - filter by priority
-
-## Mutation Commands
 
 - [ ] CLI-006 Command `mdtask done <ID>`
   Toggle `[ ]` ↔ `[x]` in task header.
@@ -104,8 +98,6 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - empty tag — warning
   - valid file — ok
 
-## Help & Output
-
 - [ ] CLI-010 Help system
   `mdtask --help` — list of commands.
   `mdtask <cmd> —help` — command help.
@@ -124,8 +116,6 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - no colors when piped
   - clean output for parsing
 
-## Security
-
 - [ ] CLI-012 Shell injection protection
   Check all places where user input reaches shell:
   - task ID in commands
@@ -133,8 +123,6 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - task content (on output)
 
   Use proper quoting, avoid eval.
-
-## Edge Cases
 
 - [ ] CLI-013 Move edge cases
   - move to read-only file — graceful error
@@ -147,8 +135,6 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - circular symlinks
 
   Solution: follow symlinks, but detect cycles.
-
-## Testing
 
 - [ ] CLI-015 Mock $EDITOR in tests
   Create mock-editor script:
