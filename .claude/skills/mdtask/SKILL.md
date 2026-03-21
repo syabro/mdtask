@@ -1,10 +1,30 @@
 ---
 name: mdtask
-description: Reference for mdtask markdown task format — use when creating, editing, or parsing tasks in .md files
+description: Load this skill when user asks to list, find, filter, summarize, or check status of tasks in .md files. Provides task format spec and rg commands for extraction.
 disable-model-invocation: false
 ---
 
 # /mdtask - Task format reference
+
+## How to use this skill
+
+When the user asks to list, find, or summarize tasks — run `rg` with the header regex to extract tasks from `.md` files:
+
+```bash
+rg '^\- \[[ x]\] [A-Z]+-\d+' /path/to/project --no-heading
+```
+
+Filter by status:
+```bash
+rg '^\- \[ \] [A-Z]+-\d+'  # open tasks only
+rg '^\- \[x\] [A-Z]+-\d+'  # done tasks only
+```
+
+Filter by tag or priority:
+```bash
+rg '^\- \[[ x]\] [A-Z]+-\d+.*#backend'  # by tag
+rg '^\- \[[ x]\] [A-Z]+-\d+.*!high'     # by priority
+```
 
 ## Task Structure
 
