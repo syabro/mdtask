@@ -31,7 +31,7 @@ Zero dependencies beyond standard Unix tools + rg + bats.
 ### 4.1 Task Structure
 
 ```md
-- [ ] TSK-123 Short task title		#backend #mcp !p1 @status(blocked)
+- [ ] TSK-123 Short task title		#backend #mcp !high @status:blocked
   Multi-line description.
   Links, code blocks, lists.
   - [ ] subtask
@@ -42,7 +42,7 @@ Zero dependencies beyond standard Unix tools + rg + bats.
 
 - Task start line: `^- \[[ x]\] [A-Z]+-\d+ `
 - ID is mandatory and comes immediately after the checkbox
-- Metadata tokens (`#tag`, `!priority`, `@status(...)`) live on the header line, after the title
+- Metadata tokens (`#tag`, `!priority`, `@key:value`) live on the header line, after the title
 - Optional: double tab (`\t\t`) before metadata for visual separation
 - Task body = all following lines indented by ≥1 space
 - Empty lines are allowed inside the body
@@ -52,11 +52,11 @@ Zero dependencies beyond standard Unix tools + rg + bats.
 
 Parsed from the header line. First `#`, `!`, or `@` token marks the start of metadata.
 
-| Type     | Format               | Purpose                |
-|----------|----------------------|------------------------|
-| Tag      | `#tag`               | Categories / filters   |
-| Priority | `!p1..p5`            | Sorting                |
-| Status   | `@status(blocked)`   | Extended state         |
+| Type     | Format                 | Purpose                   |
+|----------|------------------------|---------------------------|
+| Tag      | `#tag`                 | Categories / filters      |
+| Priority | `!crit` `!high` `!low` | Sorting (no tag = medium) |
+| Property | `@key:value`           | Extended state            |
 
 ## 5. File Organization
 
@@ -85,7 +85,7 @@ project/
 ### 6.2 Filters
 
 - `mdtask list #tag`
-- `mdtask list !p1`
+- `mdtask list !high`
 
 ### 6.3 Mutations
 
@@ -112,7 +112,7 @@ project/
 
 ### 7.2 Forbidden
 
-- `@id(...)`
+- `@id:...`
 - positional indexes
 - hidden UUIDs
 
@@ -123,7 +123,7 @@ project/
 1. Stream lines
 2. Detect task header via regex
 3. Collect indented block
-4. Parse metadata from second line (before empty line)
+4. Parse metadata from header line (after title)
 5. Remaining lines = description
 
 ### 8.2 Requirements

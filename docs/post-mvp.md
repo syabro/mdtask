@@ -33,10 +33,9 @@ Deferred features and improvements. Not blocking MVP.
 
 ## Validation
 
-- [ ] POST-030 Priorities out of range
-  #parser
-  `!p0`, `!p6` etc. — warning or ignore?
-  Solution: parse any `!p\d+`, validate in separate `mdtask validate` command.
+- [ ] POST-030 Unknown priority tags		#parser
+  Unknown `!` tags (not crit/high/low) — warning or ignore?
+  Solution: parse any `!\w+`, validate in `mdtask validate` command.
 
 - [ ] POST-031 Empty tag
   #parser

@@ -27,9 +27,7 @@ mdtask is a file-first markdown task management CLI:
 ## Task Format
 
 ```md
-- [ ] TSK-123 Short task title
-  #backend #mcp !p1 @due(2026-02-01)
-  ---
+- [ ] TSK-123 Short task title		#backend #mcp !high @due:2026-02-01
   Description here.
   - [ ] subtask
 ```

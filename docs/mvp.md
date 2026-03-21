@@ -34,8 +34,8 @@
   First `#`, `!`, or `@` token marks start of metadata.
   Extract:
   - tags: `#tag` (including with digits: #v2, #123)
-  - priority: `!p1..p5`
-  - status: `@status(value)`
+  - priority: `!crit`, `!high`, `!low` (no tag = medium)
+  - property: `@key:value` (e.g. `@status:blocked`)
 
   Tests:
   - all token types
@@ -56,8 +56,8 @@
   Colored output when tty (priority, status).
   Output format: `[status] ID priority Title`
   ```
-  [ ] TSK-123 !p1 Task name
-  [x] TSK-124 !p3 Another task
+  [ ] TSK-123 !high Task name
+  [x] TSK-124      Another task
   ```
 
   Tests:
@@ -70,7 +70,7 @@
 
 - [ ] MVP-005 Command `mdtask list` — sorting		#cli
   Flags:
-  - `--sort=priority` (by !p1..p5)
+  - `--sort=priority` (crit → high → med → low)
 
   Tests:
   - sort by priority
@@ -93,7 +93,7 @@
   - filter by single tag
   - filter by multiple tags (AND)
 
-- [ ] MVP-008 Filter by priority `mdtask list !p1`		#cli #filter
+- [ ] MVP-008 Filter by priority `mdtask list !high`		#cli #filter
   Filter tasks by priority.
 
   Tests:

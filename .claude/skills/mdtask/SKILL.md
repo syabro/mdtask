@@ -4,14 +4,14 @@ description: Reference for mdtask markdown task format — use when creating, ed
 disable-model-invocation: false
 ---
 
-# /mdtask-format - Task format reference
+# /mdtask - Task format reference
 
 ## Task Structure
 
 Every task is a markdown checkbox item with ID and optional metadata on the header line:
 
 ```md
-- [ ] TSK-123 Short task title		#tag1 #tag2 !p1 @status(blocked)
+- [ ] TSK-123 Short task title		#tag1 #tag2 !high @status:blocked
   Description body goes here.
   Can be multi-line.
   - [ ] subtask one
@@ -33,11 +33,11 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 
 Appear on the header line. First `#`, `!`, or `@` marks the start of metadata.
 
-| Token | Format | Example | Purpose |
-|-------|--------|---------|---------|
-| Tag | `#name` | `#backend #v2` | Categories / filters |
-| Priority | `!p1`..`!p5` | `!p1` | Sorting (1 = highest) |
-| Status | `@status(val)` | `@status(blocked)` | Extended state |
+| Token    | Format                 | Example            | Purpose                   |
+|----------|------------------------|--------------------|---------------------------|
+| Tag      | `#name`                | `#backend #v2`     | Categories / filters      |
+| Priority | `!crit` `!high` `!low` | `!high`            | Sorting (no tag = medium) |
+| Property | `@key:value`           | `@status:blocked`  | Extended key:value        |
 
 ## Task Body
 
@@ -62,7 +62,7 @@ Minimal task:
 
 Full task with metadata and body:
 ```md
-- [ ] FEAT-7 Add export command		#cli #export !p2 @status(in-progress)
+- [ ] FEAT-7 Add export command		#cli #export !low @status:in-progress
   Export tasks to JSON format.
   Should support:
   - filtering by tag
