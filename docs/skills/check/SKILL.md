@@ -19,7 +19,7 @@ Run these two checks **in parallel**:
 Launch an Agent (subagent_type: general-purpose) with this prompt:
 
 > 1. Read CLAUDE.md and README.md to understand what this project is.
-> 2. Explore the entire project — all files, not just markdown. Code, configs, scripts, skills, everything.
+> 2. Explore the entire project — all files, not just markdown. Code, configs, scripts, skills, everything. Skip `.claude/` (symlinks only).
 > 3. Compare everything against each other. Find any places where one source says X and another says Y.
 > 4. Report every contradiction, inconsistency, or stale reference.
 > 5. Classify each finding as: blocker (blocks merge), warning (should fix), or nit (cosmetic).
@@ -35,7 +35,7 @@ Run via `~/.claude/skills/gemini/gemini-readonly.sh` passing the whole project d
 Gemini first reads the project to understand context, then compares everything.
 
 ```bash
-~/.claude/skills/gemini/gemini-readonly.sh "@./ This is a project. First read CLAUDE.md and README.md to understand what it is. Then compare all files against each other — docs, code, configs, skills, everything. Find any places where one source contradicts or is inconsistent with another. Classify each finding as: blocker (blocks merge), warning (should fix), or nit (cosmetic)."
+~/.claude/skills/gemini/gemini-readonly.sh "@./ This is a project. First read CLAUDE.md and README.md to understand what it is. Then compare all files against each other — docs, code, configs, skills, everything. Skip .claude/ (symlinks only). Find any places where one source contradicts or is inconsistent with another. Classify each finding as: blocker (blocks merge), warning (should fix), or nit (cosmetic)."
 ```
 
 ## Output

@@ -54,7 +54,7 @@ Node.js + TypeScript + ripgrep. Minimal dependencies.
 
 ## Sources of Truth
 
-- **Task format** — `.claude/skills/mdtask/SKILL.md`
+- **Task format** — `docs/skills/mdtask/SKILL.md`
 - **Goals, architecture** — `docs/mdtask.md`
 - **CLI tasks** — `docs/cli.md`
 
