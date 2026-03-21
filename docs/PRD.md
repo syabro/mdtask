@@ -28,35 +28,7 @@ Zero dependencies beyond standard Unix tools + rg + bats.
 
 ## 4. Data Model (Canonical Format)
 
-### 4.1 Task Structure
-
-```md
-- [ ] TSK-123 Short task title		#backend #mcp !high @status:blocked
-  Multi-line description.
-  Links, code blocks, lists.
-  - [ ] subtask
-  - [ ] subtask
-```
-
-### 4.2 Rules
-
-- Task start line: `^- \[[ x]\] [A-Z]+-\d+ `
-- ID is mandatory and comes immediately after the checkbox
-- Metadata tokens (`#tag`, `!priority`, `@key:value`) live on the header line, after the title
-- Optional: double tab (`\t\t`) before metadata for visual separation
-- Task body = all following lines indented by ≥1 space
-- Empty lines are allowed inside the body
-- First non-indented non-empty line ends the task block
-
-### 4.3 Metadata (Inline Tokens)
-
-Parsed from the header line. First `#`, `!`, or `@` token marks the start of metadata.
-
-| Type     | Format                 | Purpose                   |
-|----------|------------------------|---------------------------|
-| Tag      | `#tag`                 | Categories / filters      |
-| Priority | `!crit` `!high` `!low` | Sorting (no tag = medium) |
-| Property | `@key:value`           | Extended state            |
+See `.claude/skills/mdtask/SKILL.md` — canonical reference for task format, metadata tokens, and parsing rules.
 
 ## 5. File Organization
 
