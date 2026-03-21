@@ -3,9 +3,10 @@
 ## Project Structure
 
 - `docs/mdtask.md` — goals, architecture (why + how)
-- `docs/cli.md` — CLI tasks with requirements
-- `docs/mvp.md` — parser + infrastructure tasks
-- `docs/post-mvp.md` — deferred tasks
+- `docs/prd/task.md` — task parsing PRD
+- `docs/prd/files.md` — file search & project structure PRD
+- `docs/prd/cli.md` — CLI commands PRD
+- `docs/prd/config.md` — search configuration PRD
 - `docs/skills/mdtask/SKILL.md` — canonical task format spec (what)
 
 ## Before Committing
@@ -19,7 +20,7 @@ The skill is the single source of truth for task format; mdtask.md covers everyt
   - Describe WHAT needs to be done, not HOW
   - Never write code for the agent
   - Never provide ready-made solutions
-  - Point to specs (docs/cli.md, docs/mvp.md) — agent reads them
+  - Point to specs (docs/prd/) — agent reads them
   - Agent writes the code themselves
 
 ---

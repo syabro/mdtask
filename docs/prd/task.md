@@ -1,6 +1,8 @@
-# MVP Tasks — mdtask
+# Task — mdtask
 
-## Parser
+Parsing a single task from a markdown text block.
+
+## Header Recognition
 
 - [ ] MVP-001 Implement regex for task header recognition		#parser
   Regex: `^- \[[ x]\] [A-Z]+-\d+ `
@@ -19,15 +21,19 @@
   - header with metadata on same line
   - header with `\t\t` separator before metadata
 
+## Body Collection
+
 - [ ] MVP-002 Implement task body collection (indented block)		#parser
   Collect all lines with ≥1 space indent after header.
   Empty lines within block are allowed.
-  Block ends at first line with zero indent.
+  Block ends at first non-indented non-empty line.
 
   Tests:
   - multiline body
   - empty lines inside
   - correct block termination
+
+## Metadata
 
 - [ ] MVP-003 Parse metadata from header line		#parser
   Metadata = tokens on header line after title.
@@ -44,30 +50,14 @@
   - metadata with `\t\t` separator
   - metadata without separator
 
-## Infrastructure
+## Subtasks
 
-- [ ] MVP-004 Project structure and entry point		#infra
-  Node.js + TypeScript project.
-  Create:
-  - `src/` — source code
-  - `test/` — vitest tests
-  - `package.json` — entry point, scripts
-  All errors to stderr.
+- [ ] POST-020 Auto-complete parent task		#parser
+  When all subtasks are `[x]`, automatically mark parent as done.
+  Requires parsing subtasks in description block.
 
-  Tests:
-  - entry point works
+## Validation
 
-- [ ] MVP-005 File search function		#infra
-  Recursive search `*.md` including hidden directories.
-  Use `rg --files -g '*.md' --hidden`.
-  Exclude: node_modules, .git (default).
-  Override via `MDTASK_EXCLUDE_DIRS`.
-  If rg not found — fallback to `find . -name '*.md'`.
-
-  Tests:
-  - file search finds all md
-  - excludes node_modules, .git
-  - MDTASK_EXCLUDE_DIRS works
-  - spaces in file names
-  - special characters in path
-  - fallback when rg not found
+- [ ] POST-030 Unknown priority tags		#parser
+  Unknown `!` tags (not crit/high/low) — warning or ignore?
+  Solution: parse any `!\w+`, validate in `mdtask validate` command.

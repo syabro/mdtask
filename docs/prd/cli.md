@@ -1,6 +1,6 @@
-# CLI Tasks — mdtask
+# CLI — mdtask
 
-CLI command tasks. Requirements for each command are described in the task body.
+User-facing commands, security, edge cases, and testing infrastructure.
 
 ## View Commands
 
@@ -104,7 +104,7 @@ CLI command tasks. Requirements for each command are described in the task body.
   - empty tag — warning
   - valid file — ok
 
-## Infrastructure
+## Help & Output
 
 - [ ] CLI-010 Help system		#cli #infra
   `mdtask --help` — list of commands.
@@ -123,3 +123,37 @@ CLI command tasks. Requirements for each command are described in the task body.
   Tests:
   - no colors when piped
   - clean output for parsing
+
+## Security
+
+- [ ] POST-040 Shell injection protection		#security
+  Check all places where user input reaches shell:
+  - task ID in commands
+  - file names
+  - task content (on output)
+
+  Use proper quoting, avoid eval.
+
+## Edge Cases
+
+- [ ] POST-050 Move edge cases		#cli
+  - move to read-only file — graceful error
+  - source file becomes empty — keep or delete?
+
+- [ ] POST-051 Symlinks		#infra
+  How to handle:
+  - symlink to md file
+  - symlink to directory
+  - circular symlinks
+
+  Solution: follow symlinks, but detect cycles.
+
+## Testing
+
+- [ ] POST-060 Mock $EDITOR in tests		#test
+  Create mock-editor script:
+  ```bash
+  #!/bin/bash
+  echo "$@" > /tmp/editor_args
+  ```
+  Verify that mdtask open passes correct arguments.

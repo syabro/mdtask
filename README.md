@@ -56,7 +56,7 @@ Node.js + TypeScript + ripgrep. Minimal dependencies.
 
 - **Task format** — `docs/skills/mdtask/SKILL.md`
 - **Goals, architecture** — `docs/mdtask.md`
-- **CLI tasks** — `docs/cli.md`
+- **PRDs** — `docs/prd/`
 
 When changing one — check the others for consistency.
 
