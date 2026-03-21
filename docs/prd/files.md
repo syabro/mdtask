@@ -4,7 +4,7 @@ Project structure, file search, and file operations.
 
 ## Project Structure
 
-- [ ] MVP-004 Project structure and entry point		#infra
+- [ ] MVP-004 Project structure and entry point
   Node.js + TypeScript project.
   Create:
   - `src/` — source code
@@ -17,7 +17,7 @@ Project structure, file search, and file operations.
 
 ## File Search
 
-- [ ] MVP-005 File search function		#infra
+- [ ] MVP-005 File search function
   Recursive search `*.md` including hidden directories.
   Use `rg --files -g '*.md' --hidden`.
   Exclude: node_modules, .git (default).

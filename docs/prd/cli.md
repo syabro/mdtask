@@ -4,7 +4,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## View Commands
 
-- [ ] CLI-001 Command `mdtask list` — basic output		#cli
+- [ ] CLI-001 Command `mdtask list` — basic output
   Recursive search through `*.md` files.
   Use `rg --files -g '*.md' --hidden` for file discovery.
   By default show only open `[ ]` tasks.
@@ -24,14 +24,14 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - --all flag shows [x]
   - colors on tty, no colors on pipe
 
-- [ ] CLI-002 Command `mdtask list` — sorting		#cli
+- [ ] CLI-002 Command `mdtask list` — sorting
   Flags:
   - `--sort=priority` (crit → high → med → low)
 
   Tests:
   - sort by priority
 
-- [ ] CLI-003 Command `mdtask view <ID>`		#cli
+- [ ] CLI-003 Command `mdtask view <ID>`
   Print full task block by ID.
   If not found — error, exit 1.
 
@@ -41,7 +41,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Filter Commands
 
-- [ ] CLI-004 Filter by tag `mdtask list #tag`		#cli #filter
+- [ ] CLI-004 Filter by tag `mdtask list #tag`
   Filter tasks by tag.
   Support multiple tags (AND logic).
 
@@ -49,7 +49,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - filter by single tag
   - filter by multiple tags (AND)
 
-- [ ] CLI-005 Filter by priority `mdtask list !high`		#cli #filter
+- [ ] CLI-005 Filter by priority `mdtask list !high`
   Filter tasks by priority.
 
   Tests:
@@ -57,7 +57,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Mutation Commands
 
-- [ ] CLI-006 Command `mdtask done <ID>`		#cli #mutation
+- [ ] CLI-006 Command `mdtask done <ID>`
   Toggle `[ ]` ↔ `[x]` in task header.
   File modified in-place.
   Duplicate ID — error, exit 1.
@@ -69,7 +69,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - file not corrupted
   - duplicate ID — error
 
-- [ ] CLI-007 Command `mdtask open <ID>`		#cli #mutation
+- [ ] CLI-007 Command `mdtask open <ID>`
   Open file with task in `$EDITOR +N` at task line.
   If `$EDITOR` not set — error, exit 1.
 
@@ -77,7 +77,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - opens in $EDITOR
   - non-existent ID
 
-- [ ] CLI-008 Command `mdtask move <ID> <file>`		#cli #mutation
+- [ ] CLI-008 Command `mdtask move <ID> <file>`
   Move task to another file.
   Remove from source, add to target.
   Target file doesn't exist — create it.
@@ -91,7 +91,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - move to non-existent file (create)
   - move to same file (no-op)
 
-- [ ] CLI-009 Command `mdtask validate`		#cli
+- [ ] CLI-009 Command `mdtask validate`
   Integrity check:
   - ID uniqueness across all files
   - empty tags (`# `) — warning
@@ -106,7 +106,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Help & Output
 
-- [ ] CLI-010 Help system		#cli #infra
+- [ ] CLI-010 Help system
   `mdtask --help` — list of commands.
   `mdtask <cmd> —help` — command help.
 
@@ -114,7 +114,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - --help outputs command list
   - <cmd> --help outputs help
 
-- [ ] CLI-011 Pipe behavior		#cli #infra
+- [ ] CLI-011 Pipe behavior
   When stdout is not a tty:
   - no colors (ANSI codes)
   - no progress indicators
@@ -126,7 +126,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Security
 
-- [ ] POST-040 Shell injection protection		#security
+- [ ] POST-040 Shell injection protection
   Check all places where user input reaches shell:
   - task ID in commands
   - file names
@@ -136,11 +136,11 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Edge Cases
 
-- [ ] POST-050 Move edge cases		#cli
+- [ ] POST-050 Move edge cases
   - move to read-only file — graceful error
   - source file becomes empty — keep or delete?
 
-- [ ] POST-051 Symlinks		#infra
+- [ ] POST-051 Symlinks
   How to handle:
   - symlink to md file
   - symlink to directory
@@ -150,7 +150,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
 
 ## Testing
 
-- [ ] POST-060 Mock $EDITOR in tests		#test
+- [ ] POST-060 Mock $EDITOR in tests
   Create mock-editor script:
   ```bash
   #!/bin/bash
