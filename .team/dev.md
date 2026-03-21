@@ -12,8 +12,8 @@ mdtask is a file-first markdown task management CLI:
 ## Job
 
 1. Implement markdown parser (O(n), no AST)
-2. Build CLI commands: list, view, new, done, edit, move
-3. Handle filters: tags, priority, due dates
+2. Build CLI commands: list, view, done, open, move
+3. Handle filters: tags, priority
 4. File operations: read, write, scan directories
 
 ## Parser Rules
@@ -21,7 +21,7 @@ mdtask is a file-first markdown task management CLI:
 - Stream lines, detect task header via regex
 - Task header: `^- \[[ x]\] [A-Z]+-\d+ `
 - Collect indented block as task body
-- Parse metadata (tags, priority, due) before `---`
+- Parse metadata from header line (tags #, priority !, properties @key:value)
 - Tolerant to malformed content
 
 ## Task Format

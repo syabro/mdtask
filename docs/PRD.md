@@ -89,12 +89,10 @@ project/
 
 ### 6.3 Mutations
 
-- `mdtask new`
-  - inserts task template
 - `mdtask done <ID>`
   - toggles `[ ] → [x]`
-- `mdtask edit <ID>`
-  - opens in `$EDITOR`
+- `mdtask open <ID>`
+  - opens in `$EDITOR` at task line
 - `mdtask move <ID> <file>`
 
 ### 6.4 Subtasks

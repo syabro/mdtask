@@ -32,7 +32,7 @@ mdtask is a file-first markdown task management CLI:
 - Nested indentation
 - Empty lines in task body
 - Special characters in tags
-- Invalid date formats
+- Unknown metadata tokens
 
 ### CLI
 - list with no files
@@ -40,7 +40,7 @@ mdtask is a file-first markdown task management CLI:
 - view non-existent ID
 - done on already done task
 - move to non-existent file
-- new with duplicate ID
+- done with duplicate ID
 
 ### Format
 - Output is valid markdown
