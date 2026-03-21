@@ -12,9 +12,11 @@ Run two parallel reviewers (Subagent + Gemini) to verify that all project docume
 
 Run these two checks **in parallel**:
 
-### 1. Subagent
+### 1. Code Review Agent
 
-Launch a task (subagent_type: general) with this prompt:
+#### Claude Code
+
+Launch an Agent (subagent_type: general-purpose) with this prompt:
 
 > 1. Read CLAUDE.md and README.md to understand what this project is.
 > 2. Explore the entire project — all files, not just markdown. Code, configs, scripts, skills, everything.
@@ -22,6 +24,10 @@ Launch a task (subagent_type: general) with this prompt:
 > 4. Report every contradiction, inconsistency, or stale reference.
 > 5. Classify each finding as: blocker (blocks merge), warning (should fix), or nit (cosmetic).
 > This is research only — do NOT edit files.
+
+#### opencode
+
+Launch a subagent (subagent_type: general) with the same prompt as above.
 
 ### 2. Gemini
 
