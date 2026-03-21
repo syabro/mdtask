@@ -1,71 +1,71 @@
 # mdtask
 
-CLI-система управления задачами, где Markdown — единый источник правды. Без баз данных, серверов и GUI.
+CLI task manager where Markdown is the single source of truth. No database, no server, no GUI.
 
-## Принцип
+## Principle
 
-Markdown — не презентация, а структурированная таблица:
-- строка = запись
-- отступ = граница блока
-- инлайн-токены = колонки (теги, приоритет, свойства)
+Markdown is not presentation — it is a structured table:
+- line = record
+- indent = block boundary
+- inline tokens = columns (tags, priority, properties)
 
-CLI — только интерпретатор данных, не владелец.
+CLI is only an interpreter, never the owner of data.
 
-## Формат задач
+## Task Format
 
 ```markdown
-- [ ] TSK-123 Название задачи		#feature !high @status:doing
-  Описание задачи,
-  может быть многострочным.
+- [ ] TSK-123 Short task title		#feature !high @status:doing
+  Description body goes here.
+  Can be multi-line.
 
-  - [ ] подзадача
-  - [x] выполненная подзадача
+  - [ ] subtask
+  - [x] completed subtask
 ```
 
-- **ID**: заголовок в формате `[A-Z]+-\d+`, уникален глобально
-- **Метаданные** (после названия):
-  - `#tag` — теги
-  - `!crit` / `!high` / `!low` — приоритет (без тега = medium)
-  - `@key:value` — свойства
-- **Блок**: строки с отступом после заголовка
+- **ID**: header in format `[A-Z]+-\d+`, globally unique
+- **Metadata** (after title):
+  - `#tag` — tags
+  - `!crit` / `!high` / `!low` — priority (no tag = medium)
+  - `@key:value` — properties
+- **Body**: indented lines after header
 
-## Команды
+## Commands
 
 ```bash
-mdtask list              # список открытых задач
-mdtask list --all        # все задачи, включая выполненные
-mdtask list --sort=priority  # сортировка по приоритету
-mdtask list #feature     # фильтр по тегу
-mdtask list !high        # фильтр по приоритету
-mdtask view TSK-123      # полный блок задачи
-mdtask done TSK-123      # переключить [ ] ↔ [x]
-mdtask open TSK-123      # открыть в $EDITOR на строке задачи
-mdtask move TSK-123 file.md  # переместить задачу в другой файл
-mdtask validate          # проверка целостности (уникальность ID, формат)
+mdtask list                  # list open tasks
+mdtask list --all            # all tasks including done
+mdtask list --sort=priority  # sort by priority
+mdtask list #feature         # filter by tag
+mdtask list !high            # filter by priority
+mdtask view TSK-123          # print full task block
+mdtask done TSK-123          # toggle [ ] ↔ [x]
+mdtask open TSK-123          # open in $EDITOR at task line
+mdtask move TSK-123 file.md  # move task to another file
+mdtask validate              # check integrity (ID uniqueness, format)
 ```
 
-## Технологии
+## Stack
 
-Node.js + TypeScript + ripgrep. Минимум зависимостей.
+Node.js + TypeScript + ripgrep. Minimal dependencies.
 
-## Источники правды
+## Sources of Truth
 
-- **Формат задач** — `.claude/skills/mdtask/SKILL.md`
-- **Цели, архитектура** — `docs/mdtask.md`
-- **Задачи CLI** — `docs/cli.md`
+- **Task format** — `.claude/skills/mdtask/SKILL.md`
+- **Goals, architecture** — `docs/mdtask.md`
+- **CLI tasks** — `docs/cli.md`
 
-При изменениях в одном — проверять другие на консистентность.
+When changing one — check the others for consistency.
 
-## Структура проекта
+## Project Structure
 
 ```
-src/             — исходный код
-test/            — тесты (vitest)
-docs/mdtask.md   — цели, архитектура
-docs/cli.md      — задачи CLI
-docs/mvp.md      — задачи парсер + инфраструктура
+src/             — source code
+test/            — tests (vitest)
+docs/mdtask.md   — goals, architecture
+docs/cli.md      — CLI tasks
+docs/mvp.md      — parser + infrastructure tasks
 ```
 
-## Синхронизация
+## Sync
 
-Только через Git. Все операции — правки текста, авто-коммитов нет, конфликты решаются вручную.
+Git only. All operations are plain text edits, no auto-commits, conflicts resolved manually.
