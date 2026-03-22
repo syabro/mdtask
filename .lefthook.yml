@@ -1,0 +1,10 @@
+output: false
+
+pre-commit:
+  commands:
+    format:
+      glob: "*.{ts,json}"
+      run: npx biome check --write {staged_files}
+      stage_fixed: true
+    typecheck:
+      run: npx tsc --noEmit

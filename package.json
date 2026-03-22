@@ -1,0 +1,32 @@
+{
+	"name": "mdtask",
+	"version": "0.1.0",
+	"description": "File-first markdown task system",
+	"type": "module",
+	"bin": {
+		"mdtask": "./dist/cli.js"
+	},
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"dev": "tsup --watch"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.8",
+		"@types/node": "^22.0.0",
+		"tsup": "^8.0.0",
+		"typescript": "^5.5.0",
+		"vitest": "^2.0.0"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
+	}
+}

@@ -2,7 +2,7 @@
 
 Project structure and entry point.
 
-- [ ] PRJ-001 Project structure and entry point		@iter:mvp
+- [x] PRJ-001 Project structure and entry point		@iter:mvp
   Node.js + TypeScript project.
   Create:
   - `src/` — source code
