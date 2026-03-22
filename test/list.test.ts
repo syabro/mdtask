@@ -122,7 +122,7 @@ describe('mdtask list', () => {
 			expect(output).toContain('TSK-002');
 		});
 
-		it('formats output as [status] ID priority Title', () => {
+		it('formats output as [status] ID Title priority', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Priority task !high\n- [x] TSK-002 Done no priority\n',
@@ -132,8 +132,8 @@ describe('mdtask list', () => {
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-			// Should show status, ID, priority, title
-			expect(output).toContain('[ ] TSK-001 !high Priority task');
+			// Should show status, ID, title, priority
+			expect(output).toContain('[ ] TSK-001 Priority task !high');
 			expect(output).toContain('[x] TSK-002 Done no priority');
 		});
 	});

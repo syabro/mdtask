@@ -93,11 +93,11 @@ function formatTaskLine(
 
 	if (task.status === 'done') {
 		// Apply gray to base parts, append colored blockers separately to avoid nesting issues
-		const basePart = `${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}`;
+		const basePart = `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}`;
 		return p.gray(basePart) + blockedBySuffix;
 	}
 
-	return `${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}${blockedBySuffix}`;
+	return `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}${blockedBySuffix}`;
 }
 
 function handleList(options: { all?: boolean }): void {
