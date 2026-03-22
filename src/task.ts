@@ -7,6 +7,12 @@ export type TaskHeader = {
 	rawMetadata: string;
 };
 
+export type TaskMetadata = {
+	tags: string[];
+	priority: 'crit' | 'high' | 'low' | null;
+	properties: Record<string, string[]>;
+};
+
 const TASK_HEADER_REGEX = /^- \[([ x])\] ([A-Z]+-\d+) (.*)$/;
 
 // Detects metadata start: beginning of string OR whitespace before #tag, !priority, or @key:value
@@ -54,5 +60,43 @@ export function parseTaskHeader(line: string): TaskHeader | null {
 		id,
 		title,
 		rawMetadata,
+	};
+}
+
+const TAG_REGEX = /#[\w-]+/g;
+const PRIORITY_REGEX = /!(\w+)/g;
+const PROPERTY_REGEX = /(?<=^|\s)@([\w-]+):(\S+)/g;
+
+const VALID_PRIORITIES = new Set(['crit', 'high', 'low']);
+
+export function parseMetadata(rawMetadata: string): TaskMetadata {
+	const tags: string[] = [];
+	let priority: 'crit' | 'high' | 'low' | null = null;
+	const properties: Record<string, string[]> = Object.create(null);
+
+	for (const match of rawMetadata.matchAll(TAG_REGEX)) {
+		tags.push(match[0]);
+	}
+
+	for (const match of rawMetadata.matchAll(PRIORITY_REGEX)) {
+		const prio = match[1];
+		if (VALID_PRIORITIES.has(prio) && priority === null) {
+			priority = prio as 'crit' | 'high' | 'low';
+		}
+	}
+
+	for (const match of rawMetadata.matchAll(PROPERTY_REGEX)) {
+		const key = match[1];
+		const value = match[2];
+		if (!Object.hasOwn(properties, key)) {
+			properties[key] = [];
+		}
+		properties[key].push(value);
+	}
+
+	return {
+		tags,
+		priority,
+		properties,
 	};
 }

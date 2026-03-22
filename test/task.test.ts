@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseTaskHeader } from '../src/task.js';
+import { parseMetadata, parseTaskHeader } from '../src/task.js';
 
 describe('parseTaskHeader', () => {
 	describe('valid headers', () => {
@@ -204,6 +204,161 @@ describe('parseTaskHeader', () => {
 			const result = parseTaskHeader('- [ ] TSK-123 Title #tag\r');
 			expect(result).not.toBeNull();
 			expect(result?.rawMetadata).toBe('#tag');
+		});
+	});
+});
+
+describe('parseMetadata', () => {
+	describe('all token types', () => {
+		it('parses tags', () => {
+			const result = parseMetadata('#feature #bug');
+			expect(result.tags).toEqual(['#feature', '#bug']);
+			expect(result.priority).toBeNull();
+			expect(result.properties).toEqual({});
+		});
+
+		it('parses priority !crit', () => {
+			const result = parseMetadata('!crit');
+			expect(result.tags).toEqual([]);
+			expect(result.priority).toBe('crit');
+			expect(result.properties).toEqual({});
+		});
+
+		it('parses priority !high', () => {
+			const result = parseMetadata('!high');
+			expect(result.tags).toEqual([]);
+			expect(result.priority).toBe('high');
+			expect(result.properties).toEqual({});
+		});
+
+		it('parses priority !low', () => {
+			const result = parseMetadata('!low');
+			expect(result.tags).toEqual([]);
+			expect(result.priority).toBe('low');
+			expect(result.properties).toEqual({});
+		});
+
+		it('parses property @key:value', () => {
+			const result = parseMetadata('@status:blocked');
+			expect(result.tags).toEqual([]);
+			expect(result.priority).toBeNull();
+			expect(result.properties).toEqual({ status: ['blocked'] });
+		});
+	});
+
+	describe('multiple tokens in one line', () => {
+		it('parses mixed metadata', () => {
+			const result = parseMetadata('#tag !high @key:value');
+			expect(result.tags).toEqual(['#tag']);
+			expect(result.priority).toBe('high');
+			expect(result.properties).toEqual({ key: ['value'] });
+		});
+
+		it('parses multiple tags', () => {
+			const result = parseMetadata('#frontend #backend #cli');
+			expect(result.tags).toEqual(['#frontend', '#backend', '#cli']);
+		});
+
+		it('parses multiple properties', () => {
+			const result = parseMetadata('@status:blocked @iter:mvp');
+			expect(result.properties).toEqual({
+				status: ['blocked'],
+				iter: ['mvp'],
+			});
+		});
+
+		it('parses duplicate property keys as array', () => {
+			const result = parseMetadata('@blocked_by:TSK-001 @blocked_by:FLS-001');
+			expect(result.properties).toEqual({
+				blocked_by: ['TSK-001', 'FLS-001'],
+			});
+		});
+	});
+
+	describe('tags with digits', () => {
+		it('parses tag with version number', () => {
+			const result = parseMetadata('#v2');
+			expect(result.tags).toEqual(['#v2']);
+		});
+
+		it('parses tag with only digits', () => {
+			const result = parseMetadata('#123');
+			expect(result.tags).toEqual(['#123']);
+		});
+
+		it('parses mixed tags with digits', () => {
+			const result = parseMetadata('#v2 #feature #123');
+			expect(result.tags).toEqual(['#v2', '#feature', '#123']);
+		});
+	});
+
+	describe('edge cases', () => {
+		it('returns empty result for empty string', () => {
+			const result = parseMetadata('');
+			expect(result.tags).toEqual([]);
+			expect(result.priority).toBeNull();
+			expect(result.properties).toEqual({});
+		});
+
+		it('ignores standalone # without tag name', () => {
+			const result = parseMetadata('# #tag');
+			expect(result.tags).toEqual(['#tag']);
+		});
+
+		it('ignores standalone ! without priority', () => {
+			const result = parseMetadata('! #tag');
+			expect(result.tags).toEqual(['#tag']);
+			expect(result.priority).toBeNull();
+		});
+
+		it('ignores standalone @ without property', () => {
+			const result = parseMetadata('@ #tag');
+			expect(result.tags).toEqual(['#tag']);
+		});
+
+		it('ignores unknown priority values', () => {
+			const result = parseMetadata('!urgent #tag');
+			expect(result.priority).toBeNull();
+			expect(result.tags).toEqual(['#tag']);
+		});
+
+		it('takes first priority when duplicate', () => {
+			const result = parseMetadata('!high !low');
+			expect(result.priority).toBe('high');
+		});
+
+		it('parses property with hyphen in key', () => {
+			const result = parseMetadata('@build-status:done');
+			expect(result.properties).toEqual({
+				'build-status': ['done'],
+			});
+		});
+
+		it('parses property with underscore in key', () => {
+			const result = parseMetadata('@build_status:done');
+			expect(result.properties).toEqual({
+				build_status: ['done'],
+			});
+		});
+
+		it('parses property value with special characters', () => {
+			const result = parseMetadata('@url:https://example.com/path');
+			expect(result.properties).toEqual({
+				url: ['https://example.com/path'],
+			});
+		});
+
+		it('does not parse property embedded in text', () => {
+			const result = parseMetadata('user@company:value');
+			expect(result.properties).toEqual({});
+			expect(result.tags).toEqual([]);
+		});
+
+		it('handles constructor as property key', () => {
+			const result = parseMetadata('@constructor:value');
+			expect(result.properties).toEqual({
+				constructor: ['value'],
+			});
 		});
 	});
 });

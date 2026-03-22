@@ -12,6 +12,16 @@ The parser recognizes task headers in format `- [ ] ID-123 Title` and extracts:
 
 Metadata can be separated by double tab (`\t\t`) or space before first `#`, `!`, or `@`. The parser returns null for non-task lines.
 
+## Metadata format
+
+After the task title, metadata tokens provide additional categorization:
+
+- **Tags** (`#tag`): Categories like `#feature`, `#bug`, `#v2`. Tags can contain letters and digits.
+- **Priority** (`!crit`, `!high`, `!low`): Task urgency. Tasks without priority are considered medium.
+- **Properties** (`@key:value`): Key-value pairs for structured data like `@status:blocked` or `@blocked_by:TSK-001`. The same key can appear multiple times to store multiple values.
+
+Example: `- [ ] TSK-123 Fix login		#bug !high @status:blocked @blocked_by:TSK-001`
+
 ## Tasks
 
 - [x] TSK-001 Implement regex for task header recognition		@iter:mvp
@@ -49,7 +59,7 @@ Metadata can be separated by double tab (`\t\t`) or space before first `#`, `!`,
   - empty lines inside
   - correct block termination
 
-- [ ] TSK-003 Parse metadata from header line		@iter:mvp @blocked_by:TSK-001
+- [x] TSK-003 Parse metadata from header line		@iter:mvp @blocked_by:TSK-001
   Metadata = tokens on header line after title.
   First `#`, `!`, or `@` token marks start of metadata.
   Extract:
@@ -63,6 +73,15 @@ Metadata can be separated by double tab (`\t\t`) or space before first `#`, `!`,
   - tags with digits #v2, #123
   - metadata with `\t\t` separator
   - metadata without separator
+
+  **Implemented:**
+  - `parseMetadata(rawMetadata: string)` function extracts structured metadata from raw string
+  - Tags stored as array: `['#feature', '#v2']`
+  - Priority parsed as `'crit' | 'high' | 'low' | null` (null = medium)
+  - Properties stored as `Record<string, string[]>` supporting multiple values per key
+  - Duplicate property keys accumulate values in array (e.g., `@blocked_by:TSK-001 @blocked_by:FLS-001`)
+  - First priority wins when multiple specified
+  - Protected against prototype pollution with `Object.create(null)` and `Object.hasOwn()`
 
 - [ ] TSK-004 Auto-complete parent task
   When all subtasks are `[x]`, automatically mark parent as done.
