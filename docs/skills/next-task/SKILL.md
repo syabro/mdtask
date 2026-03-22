@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Flow
 
-Immediately create a todo list from the steps below and track progress through it.
+Immediately create a todo list using `todowrite` tool for all steps below
 ALL steps are mandatory. Never skip any step, regardless of task size.
 
 ### Step 1 — Pick a task

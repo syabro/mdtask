@@ -12,6 +12,8 @@ User says: "create a task", "add task", "new task", "I need a task for...", or d
 
 ## Workflow
 
+MUST ADD All steps below  as todo items
+
 ### Step 1 — Listen
 
 Say: **"Go ahead, I'm listening."**
