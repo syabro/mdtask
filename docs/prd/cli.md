@@ -98,7 +98,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - empty tag — warning
   - valid file — ok
 
-- [ ] CLI-010 Help system		@iter:mvp
+- [x] CLI-010 Help system		@iter:mvp
   `mdtask --help` — list of commands.
   `mdtask <cmd> —help` — command help.
 

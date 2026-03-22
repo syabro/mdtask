@@ -49,4 +49,21 @@ describe('run', () => {
 		expect(code).toBe(1);
 		expect(stderrSpy).toHaveBeenCalled();
 	});
+
+	it('prints subcommand help with <cmd> --help', () => {
+		const code = run(['list', '--help']);
+		expect(code).toBe(0);
+		expect(stdoutSpy).toHaveBeenCalled();
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toContain('list');
+		expect(output).toContain('Usage');
+	});
+
+	it('prints subcommand help with <cmd> -h', () => {
+		const code = run(['view', '-h']);
+		expect(code).toBe(0);
+		expect(stdoutSpy).toHaveBeenCalled();
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toContain('view');
+	});
 });
