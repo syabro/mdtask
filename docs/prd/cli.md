@@ -198,3 +198,21 @@ When piped to another command, colors are disabled for clean parsing.
   echo "$@" > /tmp/editor_args
   ```
   Verify that mdtask open passes correct arguments.
+
+- [ ] CLI-017 Color blockers by status in list output
+  Show completed blockers in gray strikethrough, pending in red.
+
+  When displaying `@blocked_by:ID`:
+  - If blocked task is done: gray + strikethrough
+  - If blocked task is open: red
+
+  Example:
+  ```
+  [ ] TSK-005 Fix auth bug @blocked_by:TSK-001 @blocked_by:TSK-003 @blocked_by:TSK-004
+                              gray+strike      red             gray+strike
+  ```
+
+  Tests:
+  - blocker done → gray strikethrough
+  - blocker open → red
+  - non-existent blocker → red (treat as open)
