@@ -59,14 +59,18 @@ function formatPriority(priority: Task['priority']): string {
 function formatTaskLine(task: Task): string {
 	const statusStr = task.status === 'done' ? '[x]' : '[ ]';
 	const priorityStr = formatPriority(task.priority);
+	const blockedByStr =
+		task.properties['blocked_by']?.map((id) => `@blocked_by:${id}`).join(' ') ??
+		'';
+	const blockedBySuffix = blockedByStr ? ` ${blockedByStr}` : '';
 
 	if (task.status === 'done') {
 		return p.gray(
-			`${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}`,
+			`${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}${blockedBySuffix}`,
 		);
 	}
 
-	return `${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}`;
+	return `${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}${blockedBySuffix}`;
 }
 
 function handleList(options: { all?: boolean }): void {

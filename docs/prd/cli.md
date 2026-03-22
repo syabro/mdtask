@@ -13,11 +13,11 @@ mdtask list              # Show only open tasks
 mdtask list --all        # Show all tasks including done
 ```
 
-Output format shows status, ID, priority (if any), and title:
+Output format shows status, ID, priority (if any), title, and @blocked_by (if any):
 ```
 [ ] TSK-001 !high Fix authentication bug
-[ ] TSK-002      Update documentation
-[x] TSK-003 !low Refactor utils
+[ ] TSK-002      Update documentation @blocked_by:TSK-001
+[x] TSK-003 !low Refactor utils @blocked_by:CFG-001
 ```
 
 When output is to a terminal (TTY), priorities are color-coded:
@@ -48,13 +48,34 @@ When piped to another command, colors are disabled for clean parsing.
   - --all flag shows [x]
   - colors on tty, no colors on pipe
 
+**Implemented:**
+- `mdtask list` command lists all open tasks from markdown files
+- Recursive search includes hidden directories, excludes node_modules and .git
+- `--all` flag shows both open and done tasks
+- Colored output when stdout is TTY: crit=red, high=yellow, low=green, done=gray
+- File read errors are logged to stderr as warnings
+- Output format: `[ ] ID !priority Title @blocked_by:ID1 @blocked_by:ID2` or `[x] ID Title` for done tasks
+- `@blocked_by` properties are displayed at the end of each task line
+
+- [x] CLI-016 Show @blocked_by in list output
+  Display `@blocked_by:ID` properties in `mdtask list` output.
+  
+  When a task has `@blocked_by:TSK-001` in its metadata, show it in the output:
+  ```
+  [ ] CLI-003 Command `mdtask view <ID>` @blocked_by:TSK-002 @blocked_by:FLS-001
+  ```
+
+  Tests:
+  - task with single @blocked_by shows it
+  - task with multiple @blocked_by shows all
+  - task without @blocked_by has no extra output
+  - done task with @blocked_by shows it in gray
+
   **Implemented:**
-  - `mdtask list` command lists all open tasks from markdown files
-  - Recursive search includes hidden directories, excludes node_modules and .git
-  - `--all` flag shows both open and done tasks
-  - Colored output when stdout is TTY: crit=red, high=yellow, low=green, done=gray
-  - File read errors are logged to stderr as warnings
-  - Output format: `[ ] ID !priority Title` or `[x] ID Title` for done tasks without priority
+  - `@blocked_by` properties extracted from `task.properties.blocked_by` array
+  - Displayed at end of line: `@blocked_by:ID1 @blocked_by:ID2`
+  - Gray color applied for done tasks via existing `p.gray()` wrapper
+  - Added 5 tests covering single/multiple/none/done cases
 
 - [ ] CLI-002 Command `mdtask list` — sorting
   Flags:

@@ -264,4 +264,75 @@ describe('mdtask list', () => {
 			expect(output).toMatch(/TSK-001\s+Medium/);
 		});
 	});
+
+	describe('blocked_by display', () => {
+		it('shows single @blocked_by property', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Blocked task');
+			expect(output).toContain('@blocked_by:TSK-002');
+		});
+
+		it('shows multiple @blocked_by properties', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Multi-blocked @blocked_by:TSK-002 @blocked_by:FLS-001\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('@blocked_by:TSK-002');
+			expect(output).toContain('@blocked_by:FLS-001');
+		});
+
+		it('shows @blocked_by with priority', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Urgent blocked !high @blocked_by:TSK-002\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('!high');
+			expect(output).toContain('@blocked_by:TSK-002');
+		});
+
+		it('shows no @blocked_by for unblocked tasks', () => {
+			writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Free task\n');
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Free task');
+			expect(output).not.toContain('@blocked_by');
+		});
+
+		it('shows @blocked_by for done tasks', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [x] TSK-001 Done blocked @blocked_by:TSK-002\n',
+			);
+
+			const code = run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('@blocked_by:TSK-002');
+		});
+	});
 });
