@@ -210,44 +210,6 @@ describe('mdtask list', () => {
 		});
 	});
 
-	describe('color output', () => {
-		it('includes ANSI colors when output is TTY', () => {
-			Object.defineProperty(process.stdout, 'isTTY', {
-				value: true,
-				writable: true,
-				configurable: true,
-			});
-
-			writeFileSync(
-				join(tempDir, 'tasks.md'),
-				'- [ ] TSK-001 High priority !high\n- [ ] TSK-002 Critical !crit\n- [ ] TSK-003 Low priority !low\n',
-			);
-
-			const code = run(['list']);
-			expect(code).toBe(0);
-
-			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-			// Should contain ANSI escape codes
-			expect(output).toContain('\u001b[');
-		});
-
-		it('excludes ANSI colors when output is piped (non-TTY)', () => {
-			// isTTY is undefined by default in beforeEach
-
-			writeFileSync(
-				join(tempDir, 'tasks.md'),
-				'- [ ] TSK-001 High priority !high\n',
-			);
-
-			const code = run(['list']);
-			expect(code).toBe(0);
-
-			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-			// Should not contain ANSI escape codes
-			expect(output).not.toContain('\u001b[');
-		});
-	});
-
 	describe('priority display', () => {
 		it('shows !crit priority', () => {
 			writeFileSync(

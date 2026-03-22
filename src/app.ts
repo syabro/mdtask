@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import p from 'picocolors';
 import { findMarkdownFiles } from './files.js';
 import { parseMetadata, parseTaskHeader, type Task } from './task.js';
 
@@ -95,37 +96,29 @@ function collectTasks(searchPath?: string): Task[] {
 	return tasks;
 }
 
-const COLORS = {
-	reset: '\u001b[0m',
-	red: '\u001b[31m',
-	yellow: '\u001b[33m',
-	green: '\u001b[32m',
-	gray: '\u001b[90m',
-};
-
-function formatPriority(priority: Task['priority'], useColor: boolean): string {
+function formatPriority(priority: Task['priority']): string {
 	if (!priority) return '';
-
-	if (!useColor) return `!${priority}`;
 
 	switch (priority) {
 		case 'crit':
-			return `${COLORS.red}!crit${COLORS.reset}`;
+			return p.red('!crit');
 		case 'high':
-			return `${COLORS.yellow}!high${COLORS.reset}`;
+			return p.yellow('!high');
 		case 'low':
-			return `${COLORS.green}!low${COLORS.reset}`;
+			return p.green('!low');
 		default:
 			return `!${priority}`;
 	}
 }
 
-function formatTaskLine(task: Task, useColor: boolean): string {
+function formatTaskLine(task: Task): string {
 	const statusStr = task.status === 'done' ? '[x]' : '[ ]';
-	const priorityStr = formatPriority(task.priority, useColor);
+	const priorityStr = formatPriority(task.priority);
 
-	if (useColor && task.status === 'done') {
-		return `${COLORS.gray}${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}${COLORS.reset}`;
+	if (task.status === 'done') {
+		return p.gray(
+			`${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}`,
+		);
 	}
 
 	return `${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}`;
@@ -133,7 +126,6 @@ function formatTaskLine(task: Task, useColor: boolean): string {
 
 function handleList(args: string[]): number {
 	const showAll = args.includes('--all');
-	const useColor = process.stdout.isTTY === true;
 
 	const tasks = collectTasks();
 
@@ -142,7 +134,7 @@ function handleList(args: string[]): number {
 		: tasks.filter((t) => t.status === 'open');
 
 	for (const task of filteredTasks) {
-		process.stdout.write(`${formatTaskLine(task, useColor)}\n`);
+		process.stdout.write(`${formatTaskLine(task)}\n`);
 	}
 
 	return 0;

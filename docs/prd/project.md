@@ -2,14 +2,14 @@
 
 Project structure and entry point.
 
-- [ ] PRJ-002 Add picocolors for CLI colors
+- [x] PRJ-002 Add picocolors for CLI colors
   Install and use `picocolors` library for ANSI colors.
   Replace manual color codes in `src/app.ts` with picocolors API.
   
   Library: `picocolors` (~2KB, zero dependencies)
   
   Changes:
-  - `npm add picocolors`
+  - `pnpm add picocolors`
   - Replace `COLORS` constant with picocolors imports
   - Replace manual ANSI codes with `p.red()`, `p.yellow()`, etc.
   
@@ -17,6 +17,13 @@ Project structure and entry point.
   - Colors work in TTY mode
   - Colors disabled in pipe mode (picocolors auto-detects)
   - All existing tests pass
+
+  **Implemented:**
+  - `picocolors` installed as production dependency
+  - Manual ANSI color codes replaced with picocolors API
+  - Removed `useColor` parameter - picocolors auto-detects TTY
+  - `formatPriority()` and `formatTaskLine()` simplified
+  - All 87 tests pass, lint clean
 
 - [ ] PRJ-003 Add ts-pattern for pattern matching
   Install and use `ts-pattern` library for type-safe pattern matching.

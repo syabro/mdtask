@@ -2,6 +2,8 @@
 
 read @docs/skills/do-next-task/SKILL.md to understand task loop
 
+Use **pnpm** for package operations.
+
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project)
