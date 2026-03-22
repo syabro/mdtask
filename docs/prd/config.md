@@ -2,9 +2,7 @@
 
 Search scope and file filtering configuration.
 
-## How it works
-
-### Search Path
+## Search Path
 
 The search directory for task files can be configured via three methods (in priority order):
 

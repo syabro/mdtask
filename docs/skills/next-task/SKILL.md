@@ -72,9 +72,9 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 - Mark it done: `[ ]` → `[x]`
 - Add an `**Implemented:**` block inside THAT TASK BODY ONLY with 2-5 bullets
 - Describe what is now working (outcomes only — no code, no internal implementation details)
-- **CRITICAL: Only touch the taskyou worked on. NEVER modify other tasks or their Implemented sections.**
+- **CRITICAL: Only touch the task you worked on. NEVER modify other tasks or their Implemented sections.**
 
-**Place 2 — In the PRD's "How it works" section (at the TOP):**
+**Place 2 — In the PRD header (before ## Tasks):**
 - Find the markdown file where the task lives (e.g., `docs/prd/config.md`)
 - The PRD structure should be:
   ```
@@ -82,20 +82,20 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
   
   Brief description.
   
-  ## How it works
+  ## Feature Name
   
-  ### Feature Name
-  Brief description of how the implemented feature works for users.
-  What they can do with it. How to use it.
+  Brief description of the implemented feature:
+  - What users can do with it
+  - How to use it
   
   ## Tasks
   
   - [x] TSK-001 Task name
   ...
   ```
-- The "How it works" section goes BEFORE the task list
+- The feature description goes BEFORE ## Tasks
 - This lets users immediately see what's implemented without scrolling
-- Describe the feature from user perspective: what commands to run, what config to use
+- Describe from user perspective: what commands to run, what config to use
 - Keep it concise — focus on HOW TO USE, not implementation details
 
 ### Step 8 — Commit
