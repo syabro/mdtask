@@ -69,16 +69,34 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 
 **Place 1 — In the TASK body itself:**
 - Find the completed task (the `- [ ] TSK-XXX ...` line you just worked on)
+- Mark it done: `[ ]` → `[x]`
 - Add an `**Implemented:**` block inside THAT TASK BODY ONLY with 2-5 bullets
 - Describe what is now working (outcomes only — no code, no internal implementation details)
-- **CRITICAL: Only touch the "Implemented" section of the task you are working on. NEVER modify "Implemented" sections of other tasks.**
+- **CRITICAL: Only touch the taskyou worked on. NEVER modify other tasks or their Implemented sections.**
 
-**Place 2 — In the PRD's "How it works" section:**
-- Find the markdown file where the task lives (e.g., `docs/prd/task.md`)
-- Look for the `## How it works` section (or create one if missing)
-- Add a brief high-level description of the new behavior so a user or agent can understand how the system now works
-- Keep it concise and product-level, not implementation notes
-- Example: Add a subsection like `## Metadata format` describing what users can do with the feature
+**Place 2 — In the PRD's "How it works" section (at the TOP):**
+- Find the markdown file where the task lives (e.g., `docs/prd/config.md`)
+- The PRD structure should be:
+  ```
+  # Title — mdtask
+  
+  Brief description.
+  
+  ## How it works
+  
+  ### Feature Name
+  Brief description of how the implemented feature works for users.
+  What they can do with it. How to use it.
+  
+  ## Tasks
+  
+  - [x] TSK-001 Task name
+  ...
+  ```
+- The "How it works" section goes BEFORE the task list
+- This lets users immediately see what's implemented without scrolling
+- Describe the feature from user perspective: what commands to run, what config to use
+- Keep it concise — focus on HOW TO USE, not implementation details
 
 ### Step 8 — Commit
 
