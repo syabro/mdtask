@@ -6,6 +6,8 @@ disable-model-invocation: false
 
 # /do-next-task — Task workflow
 
+> **CRITICAL: ALWAYS use `pnpm mdtask <command>` CLI to work with tasks. NEVER read or parse markdown task files manually.**
+
 ## Flow
 
 Immediately create a todo list from the steps below and track progress through it.
@@ -13,18 +15,20 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 
 ### Step 1 — Pick a task
 
-1. Load mdtask skill, find all open tasks
-2. For each task, check `@blocked_by`:
-   - Extract the blocker ID
-   - Search for it across `*.md` files
-   - Skip the current task if the blocker checkbox is `[ ]`
-3. Ask user what direction they want to work on today (tags, area, specific task)
-4. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
-5. If no tasks remain: tell user, stop
+**ALWAYS use `pnpm mdtask` CLI — NEVER parse markdown files manually.**
+
+1. Run `pnpm mdtask list` to get all open tasks
+2. Run `pnpm mdtask list --all` to see all tasks including done (for checking blockers)
+3. For each task with `@blocked_by`:
+   - Run `pnpm mdtask view <BLOCKER_ID>` to check if blocker is done
+   - Skip the current task if blocker checkbox is `[ ]`
+4. Ask user what direction they want to work on today (tags, area, specific task)
+5. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
+6. If no tasks remain: tell user, stop
 
 ### Step 2 — Plan
 
-1. Find the markdown file where the task is located, read the full task body
+1. Run `pnpm mdtask view <ID>` to get the full task details
 2. Understand what needs to be built (don't invent extra scope)
 3. Write a concrete implementation plan:
    - What files to create/modify

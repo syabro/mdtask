@@ -1,30 +1,14 @@
 ---
 name: mdtask
-description: Load this skill when user asks to list, find, filter, summarize, or check status of tasks in .md files. Provides task format spec and rg commands for extraction.
+description: Load this skill when user asks to list, find, filter, summarize, or check status of tasks in .md files. Provides task format spec.
 disable-model-invocation: false
 ---
 
 # /mdtask - Task format reference
 
-## How to use this skill
+## How to use
 
-Always run `rg` from the project root (where the .git directory is). This ensures relative file paths in output.
-
-```bash
-rg '^\- \[[ x]\] [A-Z]+-\d+' . --no-heading
-```
-
-Filter by status:
-```bash
-rg '^\- \[ \] [A-Z]+-\d+'  # open tasks only
-rg '^\- \[x\] [A-Z]+-\d+'  # done tasks only
-```
-
-Filter by tag or priority:
-```bash
-rg '^\- \[[ x]\] [A-Z]+-\d+.*#backend'  # by tag
-rg '^\- \[[ x]\] [A-Z]+-\d+.*!high'     # by priority
-```
+Use `mdtask` CLI to work with tasks. Example: `mdtask list`, `mdtask view <ID>`.
 
 ## Task Structure
 
@@ -97,6 +81,5 @@ Done task:
 ## Parsing Hints
 
 - Header regex: `^- \[[ x]\] [A-Z]+-\d+ `
-- Extract all headers: `rg '^\- \[[ x]\] [A-Z]+-\d+'`
 - Metadata from header: split on first `#`, `!`, or `@`
 - Body: collect indented lines after header until dedent
