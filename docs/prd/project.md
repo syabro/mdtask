@@ -25,24 +25,30 @@ Project structure and entry point.
   - `formatPriority()` and `formatTaskLine()` simplified
   - All 87 tests pass, lint clean
 
-- [ ] PRJ-003 Add ts-pattern for pattern matching
+- [x] PRJ-003 Add ts-pattern for pattern matching
   Install and use `ts-pattern` library for type-safe pattern matching.
-  
+
   Library: `ts-pattern` (~47KB bundled)
-  
+
   Use cases:
   - Refactor command handlers to use `match().with()` chains
   - Add exhaustive pattern matching for command routing
   - Improve type safety in switch-like logic
-  
+
   Changes:
   - `npm add ts-pattern`
   - Refactor `handleCommand()` to use pattern matching
   - Refactor color formatting to use pattern matching
-  
+
   Tests:
   - All existing tests pass
   - Pattern matching covers all command cases exhaustively
+
+  **Implemented:**
+  - `ts-pattern` installed as production dependency
+  - `handleCommand()` refactored to use `match().with().otherwise()` chains
+  - `formatPriority()` refactored to use pattern matching with fallback
+  - All 87 tests pass, lint clean
 
 - [x] PRJ-001 Project structure and entry point		@iter:mvp
   Node.js + TypeScript project.
@@ -54,3 +60,15 @@ Project structure and entry point.
 
   Tests:
   - entry point works
+
+## How it works
+
+### Pattern Matching
+
+The CLI uses `ts-pattern` for type-safe pattern matching in two areas:
+
+1. **Command Routing** — `handleCommand()` uses `match().with().otherwise()` to route commands to their handlers, with a fallback for unimplemented commands.
+
+2. **Priority Colors** — `formatPriority()` uses pattern matching to map priority levels (`!crit`, `!high`, `!low`) to their respective colors, with a fallback for custom priority strings.
+
+Pattern matching provides compile-time exhaustiveness checking and cleaner syntax compared to switch statements.

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import p from 'picocolors';
+import { match } from 'ts-pattern';
 import { findMarkdownFiles } from './files.js';
 import { parseMetadata, parseTaskHeader, type Task } from './task.js';
 
@@ -99,16 +100,11 @@ function collectTasks(searchPath?: string): Task[] {
 function formatPriority(priority: Task['priority']): string {
 	if (!priority) return '';
 
-	switch (priority) {
-		case 'crit':
-			return p.red('!crit');
-		case 'high':
-			return p.yellow('!high');
-		case 'low':
-			return p.green('!low');
-		default:
-			return `!${priority}`;
-	}
+	return match(priority)
+		.with('crit', () => p.red('!crit'))
+		.with('high', () => p.yellow('!high'))
+		.with('low', () => p.green('!low'))
+		.otherwise((prio) => `!${prio}`);
 }
 
 function formatTaskLine(task: Task): string {
@@ -141,13 +137,12 @@ function handleList(args: string[]): number {
 }
 
 function handleCommand(cmd: Command, args: string[]): number {
-	switch (cmd) {
-		case 'list':
-			return handleList(args);
-		default:
-			process.stderr.write(`mdtask: command '${cmd}' is not implemented yet\n`);
+	return match(cmd)
+		.with('list', () => handleList(args))
+		.otherwise((c) => {
+			process.stderr.write(`mdtask: command '${c}' is not implemented yet\n`);
 			return 1;
-	}
+		});
 }
 
 export function run(args: string[]): number {
