@@ -240,3 +240,11 @@ Colors are only applied when output is to a terminal (TTY). When piped, plain te
   - Open or non-existent blockers shown in `red` via `p.red(text)`
   - ANSI nesting avoided by applying gray only to base task parts, appending colored blockers separately
   - Priority coloring disabled for done tasks to prevent ANSI reset codes breaking the gray wrapper
+
+- [ ] CLI-018 Move priority after title in list output
+  Change output format from `[ ] ID !priority Title` to `[ ] ID Title !priority`.
+
+  Currently: `[ ] TSK-001 !high Fix bug`
+  New:       `[ ] TSK-001 Fix bug !high`
+
+  Update tests that check output format.
