@@ -4,6 +4,10 @@ read @docs/skills/do-next-task/SKILL.md to understand task loop
 
 Use **pnpm** for package operations.
 
+## Running mdtask
+
+`pnpm mdtask <command>` — runs CLI via tsx (no build needed). Use this for local development and testing.
+
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project)

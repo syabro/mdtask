@@ -9,7 +9,7 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { run } from '../src/app.js';
+import { run } from '../src/cli.js';
 
 describe('mdtask list', () => {
 	let tempDir: string;

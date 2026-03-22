@@ -50,6 +50,24 @@ Project structure and entry point.
   - `formatPriority()` refactored to use pattern matching with fallback
   - All 87 tests pass, lint clean
 
+- [x] PRJ-004 Dev script `pnpm mdtask` — proxy to tsx		@iter:mvp
+  Add npm script `mdtask` that runs `tsx src/cli.ts` for local development.
+  This allows running `pnpm mdtask list` without building.
+
+  Changes:
+  - Add `tsx` as dev dependency
+  - Add `"mdtask": "tsx src/cli.ts"` to package.json scripts
+
+  Tests:
+  - `pnpm mdtask list` outputs tasks
+  - `pnpm mdtask --help` works
+
+  **Implemented:**
+  - `tsx 4.21.0` added as dev dependency
+  - `"mdtask": "tsx src/cli.ts"` script added to package.json
+  - Arguments pass directly: `pnpm mdtask list --all` works without `--` delimiter
+  - `pnpm mdtask list` and `pnpm mdtask --help` verified working
+
 - [x] PRJ-001 Project structure and entry point		@iter:mvp
   Node.js + TypeScript project.
   Create:
