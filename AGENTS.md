@@ -8,6 +8,10 @@ Use **pnpm** for package operations.
 
 `pnpm mdtask <command>` — runs CLI via tsx (no build needed). Use this for local development and testing.
 
+## Working with Tasks
+
+Always use `pnpm mdtask` to work with tasks. Never parse task files manually.
+
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project)
