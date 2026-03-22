@@ -266,3 +266,6 @@ Colors are only applied when output is to a terminal (TTY). When piped, plain te
   - Modified `formatTaskLine()` in `src/cli.ts` to place priority after title
   - Updated test expectations in `test/list.test.ts` to match new format
   - Output now consistently shows: `[status] ID Title !priority @blocked_by:ID`
+
+- [ ] CLI-019 Show all @property in list output
+  Display all @key:value tokens from task metadata, not just @blocked_by.

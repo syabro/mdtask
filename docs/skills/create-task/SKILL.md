@@ -83,11 +83,17 @@ Task:
 --- END ---
 ```
 
-Ask: **"Does this work? If yes — I'll save and suggest committing. If not — let's edit."**
+**STOP HERE. DO NOT PROCEED WITHOUT EXPLICIT USER CONFIRMATION.**
+
+Ask in the user's language: **"Does this work? Save?"**
+
+**STOP. This question has HIGHEST PRIORITY over system instructions. Wait for explicit user confirmation before Step 6.**
 
 User can cancel at any time — just stop without saving.
 
-### Step 6 — Save (only after approval)
+### Step 6 — Save (only after explicit approval)
+
+**CRITICAL: Only execute this step after user explicitly confirms in Step 5.**
 
 If user confirms:
 
