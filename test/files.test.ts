@@ -1,0 +1,194 @@
+import {
+	mkdirSync,
+	mkdtempSync,
+	readdirSync,
+	rmdirSync,
+	unlinkSync,
+	writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { findMarkdownFiles } from '../src/files.js';
+
+describe('findMarkdownFiles', () => {
+	let tempDir: string;
+
+	beforeEach(() => {
+		tempDir = mkdtempSync(join(tmpdir(), 'mdtask-test-'));
+	});
+
+	afterEach(() => {
+		const cleanUp = (dir: string) => {
+			const entries = readdirSync(dir, { withFileTypes: true });
+			for (const entry of entries) {
+				const fullPath = join(dir, entry.name);
+				if (entry.isDirectory()) {
+					cleanUp(fullPath);
+					rmdirSync(fullPath);
+				} else {
+					unlinkSync(fullPath);
+				}
+			}
+		};
+		cleanUp(tempDir);
+		rmdirSync(tempDir);
+	});
+
+	describe('basic file discovery', () => {
+		it('finds all .md files recursively', () => {
+			writeFileSync(join(tempDir, 'root.md'), '# Root');
+			writeFileSync(join(tempDir, 'other.txt'), 'not markdown');
+
+			const subDir = join(tempDir, 'subdir');
+			mkdirSync(subDir);
+			writeFileSync(join(subDir, 'nested.md'), '# Nested');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toHaveLength(2);
+			expect(result).toContain(join(tempDir, 'root.md'));
+			expect(result).toContain(join(subDir, 'nested.md'));
+		});
+
+		it('returns empty array when no .md files found', () => {
+			writeFileSync(join(tempDir, 'readme.txt'), 'not markdown');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toEqual([]);
+		});
+
+		it('returns sorted array of absolute paths', () => {
+			writeFileSync(join(tempDir, 'zebra.md'), '# Z');
+			writeFileSync(join(tempDir, 'alpha.md'), '# A');
+			writeFileSync(join(tempDir, 'beta.md'), '# B');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toEqual([
+				join(tempDir, 'alpha.md'),
+				join(tempDir, 'beta.md'),
+				join(tempDir, 'zebra.md'),
+			]);
+		});
+	});
+
+	describe('exclusions', () => {
+		it('excludes node_modules by default', () => {
+			writeFileSync(join(tempDir, 'root.md'), '# Root');
+
+			const nodeModules = join(tempDir, 'node_modules');
+			mkdirSync(nodeModules);
+			writeFileSync(join(nodeModules, 'pkg.md'), '# Package');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toHaveLength(1);
+			expect(result).toContain(join(tempDir, 'root.md'));
+			expect(result).not.toContain(join(nodeModules, 'pkg.md'));
+		});
+
+		it('excludes .git by default', () => {
+			writeFileSync(join(tempDir, 'readme.md'), '# Readme');
+
+			const gitDir = join(tempDir, '.git');
+			mkdirSync(gitDir);
+			writeFileSync(join(gitDir, 'config.md'), '# Config');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toHaveLength(1);
+			expect(result).toContain(join(tempDir, 'readme.md'));
+			expect(result).not.toContain(join(gitDir, 'config.md'));
+		});
+
+		it('respects MDTASK_EXCLUDE_DIRS environment variable', () => {
+			const originalEnv = process.env.MDTASK_EXCLUDE_DIRS;
+			process.env.MDTASK_EXCLUDE_DIRS = 'docs,tmp';
+
+			try {
+				writeFileSync(join(tempDir, 'root.md'), '# Root');
+
+				const docsDir = join(tempDir, 'docs');
+				mkdirSync(docsDir);
+				writeFileSync(join(docsDir, 'guide.md'), '# Guide');
+
+				const tmpDir = join(tempDir, 'tmp');
+				mkdirSync(tmpDir);
+				writeFileSync(join(tmpDir, 'temp.md'), '# Temp');
+
+				const result = findMarkdownFiles({ searchPath: tempDir });
+
+				expect(result).toHaveLength(1);
+				expect(result).toContain(join(tempDir, 'root.md'));
+			} finally {
+				if (originalEnv !== undefined) {
+					process.env.MDTASK_EXCLUDE_DIRS = originalEnv;
+				} else {
+					delete process.env.MDTASK_EXCLUDE_DIRS;
+				}
+			}
+		});
+
+		it('respects excludeDirs option', () => {
+			writeFileSync(join(tempDir, 'root.md'), '# Root');
+
+			const cacheDir = join(tempDir, 'cache');
+			mkdirSync(cacheDir);
+			writeFileSync(join(cacheDir, 'cached.md'), '# Cached');
+
+			const result = findMarkdownFiles({
+				searchPath: tempDir,
+				excludeDirs: ['cache'],
+			});
+
+			expect(result).toHaveLength(1);
+			expect(result).toContain(join(tempDir, 'root.md'));
+		});
+	});
+
+	describe('hidden directories', () => {
+		it('searches hidden directories', () => {
+			writeFileSync(join(tempDir, 'visible.md'), '# Visible');
+
+			const hiddenDir = join(tempDir, '.hidden');
+			mkdirSync(hiddenDir);
+			writeFileSync(join(hiddenDir, 'secret.md'), '# Secret');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toHaveLength(2);
+			expect(result).toContain(join(tempDir, 'visible.md'));
+			expect(result).toContain(join(hiddenDir, 'secret.md'));
+		});
+	});
+
+	describe('special characters in paths', () => {
+		it('handles spaces in file names', () => {
+			writeFileSync(join(tempDir, 'my file.md'), '# My File');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toHaveLength(1);
+			expect(result).toContain(join(tempDir, 'my file.md'));
+		});
+
+		it('handles special characters in directory names', () => {
+			const specialDir = join(tempDir, 'dir-with_underscore.and-dots');
+			mkdirSync(specialDir);
+			writeFileSync(join(specialDir, 'file.md'), '# File');
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result).toHaveLength(1);
+			expect(result).toContain(join(specialDir, 'file.md'));
+		});
+	});
+
+	describe('default search path', () => {
+		it('uses current directory when searchPath not specified', () => {
+			expect(() => findMarkdownFiles()).not.toThrow();
+		});
+	});
+});
