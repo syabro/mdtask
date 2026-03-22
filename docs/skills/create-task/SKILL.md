@@ -71,7 +71,7 @@ Show the task text with header line. Include metadata (`#tag`, `!priority`, `@bl
 --- PROPOSED TASK ---
 File: docs/prd/cli.md
 Task:
-- [ ] CLI-017 Short title
+- [ ] XXX-017 Short title
   Description line 1.
   Description line 2.
   
@@ -152,7 +152,7 @@ User: 1. Yes, in tags[]. 2. All tags. 3. Yes, space-separated.
 Agent: --- PROPOSED TASK ---
 File: docs/prd/cli.md
 Task:
-- [ ] CLI-017 Show tags in list output
+- [ ] XXX-017 Show tags in list output
   Display `#tag` tokens from task metadata.
   
   Format: `[ ] ID Title #tag1 #tag2`
