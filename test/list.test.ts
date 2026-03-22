@@ -9,6 +9,17 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('picocolors', () => ({
+	default: {
+		gray: (s: string) => `\u001b[90m${s}\u001b[39m`,
+		red: (s: string) => `\u001b[31m${s}\u001b[39m`,
+		yellow: (s: string) => `\u001b[33m${s}\u001b[39m`,
+		green: (s: string) => `\u001b[32m${s}\u001b[39m`,
+		strikethrough: (s: string) => `\u001b[9m${s}\u001b[29m`,
+	},
+}));
+
 import { run } from '../src/cli.js';
 
 describe('mdtask list', () => {
@@ -279,6 +290,66 @@ describe('mdtask list', () => {
 			expect(output).toContain('TSK-001');
 			expect(output).toContain('Blocked task');
 			expect(output).toContain('@blocked_by:TSK-002');
+		});
+
+		it('shows done blocker in gray strikethrough', () => {
+			Object.defineProperty(process.stdout, 'isTTY', {
+				value: true,
+				writable: true,
+				configurable: true,
+			});
+
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n- [x] TSK-002 Done blocker\n',
+			);
+
+			const code = run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes
+			expect(output).toMatch(/\u001b\[90m.*\u001b\[9m.*@blocked_by:TSK-002/);
+		});
+
+		it('shows open blocker in red', () => {
+			Object.defineProperty(process.stdout, 'isTTY', {
+				value: true,
+				writable: true,
+				configurable: true,
+			});
+
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n- [ ] TSK-002 Open blocker\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes
+			expect(output).toMatch(/\u001b\[31m.*@blocked_by:TSK-002/);
+		});
+
+		it('shows non-existent blocker in red', () => {
+			Object.defineProperty(process.stdout, 'isTTY', {
+				value: true,
+				writable: true,
+				configurable: true,
+			});
+
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Blocked task @blocked_by:NONEXISTENT\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes
+			expect(output).toMatch(/\u001b\[31m.*@blocked_by:NONEXISTENT/);
 		});
 
 		it('shows multiple @blocked_by properties', () => {

@@ -41,33 +41,60 @@ function collectTasks(searchPath?: string): Task[] {
 	return tasks;
 }
 
-function formatPriority(priority: Task['priority']): string {
+function formatPriority(priority: Task['priority'], isTTY: boolean): string {
 	if (!priority) return '';
+
+	const priorityStr = `!${priority}`;
+	if (!isTTY) return priorityStr;
 
 	switch (priority) {
 		case 'crit':
-			return p.red('!crit');
+			return p.red(priorityStr);
 		case 'high':
-			return p.yellow('!high');
+			return p.yellow(priorityStr);
 		case 'low':
-			return p.green('!low');
+			return p.green(priorityStr);
 		default:
-			return `!${priority}`;
+			return priorityStr;
 	}
 }
 
-function formatTaskLine(task: Task): string {
+function formatBlocker(
+	id: string,
+	statusMap: Map<string, Task['status']>,
+	isTTY: boolean,
+): string {
+	const text = `@blocked_by:${id}`;
+	if (!isTTY) return text;
+
+	const status = statusMap.get(id);
+	if (status === 'done') {
+		return p.gray(p.strikethrough(text));
+	}
+	return p.red(text);
+}
+
+function formatTaskLine(
+	task: Task,
+	statusMap: Map<string, Task['status']>,
+	isTTY: boolean,
+): string {
 	const statusStr = task.status === 'done' ? '[x]' : '[ ]';
-	const priorityStr = formatPriority(task.priority);
-	const blockedByStr =
-		task.properties['blocked_by']?.map((id) => `@blocked_by:${id}`).join(' ') ??
-		'';
+	// Disable priority coloring for done tasks to avoid ANSI reset breaking gray wrapper
+	const priorityStr = formatPriority(
+		task.priority,
+		task.status === 'done' ? false : isTTY,
+	);
+	const blockedByIds = task.properties.blocked_by ?? [];
+	const blockedByStr = blockedByIds
+		.map((id) => formatBlocker(id, statusMap, isTTY))
+		.join(' ');
 	const blockedBySuffix = blockedByStr ? ` ${blockedByStr}` : '';
 
 	if (task.status === 'done') {
-		return p.gray(
-			`${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}${blockedBySuffix}`,
-		);
+		// Apply gray to base parts, append colored blockers separately to avoid nesting issues
+		const basePart = `${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}`;
+		return p.gray(basePart) + blockedBySuffix;
 	}
 
 	return `${statusStr} ${task.id}${priorityStr ? ` ${priorityStr}` : ''} ${task.title}${blockedBySuffix}`;
@@ -75,13 +102,15 @@ function formatTaskLine(task: Task): string {
 
 function handleList(options: { all?: boolean }): void {
 	const tasks = collectTasks();
+	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
+	const isTTY = process.stdout.isTTY ?? false;
 
 	const filteredTasks = options.all
 		? tasks
 		: tasks.filter((t) => t.status === 'open');
 
 	for (const task of filteredTasks) {
-		process.stdout.write(`${formatTaskLine(task)}\n`);
+		process.stdout.write(`${formatTaskLine(task, statusMap, isTTY)}\n`);
 	}
 }
 

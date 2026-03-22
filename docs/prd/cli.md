@@ -77,6 +77,23 @@ When piped to another command, colors are disabled for clean parsing.
   - Gray color applied for done tasks via existing `p.gray()` wrapper
   - Added 5 tests covering single/multiple/none/done cases
 
+### Blocker status visualization
+
+When viewing tasks with `@blocked_by` dependencies, the status of each blocker is visualized with color:
+
+- **Done blockers**: shown in gray with strikethrough (`@blocked_by:TSK-001`)
+- **Open blockers**: shown in red (`@blocked_by:TSK-002`)
+- **Non-existent blockers**: shown in red (treated as open)
+
+This visual distinction helps quickly identify which blockers are completed and which are still pending:
+
+```
+[ ] TSK-005 Fix auth bug @blocked_by:TSK-001 @blocked_by:TSK-003 @blocked_by:TSK-004
+                            gray+strike      red             gray+strike
+```
+
+Colors are only applied when output is to a terminal (TTY). When piped, plain text is output for clean parsing.
+
 - [ ] CLI-002 Command `mdtask list` — sorting
   Flags:
   - `--sort=priority` (crit → high → med → low)
@@ -199,7 +216,7 @@ When piped to another command, colors are disabled for clean parsing.
   ```
   Verify that mdtask open passes correct arguments.
 
-- [ ] CLI-017 Color blockers by status in list output
+- [x] CLI-017 Color blockers by status in list output
   Show completed blockers in gray strikethrough, pending in red.
 
   When displaying `@blocked_by:ID`:
@@ -216,3 +233,10 @@ When piped to another command, colors are disabled for clean parsing.
   - blocker done → gray strikethrough
   - blocker open → red
   - non-existent blocker → red (treat as open)
+
+  **Implemented:**
+  - Blocker status determined by looking up task IDs in a status map built from all collected tasks
+  - Done blockers shown with `gray + strikethrough` via `p.gray(p.strikethrough(text))`
+  - Open or non-existent blockers shown in `red` via `p.red(text)`
+  - ANSI nesting avoided by applying gray only to base task parts, appending colored blockers separately
+  - Priority coloring disabled for done tasks to prevent ANSI reset codes breaking the gray wrapper
