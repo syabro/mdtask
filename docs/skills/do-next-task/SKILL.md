@@ -61,10 +61,19 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 1. Run all tests again to confirm nothing broke after review fixes
 2. Run lint/typecheck if configured
 
-### Step 7 — Update PRD
+### Step 7 — Update PRD (TWO places - BOTH required)
 
-1. In the completed task body, add a short `Implemented:` block with 2-5 bullets describing what is now working. Write outcomes only — no code, no internal implementation details.
-2. Update the relevant PRD file with a brief high-level description of the new behavior so a user or agent can understand how the system now works. Keep it concise and product-level, not implementation notes.
+**Place 1 — In the TASK body itself:**
+- Find the completed task (the `- [ ] TSK-XXX ...` line you just worked on)
+- Add an `**Implemented:**` block inside that task body with 2-5 bullets
+- Describe what is now working (outcomes only — no code, no internal implementation details)
+
+**Place 2 — In the PRD's "How it works" section:**
+- Find the markdown file where the task lives (e.g., `docs/prd/task.md`)
+- Look for the `## How it works` section (or create one if missing)
+- Add a brief high-level description of the new behavior so a user or agent can understand how the system now works
+- Keep it concise and product-level, not implementation notes
+- Example: Add a subsection like `## Metadata format` describing what users can do with the feature
 
 ### Step 8 — Commit
 
