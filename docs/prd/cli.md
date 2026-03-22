@@ -2,9 +2,7 @@
 
 User-facing commands, security, edge cases, and testing infrastructure.
 
-## How it works
-
-### Listing tasks
+## Listing tasks
 
 The `mdtask list` command searches all `.md` files recursively from the current directory and displays tasks in a compact format:
 
@@ -28,7 +26,7 @@ When output is to a terminal (TTY), priorities are color-coded:
 
 When piped to another command, colors are disabled for clean parsing.
 
-### Planned commands
+## Planned commands
 
 Additional commands are planned for future implementation:
 
@@ -90,7 +88,7 @@ Additional commands are planned for future implementation:
   - Gray color applied for done tasks via existing `p.gray()` wrapper
   - Added 5 tests covering single/multiple/none/done cases
 
-### Blocker status visualization
+## Blocker status visualization
 
 When viewing tasks with `@blocked_by` dependencies, the status of each blocker is visualized with color:
 

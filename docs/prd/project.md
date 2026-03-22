@@ -2,6 +2,18 @@
 
 Project structure and entry point.
 
+## Pattern Matching
+
+The CLI uses `ts-pattern` for type-safe pattern matching in two areas:
+
+1. **Command Routing** — `handleCommand()` uses `match().with().otherwise()` to route commands to their handlers, with a fallback for unimplemented commands.
+
+2. **Priority Colors** — `formatPriority()` uses pattern matching to map priority levels (`!crit`, `!high`, `!low`) to their respective colors, with a fallback for custom priority strings.
+
+Pattern matching provides compile-time exhaustiveness checking and cleaner syntax compared to switch statements.
+
+## Tasks
+
 - [x] PRJ-002 Add picocolors for CLI colors
   Install and use `picocolors` library for ANSI colors.
   Replace manual color codes in `src/app.ts` with picocolors API.
@@ -78,15 +90,3 @@ Project structure and entry point.
 
   Tests:
   - entry point works
-
-## How it works
-
-### Pattern Matching
-
-The CLI uses `ts-pattern` for type-safe pattern matching in two areas:
-
-1. **Command Routing** — `handleCommand()` uses `match().with().otherwise()` to route commands to their handlers, with a fallback for unimplemented commands.
-
-2. **Priority Colors** — `formatPriority()` uses pattern matching to map priority levels (`!crit`, `!high`, `!low`) to their respective colors, with a fallback for custom priority strings.
-
-Pattern matching provides compile-time exhaustiveness checking and cleaner syntax compared to switch statements.

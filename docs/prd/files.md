@@ -2,7 +2,7 @@
 
 File search across project.
 
-## How it works
+## File search
 
 The `findMarkdownFiles()` function discovers all `.md` files recursively within a search path. It uses ripgrep (`rg`) as the primary search tool for speed, with automatic fallback to the standard `find` command if ripgrep is unavailable.
 

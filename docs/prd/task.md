@@ -2,7 +2,7 @@
 
 Parsing a single task from a markdown text block.
 
-## How it works
+## Task parsing
 
 The parser recognizes task headers in format `- [ ] ID-123 Title` and extracts:
 - Status: open `[ ]` or done `[x]`
