@@ -5,7 +5,8 @@ read @docs/skills/do-next-task/SKILL.md to understand task loop
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project)
-- `docs/skills/` — skills (mdtask, check)
+- `docs/skills/` — canonical skill files (mdtask, check, do-next-task)
+- `.claude/skills/` — symlinks to `docs/skills/`; edit `docs/skills/` only
 - `docs/mdtask.md` — goals, architecture
 
 ## Before Committing
@@ -25,3 +26,5 @@ The skill is the single source of truth for task format; mdtask.md covers everyt
 ---
 
 `CLAUDE.md` is `ln -s AGENTS.md` — Claude Code only reads `CLAUDE.md`, not `AGENTS.md`.
+
+All Claude skill files under `.claude/skills/*/SKILL.md` are `ln -s` to `docs/skills/*/SKILL.md`. Update the files in `docs/skills/`, not the symlink paths.

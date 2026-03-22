@@ -61,7 +61,12 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 1. Run all tests again to confirm nothing broke after review fixes
 2. Run lint/typecheck if configured
 
-### Step 7 — Commit
+### Step 7 — Update PRD
+
+1. In the completed task body, add a short `Implemented:` block with 2-5 bullets describing what is now working. Write outcomes only — no code, no internal implementation details.
+2. Update the relevant PRD file with a brief high-level description of the new behavior so a user or agent can understand how the system now works. Keep it concise and product-level, not implementation notes.
+
+### Step 8 — Commit
 
 1. Mark task as done: `[ ]` → `[x]` in the task's markdown file
 2. Commit with message describing what was built
