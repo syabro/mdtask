@@ -1,16 +1,11 @@
 # mdtask
 
-read @docs/skills/do-next-task/SKILL.md to understand task loop
-
 Use **pnpm** for package operations.
 
 ## Running mdtask
 
 `pnpm mdtask <command>` — runs CLI via tsx (no build needed). Use this for local development and testing.
-
-## Working with Tasks
-
-Always use `pnpm mdtask` to work with tasks. Never parse task files manually.
+Always use `pnpm mdtask` to work with tasks. Never parse task files manually if there is a functionality in `mdtask` cli
 
 ## Project Structure
 
@@ -41,4 +36,7 @@ Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Cla
 
 `CLAUDE.md` is `ln -s AGENTS.md` — Claude Code only reads `CLAUDE.md`, not `AGENTS.md`.
 
-All Claude skill files under `.claude/skills/*/SKILL.md` are `ln -s` to `docs/skills/*/SKILL.md`. Update the files in `docs/skills/`, not the symlink paths.
+All Claude skill files under `.claude/skills/*/SKILL.md` are `ln -s` to `docs/skills/*/SKILL.md`.
+Update the files in `docs/skills/`, not the symlink paths.
+
+read @docs/skills/do-next-task/SKILL.md to understand task loop
