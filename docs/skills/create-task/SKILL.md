@@ -76,10 +76,6 @@ Task:
 - [ ] XXX-017 Short title
   Description line 1.
   Description line 2.
-  
-  Tests:
-  - test case 1
-  - test case 2
 --- END ---
 ```
 
@@ -126,10 +122,6 @@ Body (indented):
 ```md
   Description of what needs to be done.
   Can be multi-line.
-  
-  Tests:
-  - specific test case
-  - edge case
 ```
 
 ## Metadata Guidelines
