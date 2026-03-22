@@ -2,7 +2,33 @@
 
 User-facing commands, security, edge cases, and testing infrastructure.
 
-- [ ] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
+## How it works
+
+### Listing tasks
+
+The `mdtask list` command searches all `.md` files recursively from the current directory and displays tasks in a compact format:
+
+```bash
+mdtask list              # Show only open tasks
+mdtask list --all        # Show all tasks including done
+```
+
+Output format shows status, ID, priority (if any), and title:
+```
+[ ] TSK-001 !high Fix authentication bug
+[ ] TSK-002      Update documentation
+[x] TSK-003 !low Refactor utils
+```
+
+When output is to a terminal (TTY), priorities are color-coded:
+- `!crit` — red
+- `!high` — yellow  
+- `!low` — green
+- Done tasks — gray
+
+When piped to another command, colors are disabled for clean parsing.
+
+- [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
   Recursive search through `*.md` files.
   Use `rg --files -g '*.md' --hidden` for file discovery.
   By default show only open `[ ]` tasks.
@@ -21,6 +47,14 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - empty directory
   - --all flag shows [x]
   - colors on tty, no colors on pipe
+
+  **Implemented:**
+  - `mdtask list` command lists all open tasks from markdown files
+  - Recursive search includes hidden directories, excludes node_modules and .git
+  - `--all` flag shows both open and done tasks
+  - Colored output when stdout is TTY: crit=red, high=yellow, low=green, done=gray
+  - File read errors are logged to stderr as warnings
+  - Output format: `[ ] ID !priority Title` or `[x] ID Title` for done tasks without priority
 
 - [ ] CLI-002 Command `mdtask list` — sorting
   Flags:

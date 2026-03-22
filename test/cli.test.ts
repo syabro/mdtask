@@ -45,7 +45,7 @@ describe('run', () => {
 	});
 
 	it('returns 1 for stub commands (not implemented)', () => {
-		const code = run(['list']);
+		const code = run(['view']);
 		expect(code).toBe(1);
 		expect(stderrSpy).toHaveBeenCalled();
 	});

@@ -13,6 +13,12 @@ export type TaskMetadata = {
 	properties: Record<string, string[]>;
 };
 
+export type Task = TaskHeader &
+	TaskMetadata & {
+		filePath: string;
+		lineNumber: number;
+	};
+
 const TASK_HEADER_REGEX = /^- \[([ x])\] ([A-Z]+-\d+) (.*)$/;
 
 // Detects metadata start: beginning of string OR whitespace before #tag, !priority, or @key:value
