@@ -2,7 +2,7 @@
 
 Parsing a single task from a markdown text block.
 
-- [ ] TSK-001 Implement regex for task header recognition
+- [ ] TSK-001 Implement regex for task header recognition		@iter:mvp
   Regex: `^- \[[ x]\] [A-Z]+-\d+ `
   Must correctly match:
   - `- [ ] TSK-123 Title`
@@ -19,7 +19,7 @@ Parsing a single task from a markdown text block.
   - header with metadata on same line
   - header with `\t\t` separator before metadata
 
-- [ ] TSK-002 Implement task body collection (indented block)
+- [ ] TSK-002 Implement task body collection (indented block)		@iter:mvp @blocked_by:TSK-001
   Collect all lines with ≥1 space indent after header.
   Empty lines within block are allowed.
   Block ends at first non-indented non-empty line.
@@ -29,7 +29,7 @@ Parsing a single task from a markdown text block.
   - empty lines inside
   - correct block termination
 
-- [ ] TSK-003 Parse metadata from header line
+- [ ] TSK-003 Parse metadata from header line		@iter:mvp @blocked_by:TSK-001
   Metadata = tokens on header line after title.
   First `#`, `!`, or `@` token marks start of metadata.
   Extract:

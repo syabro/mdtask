@@ -2,7 +2,7 @@
 
 User-facing commands, security, edge cases, and testing infrastructure.
 
-- [ ] CLI-001 Command `mdtask list` — basic output
+- [ ] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
   Recursive search through `*.md` files.
   Use `rg --files -g '*.md' --hidden` for file discovery.
   By default show only open `[ ]` tasks.
@@ -29,7 +29,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   Tests:
   - sort by priority
 
-- [ ] CLI-003 Command `mdtask view <ID>`
+- [ ] CLI-003 Command `mdtask view <ID>`		@iter:mvp @blocked_by:TSK-002 @blocked_by:FLS-001
   Print full task block by ID.
   If not found — error, exit 1.
 
@@ -51,7 +51,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   Tests:
   - filter by priority
 
-- [ ] CLI-006 Command `mdtask done <ID>`
+- [ ] CLI-006 Command `mdtask done <ID>`		@iter:mvp @blocked_by:TSK-001 @blocked_by:FLS-001
   Toggle `[ ]` ↔ `[x]` in task header.
   File modified in-place.
   Duplicate ID — error, exit 1.
@@ -98,7 +98,7 @@ User-facing commands, security, edge cases, and testing infrastructure.
   - empty tag — warning
   - valid file — ok
 
-- [ ] CLI-010 Help system
+- [ ] CLI-010 Help system		@iter:mvp
   `mdtask --help` — list of commands.
   `mdtask <cmd> —help` — command help.
 
