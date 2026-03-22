@@ -8,7 +8,8 @@ disable-model-invocation: false
 
 ## Flow
 
-Immediately create a todo list from the 6 steps below and track progress through it.
+Immediately create a todo list from the steps below and track progress through it.
+ALL steps are mandatory. Never skip any step, regardless of task size.
 
 ### Step 1 — Pick a task
 
@@ -21,7 +22,7 @@ Immediately create a todo list from the 6 steps below and track progress through
 4. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
 5. If no tasks remain: tell user, stop
 
-### Step 2 — Plan and review
+### Step 2 — Plan
 
 1. Find the markdown file where the task is located, read the full task body
 2. Understand what needs to be built (don't invent extra scope)
@@ -30,12 +31,16 @@ Immediately create a todo list from the 6 steps below and track progress through
    - What functions/modules
    - How to structure code
    - Which tests to write
-4. Load gemini skill, send plan + task spec + relevant project files for review
-5. Ask Gemini: is the plan correct? Any missing pieces? Better approach?
-6. Combine feedback into a refined plan
-7. Present the refined plan to user for single approval
 
-### Step 3 — Execute (TDD)
+### Step 3 — Validate plan with Gemini
+
+1. Load gemini skill
+2. Send plan + task spec + relevant project files for review
+3. Ask Gemini: is the plan correct? Any missing pieces? Better approach?
+4. Combine feedback into a refined plan
+5. Present the refined plan to user for single approval
+
+### Step 4 — Execute (TDD)
 
 1. Write failing tests first based on the task description
 2. Run tests, confirm they fail
@@ -44,19 +49,19 @@ Immediately create a todo list from the 6 steps below and track progress through
 5. Refactor if needed, keep tests green
 6. Run lint/typecheck if configured
 
-### Step 4 — Code review
+### Step 5 — Code review with Gemini
 
 1. Load gemini skill, send final code for review
 2. Ask: correctness, edge cases, style, security
 3. Review code yourself
 4. Fix issues found
 
-### Step 5 — Final validation
+### Step 6 — Final validation
 
 1. Run all tests again to confirm nothing broke after review fixes
 2. Run lint/typecheck if configured
 
-### Step 6 — Commit
+### Step 7 — Commit
 
 1. Mark task as done: `[ ]` → `[x]` in the task's markdown file
 2. Commit with message describing what was built
