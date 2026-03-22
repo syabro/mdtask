@@ -28,6 +28,16 @@ When output is to a terminal (TTY), priorities are color-coded:
 
 When piped to another command, colors are disabled for clean parsing.
 
+### Planned commands
+
+Additional commands are planned for future implementation:
+
+- `mdtask view <ID>` — print full task block (planned)
+- `mdtask done <ID>` — toggle `[ ] ↔ [x]` status (planned)
+- `mdtask open <ID>` — open task in `$EDITOR` at task line (planned)
+- `mdtask move <ID> <file>` — move task to another file (planned)
+- `mdtask validate` — check ID uniqueness and metadata integrity (planned)
+
 - [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
   Recursive search through `*.md` files.
   Use `rg --files -g '*.md' --hidden` for file discovery.

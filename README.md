@@ -38,9 +38,6 @@ CLI is only an interpreter, never the owner of data.
 ```bash
 mdtask list                  # list open tasks
 mdtask list --all            # all tasks including done
-mdtask list --sort=priority  # sort by priority
-mdtask list #feature         # filter by tag
-mdtask list !high            # filter by priority
 ```
 
 ## Stack

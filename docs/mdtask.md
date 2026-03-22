@@ -46,29 +46,10 @@ project/
 
 ### 6.1 View
 
-- `mdtask list`
-  - flat list
-  - sortable by priority
-- `mdtask view <ID>`
-  - prints full task block
+- `mdtask list` — flat list of open tasks
+- `mdtask list --all` — include done tasks
 
-### 6.2 Filters
-
-- `mdtask list #tag`
-- `mdtask list !high`
-
-### 6.3 Mutations
-
-- `mdtask done <ID>`
-  - toggles `[ ] → [x]`
-- `mdtask open <ID>`
-  - opens in `$EDITOR` at task line
-- `mdtask move <ID> <file>`
-
-### 6.4 Subtasks
-
-- part of description block
-- optional: auto-complete parent when all subtasks are `[x]`
+Tasks display `@blocked_by:ID` dependencies. Blocker status is shown with color coding: done blockers in gray with strikethrough, pending in red.
 
 ## 7. Task Identity
 
