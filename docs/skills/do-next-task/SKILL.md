@@ -34,7 +34,7 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 
 ### Step 3 — Validate plan with Gemini
 
-1. Load gemini skill
+1. Load gemini skill (user-level skill)
 2. Send plan + task spec + relevant project files for review
 3. Ask Gemini: is the plan correct? Any missing pieces? Better approach?
 4. Combine feedback into a refined plan
@@ -51,7 +51,7 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 
 ### Step 5 — Code review with Gemini
 
-1. Load gemini skill, send final code for review
+1. Load gemini skill (user-level skill), send final code for review
 2. Ask: correctness, edge cases, style, security
 3. Review code yourself
 4. Fix issues found

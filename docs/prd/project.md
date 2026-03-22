@@ -36,7 +36,7 @@ Project structure and entry point.
   - Improve type safety in switch-like logic
 
   Changes:
-  - `npm add ts-pattern`
+  - `pnpm add ts-pattern`
   - Refactor `handleCommand()` to use pattern matching
   - Refactor color formatting to use pattern matching
 

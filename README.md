@@ -41,11 +41,6 @@ mdtask list --all            # all tasks including done
 mdtask list --sort=priority  # sort by priority
 mdtask list #feature         # filter by tag
 mdtask list !high            # filter by priority
-mdtask view TSK-123          # print full task block
-mdtask done TSK-123          # toggle [ ] ↔ [x]
-mdtask open TSK-123          # open in $EDITOR at task line
-mdtask move TSK-123 file.md  # move task to another file
-mdtask validate              # check integrity (ID uniqueness, format)
 ```
 
 ## Stack

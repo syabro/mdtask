@@ -25,6 +25,10 @@ The skill is the single source of truth for task format; mdtask.md covers everyt
   - Point to specs (docs/prd/) — agent reads them
   - Agent writes the code themselves
 
+## File Paths in Prompts
+
+Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Claude Code file inclusion syntax.
+
 ---
 
 `CLAUDE.md` is `ln -s AGENTS.md` — Claude Code only reads `CLAUDE.md`, not `AGENTS.md`.
