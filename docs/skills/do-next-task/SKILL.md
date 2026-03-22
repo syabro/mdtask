@@ -69,8 +69,9 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 
 **Place 1 — In the TASK body itself:**
 - Find the completed task (the `- [ ] TSK-XXX ...` line you just worked on)
-- Add an `**Implemented:**` block inside that task body with 2-5 bullets
+- Add an `**Implemented:**` block inside THAT TASK BODY ONLY with 2-5 bullets
 - Describe what is now working (outcomes only — no code, no internal implementation details)
+- **CRITICAL: Only touch the "Implemented" section of the task you are working on. NEVER modify "Implemented" sections of other tasks.**
 
 **Place 2 — In the PRD's "How it works" section:**
 - Find the markdown file where the task lives (e.g., `docs/prd/task.md`)
