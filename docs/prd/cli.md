@@ -13,11 +13,11 @@ mdtask list              # Show only open tasks
 mdtask list --all        # Show all tasks including done
 ```
 
-Output format shows status, ID, priority (if any), title, and @blocked_by (if any):
+Output format shows status, ID, title, priority (if any), and @blocked_by (if any):
 ```
-[ ] TSK-001 !high Fix authentication bug
-[ ] TSK-002      Update documentation @blocked_by:TSK-001
-[x] TSK-003 !low Refactor utils @blocked_by:CFG-001
+[ ] TSK-001 Fix authentication bug !high
+[ ] TSK-002 Update documentation @blocked_by:TSK-001
+[x] TSK-003 Refactor utils !low @blocked_by:CFG-001
 ```
 
 When output is to a terminal (TTY), priorities are color-coded:
@@ -37,6 +37,9 @@ Additional commands are planned for future implementation:
 - `mdtask open <ID>` — open task in `$EDITOR` at task line (planned)
 - `mdtask move <ID> <file>` — move task to another file (planned)
 - `mdtask validate` — check ID uniqueness and metadata integrity (planned)
+- `mdtask list --sort=priority` — sort by priority (planned)
+- `mdtask list #tag` — filter by tag (planned)
+- `mdtask list !high` — filter by priority (planned)
 
 - [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
   Recursive search through `*.md` files.

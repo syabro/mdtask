@@ -98,7 +98,7 @@ Tasks display `@blocked_by:ID` dependencies. Blocker status is shown with color 
 
 System is valid if:
 
-- tasks can be listed and filtered without extra indexes
+- tasks can be listed; filtering planned for future releases
 - any file can be edited manually without breaking format
 - `rg` can extract full task blocks via regex
 - diffs are human-readable

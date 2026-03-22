@@ -8,7 +8,7 @@ disable-model-invocation: false
 
 ## How to use
 
-Use `mdtask` CLI to work with tasks. Example: `mdtask list`, `mdtask view <ID>`.
+Use `mdtask` CLI to work with tasks. Example: `mdtask list`.
 
 ## Task Structure
 

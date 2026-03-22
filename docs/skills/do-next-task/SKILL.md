@@ -28,7 +28,7 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 
 ### Step 2 — Plan
 
-1. Run `pnpm mdtask view <ID>` to get the full task details
+1. Read the task file to get the full task details (use Read tool)
 2. Understand what needs to be built (don't invent extra scope)
 3. Write a concrete implementation plan:
    - What files to create/modify
