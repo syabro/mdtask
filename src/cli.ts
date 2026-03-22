@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { CAC } from 'cac';
 import p from 'picocolors';
+import { loadConfig, resolveSearchPath } from './config.js';
 import { findMarkdownFiles } from './files.js';
 import { parseMetadata, parseTaskHeader, type Task } from './task.js';
 
@@ -100,8 +101,10 @@ function formatTaskLine(
 	return `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}${blockedBySuffix}`;
 }
 
-function handleList(options: { all?: boolean }): void {
-	const tasks = collectTasks();
+function handleList(options: { all?: boolean; path?: string }): void {
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const tasks = collectTasks(searchPath);
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
 
@@ -116,6 +119,8 @@ function handleList(options: { all?: boolean }): void {
 
 export function run(args: string[]): number {
 	const cli = new CAC('mdtask');
+
+	cli.option('--path <path>', 'Search path for tasks (default: .)');
 
 	cli
 		.command('list', 'List tasks')
