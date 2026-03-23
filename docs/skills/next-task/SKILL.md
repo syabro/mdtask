@@ -57,10 +57,11 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 ### Step 5 — Code review with Gemini
 
-1. Load gemini skill (user-level skill), send final code for review
-2. Ask: correctness, edge cases, style, security
+1. use /code-review skill but call gemini only
+2. Ask: correctness, edge cases, style, security (blocker/warming/nitpick)
 3. Review code yourself
 4. Fix issues found
+5. You can create the tasks to fix later if business logic is unclear to you with #needhuman tag using /creat-task skill
 
 ### Step 6 — Final validation
 
