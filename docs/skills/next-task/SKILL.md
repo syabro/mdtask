@@ -1,10 +1,10 @@
 ---
-name: do-next-task
+name: next-task
 description: Work on the next task from the project — pick, plan, review, execute, review code, commit
 disable-model-invocation: false
 ---
 
-# /do-next-task — Task workflow
+# /next-task — Task workflow
 
 > **CRITICAL: ALWAYS use `pnpm mdtask <command>` CLI to work with tasks. NEVER read or parse markdown task files manually.**
 
@@ -12,6 +12,8 @@ disable-model-invocation: false
 
 Immediately create a todo list using `todowrite` tool for all steps below
 ALL steps are mandatory. Never skip any step, regardless of task size.
+After reading this file you must say "I'll do all the steps as it described" and provide all steps you understood, 
+   so user will understand you really get it
 
 ### Step 1 — Pick a task
 
@@ -22,7 +24,7 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 3. For each task with `@blocked_by`:
    - Run `pnpm mdtask view <BLOCKER_ID>` to check if blocker is done
    - Skip the current task if blocker checkbox is `[ ]`
-4. Ask user what direction they want to work on today (tags, area, specific task)
+4. Ask user what direction they want to work on today (tags, area, specific task) if user didnt provide scope of the work
 5. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
 6. If no tasks remain: tell user, stop
 

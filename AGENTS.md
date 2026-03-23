@@ -10,7 +10,7 @@ Always use `pnpm mdtask` to work with tasks. Never parse task files manually if 
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project)
-- `docs/skills/` — canonical skill files (mdtask, check, do-next-task)
+- `docs/skills/` — canonical skill files (mdtask, check, next-task)
 - `.claude/skills/` — symlinks to `docs/skills/`; edit `docs/skills/` only
 - `docs/mdtask.md` — goals, architecture
 
@@ -39,4 +39,4 @@ Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Cla
 All Claude skill files under `.claude/skills/*/SKILL.md` are `ln -s` to `docs/skills/*/SKILL.md`.
 Update the files in `docs/skills/`, not the symlink paths.
 
-read @docs/skills/do-next-task/SKILL.md to understand task loop
+read @docs/skills/next-task/SKILL.md to understand task loop
