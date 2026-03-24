@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { parseMetadata, parseTaskHeader } from '../src/task.js';
+import {
+	collectTaskBody,
+	parseMetadata,
+	parseTaskHeader,
+} from '../src/task.js';
 
 describe('parseTaskHeader', () => {
 	describe('valid headers', () => {
@@ -360,5 +364,105 @@ describe('parseMetadata', () => {
 				constructor: ['value'],
 			});
 		});
+	});
+});
+
+describe('collectTaskBody', () => {
+	it('collects multiline body', () => {
+		const lines = ['- [ ] TSK-001 Title', '  Body line 1', '  Body line 2'];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Body line 1\nBody line 2');
+	});
+
+	it('preserves empty lines inside body', () => {
+		const lines = ['- [ ] TSK-001 Title', '  Line 1', '', '  Line 2'];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Line 1\n\nLine 2');
+	});
+
+	it('stops at first non-indented non-empty line', () => {
+		const lines = [
+			'- [ ] TSK-001 Title',
+			'  Body line',
+			'- [ ] TSK-002 Next task',
+		];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Body line');
+	});
+
+	it('returns empty string when no body', () => {
+		const lines = ['- [ ] TSK-001 Title', '- [ ] TSK-002 Next task'];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('');
+	});
+
+	it('returns empty string when header is last line', () => {
+		const lines = ['- [ ] TSK-001 Title'];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('');
+	});
+
+	it('trims trailing empty lines', () => {
+		const lines = [
+			'- [ ] TSK-001 Title',
+			'  Body line',
+			'',
+			'',
+			'- [ ] TSK-002 Next task',
+		];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Body line');
+	});
+
+	it('dedents by minimum common indent', () => {
+		const lines = [
+			'- [ ] TSK-001 Title',
+			'  Body line 1',
+			'    Nested line',
+			'  Body line 2',
+		];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Body line 1\n  Nested line\nBody line 2');
+	});
+
+	it('handles single line body', () => {
+		const lines = ['- [ ] TSK-001 Title', '  Single body line'];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Single body line');
+	});
+
+	it('handles whitespace-only lines as empty', () => {
+		const lines = ['- [ ] TSK-001 Title', '  Line 1', '   ', '  Line 2'];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Line 1\n\nLine 2');
+	});
+
+	it('works with headerIndex in the middle', () => {
+		const lines = [
+			'# Heading',
+			'',
+			'- [ ] TSK-001 First task',
+			'  First body',
+			'- [ ] TSK-002 Second task',
+			'  Second body',
+		];
+		const result = collectTaskBody(lines, 4);
+		expect(result).toBe('Second body');
+	});
+
+	it('handles CRLF line endings', () => {
+		const lines = [
+			'- [ ] TSK-001 Title\r',
+			'  Body line 1\r',
+			'  Body line 2\r',
+		];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('Body line 1\nBody line 2');
+	});
+
+	it('does not treat tab-only indent as body', () => {
+		const lines = ['- [ ] TSK-001 Title', '\tTab indented line'];
+		const result = collectTaskBody(lines, 0);
+		expect(result).toBe('');
 	});
 });

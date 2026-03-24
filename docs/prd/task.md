@@ -22,6 +22,22 @@ After the task title, metadata tokens provide additional categorization:
 
 Example: `- [ ] TSK-123 Fix login		#bug !high @status:blocked @blocked_by:TSK-001`
 
+## Task body
+
+Lines indented with ≥1 space after the header form the task body. Empty lines within the body are preserved. The body ends at the first non-indented non-empty line.
+
+`collectTaskBody(lines, headerIndex)` returns the body as a single dedented string — the minimum common indent is stripped, preserving relative indentation of nested content (sub-lists, code blocks). Trailing empty lines are trimmed.
+
+```markdown
+- [ ] TSK-001 Title
+  Body line 1
+  Body line 2
+
+  More body after empty line
+```
+
+→ `"Body line 1\nBody line 2\n\nMore body after empty line"`
+
 ## Tasks
 
 - [x] TSK-001 Implement regex for task header recognition		@iter:mvp
@@ -49,7 +65,7 @@ Example: `- [ ] TSK-123 Fix login		#bug !high @status:blocked @blocked_by:TSK-00
   - Rejects empty titles (metadata immediately after ID)
   - Property keys allow hyphens: `@build-status:value`
 
-- [ ] TSK-002 Implement task body collection (indented block)		@iter:mvp @blocked_by:TSK-001
+- [x] TSK-002 Implement task body collection (indented block)		@iter:mvp @blocked_by:TSK-001
   Collect all lines with ≥1 space indent after header.
   Empty lines within block are allowed.
   Block ends at first non-indented non-empty line.
@@ -58,6 +74,13 @@ Example: `- [ ] TSK-123 Fix login		#bug !high @status:blocked @blocked_by:TSK-00
   - multiline body
   - empty lines inside
   - correct block termination
+
+  **Implemented:**
+  - `collectTaskBody(lines, headerIndex)` in `src/task.ts` returns dedented body as a single string
+  - Minimum common indent stripped, relative indentation preserved for nested content
+  - Empty lines within body preserved, trailing empty lines trimmed
+  - CRLF line endings handled consistently with `parseTaskHeader`
+  - Tab-only indentation not treated as body (spec requires spaces)
 
 - [x] TSK-003 Parse metadata from header line		@iter:mvp @blocked_by:TSK-001
   Metadata = tokens on header line after title.

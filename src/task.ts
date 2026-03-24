@@ -69,6 +69,46 @@ export function parseTaskHeader(line: string): TaskHeader | null {
 	};
 }
 
+export function collectTaskBody(lines: string[], headerIndex: number): string {
+	const raw: string[] = [];
+
+	for (let i = headerIndex + 1; i < lines.length; i++) {
+		const line = lines[i].replace(/\r$/, '');
+
+		if (line.trim() === '') {
+			raw.push('');
+			continue;
+		}
+
+		if (!line.startsWith(' ')) {
+			break;
+		}
+
+		raw.push(line);
+	}
+
+	// Trim trailing empty lines
+	while (raw.length > 0 && raw[raw.length - 1] === '') {
+		raw.pop();
+	}
+
+	if (raw.length === 0) return '';
+
+	// Dedent by minimum common indent (non-empty lines only)
+	let minIndent = Number.POSITIVE_INFINITY;
+	for (const line of raw) {
+		if (line === '') continue;
+		const indent = line.length - line.trimStart().length;
+		if (indent < minIndent) minIndent = indent;
+	}
+
+	const dedented = raw.map((line) =>
+		line === '' ? '' : line.slice(minIndent),
+	);
+
+	return dedented.join('\n');
+}
+
 const TAG_REGEX = /#[\w-]+/g;
 const PRIORITY_REGEX = /!(\w+)/g;
 const PROPERTY_REGEX = /(?<=^|\s)@([\w-]+):(\S+)/g;
