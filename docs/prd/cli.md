@@ -267,3 +267,12 @@ Colors are only applied when output is to a terminal (TTY). When piped, plain te
 
 - [ ] CLI-019 Show all @property in list output
   Display all @key:value tokens from task metadata, not just @blocked_by.
+
+- [ ] CLI-020 Hide resolved blockers in list output
+  In `mdtask list`, only show @blocked_by for blockers that are still open.
+  If a blocker is done — don't display it.
+
+  Before: `[ ] KTL-003 Schedule boiling @blocked_by:KTL-001 @blocked_by:KTL-002`
+  After (KTL-001 done): `[ ] KTL-003 Schedule boiling @blocked_by:KTL-002`
+
+  Full blocker info remains in the task file, visible via `mdtask view`.
