@@ -3,7 +3,12 @@ import { CAC } from 'cac';
 import p from 'picocolors';
 import { loadConfig, resolveSearchPath } from './config.js';
 import { findMarkdownFiles } from './files.js';
-import { parseMetadata, parseTaskHeader, type Task } from './task.js';
+import {
+	collectTaskBody,
+	parseMetadata,
+	parseTaskHeader,
+	type Task,
+} from './task.js';
 
 function collectTasks(searchPath?: string): Task[] {
 	const files = findMarkdownFiles(searchPath ? { searchPath } : undefined);
@@ -111,6 +116,29 @@ function formatTaskLine(
 	return `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}${blockedBySuffix}${propsSuffix}`;
 }
 
+function handleView(id: string, options: { path?: string }): void {
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const tasks = collectTasks(searchPath);
+	const task = tasks.find((t) => t.id === id);
+
+	if (!task) {
+		process.stderr.write(`mdtask: task '${id}' not found\n`);
+		process.exit(1);
+		return;
+	}
+
+	const content = readFileSync(task.filePath, 'utf-8');
+	const lines = content.split('\n');
+	const headerLine = lines[task.lineNumber - 1];
+	const body = collectTaskBody(lines, task.lineNumber - 1);
+
+	process.stdout.write(headerLine + '\n');
+	if (body) {
+		process.stdout.write(body + '\n');
+	}
+}
+
 function handleList(options: { all?: boolean; path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
@@ -139,9 +167,8 @@ export function run(args: string[]): number {
 			handleList(options);
 		});
 
-	cli.command('view <id>', 'View task details').action(() => {
-		process.stderr.write("mdtask: command 'view' is not implemented yet\n");
-		process.exit(1);
+	cli.command('view <id>', 'View task details').action((id, options) => {
+		handleView(id, options);
 	});
 
 	cli.command('done <id>', 'Toggle task done/open').action(() => {

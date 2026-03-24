@@ -26,11 +26,27 @@ When output is to a terminal (TTY), priorities are color-coded:
 
 When piped to another command, colors are disabled for clean parsing.
 
+## Viewing a task
+
+`mdtask view <ID>` prints the full task block — header line (raw from file) followed by the dedented body:
+
+```bash
+mdtask view TSK-001
+```
+
+Output:
+```
+- [ ] TSK-001 Fix the bug		@blocked_by:TSK-002 !high
+Description line 1.
+Description line 2.
+```
+
+If the task is not found, exits with error code 1.
+
 ## Planned commands
 
 Additional commands are planned for future implementation:
 
-- `mdtask view <ID>` — print full task block (planned)
 - `mdtask done <ID>` — toggle `[ ] ↔ [x]` status (planned)
 - `mdtask open <ID>` — open task in `$EDITOR` at task line (planned)
 - `mdtask move <ID> <file>` — move task to another file (planned)
@@ -109,13 +125,19 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   Tests:
   - sort by priority
 
-- [ ] CLI-003 Command `mdtask view <ID>`		@iter:mvp @blocked_by:TSK-002 @blocked_by:FLS-001
+- [x] CLI-003 Command `mdtask view <ID>`		@iter:mvp @blocked_by:TSK-002 @blocked_by:FLS-001
   Print full task block by ID.
   If not found — error, exit 1.
 
   Tests:
   - output full block
   - error on non-existent ID
+
+  **Implemented:**
+  - `mdtask view <ID>` prints raw header line + dedented body
+  - Task found by ID across all markdown files in search path
+  - Exits with code 1 and error message if task not found
+  - Body dedented using `collectTaskBody` from TSK-002
 
 - [ ] CLI-004 Filter by tag `mdtask list #tag`
   Filter tasks by tag.
