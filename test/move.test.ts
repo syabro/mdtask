@@ -1,5 +1,6 @@
 import {
 	existsSync,
+	mkdirSync,
 	mkdtempSync,
 	readdirSync,
 	readFileSync,
@@ -190,6 +191,20 @@ describe('mdtask move', () => {
 		run(['move', 'TSK-001', target]);
 
 		expect(existsSync(source)).toBe(true);
+	});
+
+	it('moves task to target file with shell metacharacters in path', () => {
+		const source = join(tempDir, 'source.md');
+		const dangerDir = join(tempDir, 'target $(rm)');
+		mkdirSync(dangerDir, { recursive: true });
+		const target = join(dangerDir, 'target.md');
+		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
+
+		run(['move', 'TSK-001', target]);
+
+		const content = readFileSync(target, 'utf-8');
+		expect(content).toContain('- [ ] TSK-001 Fix the bug');
+		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
 	it('preserves task metadata after move', () => {

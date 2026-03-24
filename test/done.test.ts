@@ -1,4 +1,5 @@
 import {
+	mkdirSync,
 	mkdtempSync,
 	readdirSync,
 	readFileSync,
@@ -135,6 +136,29 @@ describe('mdtask done', () => {
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('not found');
 		expect(exitSpy).toHaveBeenCalledWith(1);
+	});
+
+	it('toggles task in file with shell metacharacters in path', () => {
+		const dangerDir = join(tempDir, 'docs $(rm)');
+		mkdirSync(dangerDir, { recursive: true });
+		const file = join(dangerDir, 'tasks.md');
+		writeFileSync(file, '- [ ] TSK-001 Fix the bug\n');
+
+		run(['done', 'TSK-001']);
+
+		const content = readFileSync(file, 'utf-8');
+		expect(content).toBe('- [x] TSK-001 Fix the bug\n');
+		expect(exitSpy).not.toHaveBeenCalledWith(1);
+	});
+
+	it('preserves shell metacharacters in task title after toggle', () => {
+		const file = join(tempDir, 'tasks.md');
+		writeFileSync(file, '- [ ] TSK-001 Fix bug; rm -rf /\n');
+
+		run(['done', 'TSK-001']);
+
+		const content = readFileSync(file, 'utf-8');
+		expect(content).toBe('- [x] TSK-001 Fix bug; rm -rf /\n');
 	});
 
 	it('preserves metadata after toggle', () => {

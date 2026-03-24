@@ -118,6 +118,10 @@ The entire task block (header line and indented body) is removed from the source
 
 If the task ID is not found or appears in multiple files (duplicate), the command exits with error code 1.
 
+## Shell safety
+
+All external process invocations use `execFileSync` or `spawnSync` without `shell: true`, so user input (task IDs, file paths, task content) is never interpreted by a shell. Task IDs are constrained to `[A-Z]+-\d+` by the parser regex, preventing metacharacters from entering IDs. File paths with special characters (spaces, `$()`, backticks, pipes) are handled safely by Node.js `fs` APIs. All output uses `process.stdout.write()` directly — no shell involved.
+
 ## Tasks
 
 - [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
@@ -333,13 +337,19 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Output lines follow stable parseable format: `[status] ID Title [!priority] [@key:value...]`
   - No progress indicators exist in the codebase (nothing to disable)
 
-- [ ] CLI-012 Shell injection protection
+- [x] CLI-012 Shell injection protection
   Check all places where user input reaches shell:
   - task ID in commands
   - file names
   - task content (on output)
 
   Use proper quoting, avoid eval.
+
+  **Implemented:**
+  - Audited all external process invocations: `execFileSync` and `spawnSync` used without `shell: true`
+  - Task ID regex `[A-Z]+-\d+` prevents shell metacharacters in IDs
+  - File paths with special characters handled safely by Node.js `fs` APIs
+  - 11 tests added across list, view, done, move, and open commands proving safety with shell metacharacters
 
 - [ ] CLI-013 Move edge cases
   - move to read-only file — graceful error

@@ -819,6 +819,77 @@ describe('mdtask list', () => {
 		});
 	});
 
+	describe('shell injection protection', () => {
+		it('outputs shell metacharacters in titles verbatim', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				`${[
+					'- [ ] TSK-001 Fix bug; rm -rf /',
+					'- [ ] TSK-002 Check $(whoami) output',
+					'- [ ] TSK-003 Test `id` command',
+					'- [ ] TSK-004 Pipe |cat /etc/passwd',
+				].join('\n')}\n`,
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('Fix bug; rm -rf /');
+			expect(output).toContain('Check $(whoami) output');
+			expect(output).toContain('Test `id` command');
+			expect(output).toContain('Pipe |cat /etc/passwd');
+		});
+
+		it('outputs shell metacharacters in properties verbatim', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Task @status:$(whoami)\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('@status:$(whoami)');
+		});
+
+		it('reads files from directories with shell metacharacters', () => {
+			const dangerDir = join(tempDir, 'docs $(rm)');
+			mkdirSync(dangerDir, { recursive: true });
+			writeFileSync(
+				join(dangerDir, 'tasks.md'),
+				'- [ ] TSK-001 Task in dangerous dir\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Task in dangerous dir');
+		});
+
+		it('task ID regex prevents shell metacharacters in IDs', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				`${[
+					'- [ ] VALID-001 Valid task',
+					'- [ ] $(cmd)-001 Should not parse',
+					'- [ ] ;rm-001 Should not parse',
+				].join('\n')}\n`,
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('VALID-001');
+			expect(output).not.toContain('$(cmd)');
+			expect(output).not.toContain(';rm');
+		});
+	});
+
 	describe('pipe behavior', () => {
 		it('outputs no ANSI codes when stdout is not a TTY', () => {
 			writeFileSync(

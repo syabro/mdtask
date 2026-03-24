@@ -118,6 +118,33 @@ describe('mdtask open', () => {
 		expect(execFileSync).not.toHaveBeenCalled();
 	});
 
+	it('uses execFileSync not shell exec to prevent injection', () => {
+		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
+
+		run(['open', 'TSK-001']);
+
+		// execFileSync is called (not execSync which would use shell)
+		expect(execFileSync).toHaveBeenCalledTimes(1);
+		const call = vi.mocked(execFileSync).mock.calls[0];
+		// First arg is the editor binary, second is args array — no shell interpretation
+		expect(call[0]).toBe('vim');
+		expect(Array.isArray(call[1])).toBe(true);
+		// No shell: true in options
+		expect(call[2]).not.toHaveProperty('shell');
+	});
+
+	it('passes $EDITOR with shell metacharacters as literal binary name', () => {
+		process.env.EDITOR = '/usr/bin/my;editor';
+		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
+
+		run(['open', 'TSK-001']);
+
+		// execFileSync should receive the literal editor path, not shell-interpreted
+		expect(execFileSync).toHaveBeenCalledTimes(1);
+		const call = vi.mocked(execFileSync).mock.calls[0];
+		expect(call[0]).toBe('/usr/bin/my;editor');
+	});
+
 	it('errors when $EDITOR is not set', () => {
 		delete process.env.EDITOR;
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');

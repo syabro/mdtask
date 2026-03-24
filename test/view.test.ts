@@ -139,6 +139,31 @@ describe('mdtask view', () => {
 		expect(output).toContain('Line 2');
 	});
 
+	it('outputs shell metacharacters in body verbatim', () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 Fix the bug\n  Run `rm -rf /` to test.\n  Check $(whoami) and |pipe.\n',
+		);
+
+		run(['view', 'TSK-001']);
+
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toContain('Run `rm -rf /` to test.');
+		expect(output).toContain('Check $(whoami) and |pipe.');
+	});
+
+	it('outputs shell metacharacters in title verbatim', () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 Fix bug; rm -rf /\n  Body content.\n',
+		);
+
+		run(['view', 'TSK-001']);
+
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toContain('Fix bug; rm -rf /');
+	});
+
 	it('finds task in subdirectory', () => {
 		const subDir = join(tempDir, 'docs', 'prd');
 		mkdirSync(subDir, { recursive: true });
