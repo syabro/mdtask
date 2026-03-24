@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { CAC } from 'cac';
 import p from 'picocolors';
 import { loadConfig, resolveSearchPath } from './config.js';
@@ -180,6 +181,91 @@ function handleDone(id: string, options: { path?: string }): void {
 	writeFileSync(task.filePath, lines.join('\n'));
 }
 
+function handleMove(
+	id: string,
+	targetFile: string,
+	options: { path?: string },
+): void {
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const tasks = collectTasks(searchPath);
+	const matches = tasks.filter((t) => t.id === id);
+
+	if (matches.length === 0) {
+		process.stderr.write(`mdtask: task '${id}' not found\n`);
+		process.exit(1);
+		return;
+	}
+
+	if (matches.length > 1) {
+		process.stderr.write(`mdtask: duplicate ID '${id}'\n`);
+		process.exit(1);
+		return;
+	}
+
+	const task = matches[0];
+	const resolvedTarget = resolve(targetFile);
+
+	if (task.filePath === resolvedTarget) {
+		return;
+	}
+
+	const content = readFileSync(task.filePath, 'utf-8');
+	const lines = content.split('\n');
+	const headerIndex = task.lineNumber - 1;
+	const line = lines[headerIndex];
+
+	if (!line.includes(task.id)) {
+		process.stderr.write(
+			`mdtask: file changed, task '${id}' not at expected line\n`,
+		);
+		process.exit(1);
+		return;
+	}
+
+	// Collect block range: header + indented/empty body lines
+	let endIndex = headerIndex + 1;
+	while (endIndex < lines.length) {
+		const currentLine = lines[endIndex];
+		if (currentLine.trim() === '') {
+			endIndex++;
+			continue;
+		}
+		if (!currentLine.startsWith(' ')) {
+			break;
+		}
+		endIndex++;
+	}
+
+	// Trim trailing empty lines from block
+	let blockEnd = endIndex;
+	while (blockEnd > headerIndex + 1 && lines[blockEnd - 1].trim() === '') {
+		blockEnd--;
+	}
+
+	const blockLines = lines.slice(headerIndex, blockEnd);
+
+	// Remove block from source
+	lines.splice(headerIndex, blockEnd - headerIndex);
+	writeFileSync(task.filePath, lines.join('\n'));
+
+	// Append to target
+	let targetContent = '';
+	if (existsSync(resolvedTarget)) {
+		targetContent = readFileSync(resolvedTarget, 'utf-8');
+	}
+
+	if (targetContent.length > 0 && !targetContent.endsWith('\n')) {
+		targetContent += '\n';
+	}
+	if (targetContent.length > 0) {
+		targetContent += '\n';
+	}
+
+	targetContent += blockLines.join('\n') + '\n';
+	writeFileSync(resolvedTarget, targetContent);
+}
+
 function handleOpen(id: string, options: { path?: string }): void {
 	const editor = process.env.EDITOR;
 	if (!editor) {
@@ -343,10 +429,11 @@ export function run(args: string[]): number {
 		handleOpen(id, options);
 	});
 
-	cli.command('move <id> <file>', 'Move task to another file').action(() => {
-		process.stderr.write("mdtask: command 'move' is not implemented yet\n");
-		process.exit(1);
-	});
+	cli
+		.command('move <id> <file>', 'Move task to another file')
+		.action((id, file, options) => {
+			handleMove(id, file, options);
+		});
 
 	cli.command('validate', 'Check task integrity').action((options) => {
 		handleValidate(options);

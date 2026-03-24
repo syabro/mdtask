@@ -55,6 +55,7 @@ Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown;
 ### 6.2 Modify
 
 - `mdtask done <ID>` — toggle `[ ] ↔ [x]` in-place. Duplicate IDs cause an error.
+- `mdtask move <ID> <file>` — move task block to another file. Creates target if needed.
 
 ### 6.3 Validate
 

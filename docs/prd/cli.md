@@ -106,11 +106,17 @@ Checks performed:
 
 Errors cause exit code 1. Warnings are reported but don't affect exit code. Clean files produce no output and exit 0.
 
-## Planned commands
+## Moving tasks
 
-Additional commands are planned for future implementation:
+`mdtask move <ID> <file>` moves a task (header + body) from its current file to another file:
 
-- `mdtask move <ID> <file>` — move task to another file (planned)
+```bash
+mdtask move TSK-001 docs/prd/other.md
+```
+
+The entire task block (header line and indented body) is removed from the source file and appended to the target file. If the target file does not exist, it is created. If the source file becomes empty after the move, it is kept. Moving a task to the same file it already lives in is a no-op.
+
+If the task ID is not found or appears in multiple files (duplicate), the command exits with error code 1.
 
 ## Tasks
 
@@ -262,7 +268,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Exits with error code 1 if task ID not found
   - Uses `execFileSync` to avoid shell injection
 
-- [ ] CLI-008 Command `mdtask move <ID> <file>`
+- [x] CLI-008 Command `mdtask move <ID> <file>`
   Move task to another file.
   Remove from source, add to target.
   Target file doesn't exist — create it.
@@ -275,6 +281,13 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - entire block moved
   - move to non-existent file (create)
   - move to same file (no-op)
+
+  **Implemented:**
+  - Moves entire task block (header + indented body) from source to target
+  - Target file created if it doesn't exist
+  - Source file kept even if empty after move
+  - Same-file move is a no-op (exit 0)
+  - Duplicate ID and not-found errors exit with code 1
 
 - [x] CLI-009 Command `mdtask validate`
   Integrity check:
