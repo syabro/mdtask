@@ -43,6 +43,15 @@ mdtask list #backend #urgent   # Show tasks with BOTH tags (AND logic)
 
 Multiple tags use AND logic — only tasks that have all specified tags are shown. Tag filters combine with `--all` and `--sort`.
 
+### Filtering by priority
+
+```bash
+mdtask list !high              # Show only high-priority tasks
+mdtask list !high !crit        # Show high OR crit tasks (OR logic)
+```
+
+Multiple priorities use OR logic — tasks matching any of the specified priorities are shown. Priority filters combine with `--all`, `--sort`, and tag filters.
+
 ## Viewing a task
 
 `mdtask view <ID>` prints the full task block — header line (raw from file) followed by the dedented body:
@@ -78,7 +87,6 @@ Additional commands are planned for future implementation:
 - `mdtask open <ID>` — open task in `$EDITOR` at task line (planned)
 - `mdtask move <ID> <file>` — move task to another file (planned)
 - `mdtask validate` — check ID uniqueness and metadata integrity (planned)
-- `mdtask list !high` — filter by priority (planned)
 
 ## Tasks
 
@@ -185,11 +193,17 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Combines with `--all` flag and `--sort=priority`
   - No matches produces empty output (exit 0)
 
-- [ ] CLI-005 Filter by priority `mdtask list !high`
+- [x] CLI-005 Filter by priority `mdtask list !high`
   Filter tasks by priority.
 
   Tests:
   - filter by priority
+
+  **Implemented:**
+  - `mdtask list !high` filters tasks by priority using variadic positional args
+  - Multiple priorities use OR logic — `!high !crit` shows tasks matching either
+  - Combines with `--all`, `--sort=priority`, and tag filters
+  - No matches produces empty output (exit 0)
 
 - [x] CLI-006 Command `mdtask done <ID>`		@iter:mvp @blocked_by:TSK-001 @blocked_by:FLS-001
   Toggle `[ ]` ↔ `[x]` in task header.

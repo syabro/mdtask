@@ -702,4 +702,120 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-003');
 		});
 	});
+
+	describe('priority filtering', () => {
+		it('filters by single priority', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Critical task !crit',
+					'- [ ] TSK-002 High task !high',
+					'- [ ] TSK-003 Medium task',
+					'- [ ] TSK-004 Low task !low',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '!high']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-002');
+			expect(output).not.toContain('TSK-001');
+			expect(output).not.toContain('TSK-003');
+			expect(output).not.toContain('TSK-004');
+		});
+
+		it('filters by multiple priorities with OR logic', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Critical task !crit',
+					'- [ ] TSK-002 High task !high',
+					'- [ ] TSK-003 Medium task',
+					'- [ ] TSK-004 Low task !low',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '!high', '!crit']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('TSK-002');
+			expect(output).not.toContain('TSK-003');
+			expect(output).not.toContain('TSK-004');
+		});
+
+		it('returns empty output when no tasks match priority', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Medium task\n- [ ] TSK-002 Low task !low\n',
+			);
+
+			const code = run(['list', '!crit']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toBe('');
+		});
+
+		it('combines priority filter with --all', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Open high !high',
+					'- [x] TSK-002 Done high !high',
+					'- [ ] TSK-003 Open low !low',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '--all', '!high']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('TSK-002');
+			expect(output).not.toContain('TSK-003');
+		});
+
+		it('combines priority filter with --sort=priority', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 High task !high',
+					'- [ ] TSK-002 Crit task !crit',
+					'- [ ] TSK-003 Low task !low',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '!high', '!crit', '--sort=priority']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			const lines = output.trim().split('\n');
+			expect(lines).toHaveLength(2);
+			expect(lines[0]).toContain('TSK-002'); // crit first
+			expect(lines[1]).toContain('TSK-001'); // high second
+			expect(output).not.toContain('TSK-003');
+		});
+
+		it('combines priority filter with tag filter', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 High backend !high #backend',
+					'- [ ] TSK-002 High frontend !high #frontend',
+					'- [ ] TSK-003 Low backend !low #backend',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '!high', '#backend']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).not.toContain('TSK-002');
+			expect(output).not.toContain('TSK-003');
+		});
+	});
 });

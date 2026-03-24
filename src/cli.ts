@@ -213,6 +213,9 @@ function handleList(
 	const isTTY = process.stdout.isTTY ?? false;
 
 	const tagFilters = filters.filter((f) => f.startsWith('#'));
+	const priorityFilters = filters
+		.filter((f) => f.startsWith('!'))
+		.map((f) => f.slice(1));
 
 	let filteredTasks = options.all
 		? tasks
@@ -221,6 +224,12 @@ function handleList(
 	if (tagFilters.length > 0) {
 		filteredTasks = filteredTasks.filter((t) =>
 			tagFilters.every((tag) => t.tags.includes(tag)),
+		);
+	}
+
+	if (priorityFilters.length > 0) {
+		filteredTasks = filteredTasks.filter(
+			(t) => t.priority !== null && priorityFilters.includes(t.priority),
 		);
 	}
 
