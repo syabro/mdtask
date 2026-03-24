@@ -2,11 +2,11 @@
 	"agent": "claude",
 	"sandbox": "agent",
 	"steps": {
-		"work": {"agent": "claude"},
-		"review": {"agent": "claude"},
-		"gate": {"agent": "claude"},
-		"iterate": {"agent": "claude"},
-		"ralph": {"agent": "claude"}
+		"work": { "agent": "claude" },
+		"review": { "agent": "claude" },
+		"gate": { "agent": "claude" },
+		"iterate": { "agent": "claude" },
+		"ralph": { "agent": "claude" }
 	},
 	"env": []
 }

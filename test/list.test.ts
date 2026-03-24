@@ -420,12 +420,12 @@ describe('mdtask list', () => {
 		it('sorts by priority with --sort=priority (crit → high → medium → low)', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Low task !low',
 					'- [ ] TSK-002 Medium task',
 					'- [ ] TSK-003 Critical task !crit',
 					'- [ ] TSK-004 High task !high',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '--sort=priority']);
@@ -443,11 +443,11 @@ describe('mdtask list', () => {
 		it('preserves file order within same priority', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 First high !high',
 					'- [ ] TSK-002 Second high !high',
 					'- [ ] TSK-003 Third high !high',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '--sort=priority']);
@@ -463,11 +463,11 @@ describe('mdtask list', () => {
 		it('default list (no --sort) preserves file order', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Low task !low',
 					'- [ ] TSK-002 Critical task !crit',
 					'- [ ] TSK-003 High task !high',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list']);
@@ -614,11 +614,11 @@ describe('mdtask list', () => {
 		it('filters by single tag', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Backend task #backend',
 					'- [ ] TSK-002 Frontend task #frontend',
 					'- [ ] TSK-003 Another backend #backend',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '#backend']);
@@ -633,11 +633,11 @@ describe('mdtask list', () => {
 		it('filters by multiple tags with AND logic', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Backend urgent #backend #urgent',
 					'- [ ] TSK-002 Backend normal #backend',
 					'- [ ] TSK-003 Frontend urgent #frontend #urgent',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '#backend', '#urgent']);
@@ -665,11 +665,11 @@ describe('mdtask list', () => {
 		it('combines tag filter with --all', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Open backend #backend',
 					'- [x] TSK-002 Done backend #backend',
 					'- [ ] TSK-003 Open frontend #frontend',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '--all', '#backend']);
@@ -684,11 +684,11 @@ describe('mdtask list', () => {
 		it('combines tag filter with --sort=priority', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Low backend #backend !low',
 					'- [ ] TSK-002 High backend #backend !high',
 					'- [ ] TSK-003 High frontend #frontend !high',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '#backend', '--sort=priority']);
@@ -707,12 +707,12 @@ describe('mdtask list', () => {
 		it('filters by single priority', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Critical task !crit',
 					'- [ ] TSK-002 High task !high',
 					'- [ ] TSK-003 Medium task',
 					'- [ ] TSK-004 Low task !low',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '!high']);
@@ -728,12 +728,12 @@ describe('mdtask list', () => {
 		it('filters by multiple priorities with OR logic', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Critical task !crit',
 					'- [ ] TSK-002 High task !high',
 					'- [ ] TSK-003 Medium task',
 					'- [ ] TSK-004 Low task !low',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '!high', '!crit']);
@@ -762,11 +762,11 @@ describe('mdtask list', () => {
 		it('combines priority filter with --all', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 Open high !high',
 					'- [x] TSK-002 Done high !high',
 					'- [ ] TSK-003 Open low !low',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '--all', '!high']);
@@ -781,11 +781,11 @@ describe('mdtask list', () => {
 		it('combines priority filter with --sort=priority', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 High task !high',
 					'- [ ] TSK-002 Crit task !crit',
 					'- [ ] TSK-003 Low task !low',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '!high', '!crit', '--sort=priority']);
@@ -802,11 +802,11 @@ describe('mdtask list', () => {
 		it('combines priority filter with tag filter', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				[
+				`${[
 					'- [ ] TSK-001 High backend !high #backend',
 					'- [ ] TSK-002 High frontend !high #frontend',
 					'- [ ] TSK-003 Low backend !low #backend',
-				].join('\n') + '\n',
+				].join('\n')}\n`,
 			);
 
 			const code = run(['list', '!high', '#backend']);

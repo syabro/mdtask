@@ -33,7 +33,7 @@ import { run } from '../src/cli.js';
 describe('mdtask open', () => {
 	let tempDir: string;
 	let stderrSpy: ReturnType<typeof vi.spyOn>;
-	let stdoutSpy: ReturnType<typeof vi.spyOn>;
+	let _stdoutSpy: ReturnType<typeof vi.spyOn>;
 	let originalCwd: string;
 	let exitSpy: ReturnType<typeof vi.spyOn>;
 	let originalEditor: string | undefined;
@@ -42,7 +42,7 @@ describe('mdtask open', () => {
 		tempDir = mkdtempSync(join(tmpdir(), 'mdtask-test-'));
 		originalCwd = process.cwd();
 		process.chdir(tempDir);
-		stdoutSpy = vi
+		_stdoutSpy = vi
 			.spyOn(process.stdout, 'write')
 			.mockImplementation(() => true);
 		stderrSpy = vi

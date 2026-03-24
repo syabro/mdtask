@@ -135,9 +135,9 @@ function handleView(id: string, options: { path?: string }): void {
 	const headerLine = lines[task.lineNumber - 1];
 	const body = collectTaskBody(lines, task.lineNumber - 1);
 
-	process.stdout.write(headerLine + '\n');
+	process.stdout.write(`${headerLine}\n`);
 	if (body) {
-		process.stdout.write(body + '\n');
+		process.stdout.write(`${body}\n`);
 	}
 }
 
@@ -262,7 +262,7 @@ function handleMove(
 		targetContent += '\n';
 	}
 
-	targetContent += blockLines.join('\n') + '\n';
+	targetContent += `${blockLines.join('\n')}\n`;
 	writeFileSync(resolvedTarget, targetContent);
 }
 
