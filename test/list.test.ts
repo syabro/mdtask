@@ -609,4 +609,97 @@ describe('mdtask list', () => {
 			expect(output).toBe('[ ] TSK-001 Plain task\n');
 		});
 	});
+
+	describe('tag filtering', () => {
+		it('filters by single tag', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Backend task #backend',
+					'- [ ] TSK-002 Frontend task #frontend',
+					'- [ ] TSK-003 Another backend #backend',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '#backend']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('TSK-003');
+			expect(output).not.toContain('TSK-002');
+		});
+
+		it('filters by multiple tags with AND logic', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Backend urgent #backend #urgent',
+					'- [ ] TSK-002 Backend normal #backend',
+					'- [ ] TSK-003 Frontend urgent #frontend #urgent',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '#backend', '#urgent']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).not.toContain('TSK-002');
+			expect(output).not.toContain('TSK-003');
+		});
+
+		it('returns empty output when no tasks match tag', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Backend task #backend\n',
+			);
+
+			const code = run(['list', '#nonexistent']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toBe('');
+		});
+
+		it('combines tag filter with --all', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Open backend #backend',
+					'- [x] TSK-002 Done backend #backend',
+					'- [ ] TSK-003 Open frontend #frontend',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '--all', '#backend']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('TSK-002');
+			expect(output).not.toContain('TSK-003');
+		});
+
+		it('combines tag filter with --sort=priority', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Low backend #backend !low',
+					'- [ ] TSK-002 High backend #backend !high',
+					'- [ ] TSK-003 High frontend #frontend !high',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '#backend', '--sort=priority']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			const lines = output.trim().split('\n');
+			expect(lines).toHaveLength(2);
+			expect(lines[0]).toContain('TSK-002'); // high
+			expect(lines[1]).toContain('TSK-001'); // low
+			expect(output).not.toContain('TSK-003');
+		});
+	});
 });

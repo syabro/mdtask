@@ -198,20 +198,31 @@ function sortByPriority(tasks: Task[]): Task[] {
 	});
 }
 
-function handleList(options: {
-	all?: boolean;
-	sort?: string;
-	path?: string;
-}): void {
+function handleList(
+	filters: string[],
+	options: {
+		all?: boolean;
+		sort?: string;
+		path?: string;
+	},
+): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
 	const tasks = collectTasks(searchPath);
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
 
+	const tagFilters = filters.filter((f) => f.startsWith('#'));
+
 	let filteredTasks = options.all
 		? tasks
 		: tasks.filter((t) => t.status === 'open');
+
+	if (tagFilters.length > 0) {
+		filteredTasks = filteredTasks.filter((t) =>
+			tagFilters.every((tag) => t.tags.includes(tag)),
+		);
+	}
 
 	if (options.sort === 'priority') {
 		filteredTasks = sortByPriority(filteredTasks);
@@ -228,11 +239,11 @@ export function run(args: string[]): number {
 	cli.option('--path <path>', 'Search path for tasks (default: .)');
 
 	cli
-		.command('list', 'List tasks')
+		.command('list [...filters]', 'List tasks')
 		.option('--all', 'Show all tasks including done')
 		.option('--sort <field>', 'Sort tasks (e.g. --sort=priority)')
-		.action((options) => {
-			handleList(options);
+		.action((filters: string[], options) => {
+			handleList(filters, options);
 		});
 
 	cli.command('view <id>', 'View task details').action((id, options) => {
