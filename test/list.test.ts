@@ -292,24 +292,33 @@ describe('mdtask list', () => {
 			expect(output).toContain('@blocked_by:TSK-002');
 		});
 
-		it('shows done blocker in gray strikethrough', () => {
-			Object.defineProperty(process.stdout, 'isTTY', {
-				value: true,
-				writable: true,
-				configurable: true,
-			});
-
+		it('hides resolved blockers from output', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n- [x] TSK-002 Done blocker\n',
 			);
 
-			const code = run(['list', '--all']);
+			const code = run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes
-			expect(output).toMatch(/\u001b\[90m.*\u001b\[9m.*@blocked_by:TSK-002/);
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Blocked task');
+			expect(output).not.toContain('@blocked_by:TSK-002');
+		});
+
+		it('shows only open blockers when mixed with resolved ones', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Mixed blockers @blocked_by:TSK-002 @blocked_by:TSK-003\n- [x] TSK-002 Done blocker\n- [ ] TSK-003 Open blocker\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).not.toContain('@blocked_by:TSK-002');
+			expect(output).toContain('@blocked_by:TSK-003');
 		});
 
 		it('shows open blocker in red', () => {

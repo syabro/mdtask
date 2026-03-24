@@ -88,22 +88,19 @@ Additional commands are planned for future implementation:
   - Gray color applied for done tasks via existing `p.gray()` wrapper
   - Added 5 tests covering single/multiple/none/done cases
 
-## Blocker status visualization
+## Blocker display in list
 
-When viewing tasks with `@blocked_by` dependencies, the status of each blocker is visualized with color:
-
-- **Done blockers**: shown in gray with strikethrough (`@blocked_by:TSK-001`)
-- **Open blockers**: shown in red (`@blocked_by:TSK-002`)
-- **Non-existent blockers**: shown in red (treated as open)
-
-This visual distinction helps quickly identify which blockers are completed and which are still pending:
+`mdtask list` only shows **unresolved** blockers — if a blocker task is done, it is hidden from the output:
 
 ```
-[ ] TSK-005 Fix auth bug @blocked_by:TSK-001 @blocked_by:TSK-003 @blocked_by:TSK-004
-                            gray+strike      red             gray+strike
+[ ] TSK-005 Fix auth bug @blocked_by:TSK-003
 ```
 
-Colors are only applied when output is to a terminal (TTY). When piped, plain text is output for clean parsing.
+Here TSK-001 was also a blocker but is already done, so it's not shown. Non-existent blockers are treated as open and always displayed.
+
+When output is to a terminal (TTY), open blockers are shown in red. When piped, plain text is output for clean parsing.
+
+Full blocker info (including resolved ones) remains in the task file, visible via `mdtask view`.
 
 - [ ] CLI-002 Command `mdtask list` — sorting
   Flags:
@@ -268,7 +265,7 @@ Colors are only applied when output is to a terminal (TTY). When piped, plain te
 - [ ] CLI-019 Show all @property in list output
   Display all @key:value tokens from task metadata, not just @blocked_by.
 
-- [ ] CLI-020 Hide resolved blockers in list output
+- [x] CLI-020 Hide resolved blockers in list output
   In `mdtask list`, only show @blocked_by for blockers that are still open.
   If a blocker is done — don't display it.
 
@@ -276,3 +273,9 @@ Colors are only applied when output is to a terminal (TTY). When piped, plain te
   After (KTL-001 done): `[ ] KTL-003 Schedule boiling @blocked_by:KTL-002`
 
   Full blocker info remains in the task file, visible via `mdtask view`.
+
+  **Implemented:**
+  - Done blockers are filtered out before rendering in `mdtask list`
+  - Open and non-existent blockers still shown (non-existent treated as open)
+  - When all blockers are resolved, no `@blocked_by` suffix appears
+  - Full blocker info preserved in task files for `mdtask view`

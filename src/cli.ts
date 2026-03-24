@@ -60,18 +60,9 @@ function formatPriority(priority: Task['priority'], isTTY: boolean): string {
 	}
 }
 
-function formatBlocker(
-	id: string,
-	statusMap: Map<string, Task['status']>,
-	isTTY: boolean,
-): string {
+function formatBlocker(id: string, isTTY: boolean): string {
 	const text = `@blocked_by:${id}`;
 	if (!isTTY) return text;
-
-	const status = statusMap.get(id);
-	if (status === 'done') {
-		return p.gray(p.strikethrough(text));
-	}
 	return p.red(text);
 }
 
@@ -86,9 +77,11 @@ function formatTaskLine(
 		task.priority,
 		task.status === 'done' ? false : isTTY,
 	);
-	const blockedByIds = task.properties.blocked_by ?? [];
+	const blockedByIds = (task.properties.blocked_by ?? []).filter(
+		(id) => statusMap.get(id) !== 'done',
+	);
 	const blockedByStr = blockedByIds
-		.map((id) => formatBlocker(id, statusMap, isTTY))
+		.map((id) => formatBlocker(id, isTTY))
 		.join(' ');
 	const blockedBySuffix = blockedByStr ? ` ${blockedByStr}` : '';
 
