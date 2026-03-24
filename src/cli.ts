@@ -111,15 +111,16 @@ function formatTaskLine(
 	const propsStr = formatProperties(task.properties);
 	const propsSuffix = propsStr ? ` ${propsStr}` : '';
 
-	if (task.status === 'done') {
+	const basePart = `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}`;
+
+	if (task.status === 'done' && isTTY) {
 		// Apply gray to base parts, append colored blockers separately to avoid nesting issues,
 		// then append properties in gray
-		const basePart = `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}`;
 		const grayProps = propsSuffix ? p.gray(propsSuffix) : '';
 		return p.gray(basePart) + blockedBySuffix + grayProps;
 	}
 
-	return `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}${blockedBySuffix}${propsSuffix}`;
+	return `${basePart}${blockedBySuffix}${propsSuffix}`;
 }
 
 function handleView(id: string, options: { path?: string }): void {

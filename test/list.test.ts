@@ -818,4 +818,64 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-003');
 		});
 	});
+
+	describe('pipe behavior', () => {
+		it('outputs no ANSI codes when stdout is not a TTY', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				`${[
+					'- [ ] TSK-001 Open task !high',
+					'- [x] TSK-002 Done task !low @blocked_by:TSK-003 @iter:mvp',
+					'- [ ] TSK-003 Blocker task',
+				].join('\n')}\n`,
+			);
+
+			// isTTY is already undefined (non-tty) by default in beforeEach
+			const code = run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes absence
+			expect(output).not.toMatch(/\u001b\[/);
+		});
+
+		it('done tasks have no color codes when piped', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [x] TSK-001 Done task !low @iter:mvp\n',
+			);
+
+			const code = run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes absence
+			expect(output).not.toMatch(/\u001b\[/);
+			expect(output).toContain('[x] TSK-001 Done task !low @iter:mvp');
+		});
+
+		it('output lines are parseable when piped', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				`${[
+					'- [ ] TSK-001 Simple task',
+					'- [ ] TSK-002 Priority task !high',
+					'- [ ] TSK-003 Blocked task @blocked_by:TSK-004',
+					'- [x] TSK-005 Done task !low @iter:mvp',
+				].join('\n')}\n`,
+			);
+
+			const code = run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			const lines = output.trim().split('\n');
+
+			// Each line should match: [status] ID Title [!priority] [@key:value...]
+			const linePattern = /^\[[ x]\] [A-Z]+-\d+ .+$/;
+			for (const line of lines) {
+				expect(line).toMatch(linePattern);
+			}
+		});
+	});
 });

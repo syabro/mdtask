@@ -317,7 +317,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - --help outputs command list
   - <cmd> --help outputs help
 
-- [ ] CLI-011 Pipe behavior
+- [x] CLI-011 Pipe behavior
   When stdout is not a tty:
   - no colors (ANSI codes)
   - no progress indicators
@@ -326,6 +326,12 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   Tests:
   - no colors when piped
   - clean output for parsing
+
+  **Implemented:**
+  - All color output (priority, blockers, done task gray) gated by `isTTY` check
+  - No ANSI escape codes emitted when stdout is piped
+  - Output lines follow stable parseable format: `[status] ID Title [!priority] [@key:value...]`
+  - No progress indicators exist in the codebase (nothing to disable)
 
 - [ ] CLI-012 Shell injection protection
   Check all places where user input reaches shell:
