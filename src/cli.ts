@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { CAC } from 'cac';
 import p from 'picocolors';
@@ -179,6 +180,30 @@ function handleDone(id: string, options: { path?: string }): void {
 	writeFileSync(task.filePath, lines.join('\n'));
 }
 
+function handleOpen(id: string, options: { path?: string }): void {
+	const editor = process.env.EDITOR;
+	if (!editor) {
+		process.stderr.write('mdtask: $EDITOR is not set\n');
+		process.exit(1);
+		return;
+	}
+
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const tasks = collectTasks(searchPath);
+	const task = tasks.find((t) => t.id === id);
+
+	if (!task) {
+		process.stderr.write(`mdtask: task '${id}' not found\n`);
+		process.exit(1);
+		return;
+	}
+
+	execFileSync(editor, [`+${task.lineNumber}`, task.filePath], {
+		stdio: 'inherit',
+	});
+}
+
 const PRIORITY_WEIGHT: Record<string, number> = {
 	crit: 0,
 	high: 1,
@@ -263,9 +288,8 @@ export function run(args: string[]): number {
 		handleDone(id, options);
 	});
 
-	cli.command('open <id>', 'Open task in $EDITOR').action(() => {
-		process.stderr.write("mdtask: command 'open' is not implemented yet\n");
-		process.exit(1);
+	cli.command('open <id>', 'Open task in $EDITOR').action((id, options) => {
+		handleOpen(id, options);
 	});
 
 	cli.command('move <id> <file>', 'Move task to another file').action(() => {

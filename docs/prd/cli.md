@@ -80,11 +80,20 @@ mdtask done TSK-001      # [x] → [ ] (toggle back)
 
 The file is modified in-place. If the ID is not found, exits with error code 1. If the ID appears in multiple files (duplicate), exits with error code 1.
 
+## Opening a task in editor
+
+`mdtask open <ID>` opens the file containing the task in `$EDITOR` at the task's line number:
+
+```bash
+mdtask open TSK-001      # opens $EDITOR +lineNumber filePath
+```
+
+If `$EDITOR` is not set, exits with error code 1. If the task ID is not found, exits with error code 1.
+
 ## Planned commands
 
 Additional commands are planned for future implementation:
 
-- `mdtask open <ID>` — open task in `$EDITOR` at task line (planned)
 - `mdtask move <ID> <file>` — move task to another file (planned)
 - `mdtask validate` — check ID uniqueness and metadata integrity (planned)
 
@@ -224,13 +233,19 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Non-existent ID — exits with error
   - Line verification before modification prevents stale data overwrites
 
-- [ ] CLI-007 Command `mdtask open <ID>`
+- [x] CLI-007 Command `mdtask open <ID>`
   Open file with task in `$EDITOR +N` at task line.
   If `$EDITOR` not set — error, exit 1.
 
   Tests:
   - opens in $EDITOR
   - non-existent ID
+
+  **Implemented:**
+  - `mdtask open <ID>` spawns `$EDITOR +lineNumber filePath` with inherited stdio
+  - Exits with error code 1 if `$EDITOR` is not set
+  - Exits with error code 1 if task ID not found
+  - Uses `execFileSync` to avoid shell injection
 
 - [ ] CLI-008 Command `mdtask move <ID> <file>`
   Move task to another file.
