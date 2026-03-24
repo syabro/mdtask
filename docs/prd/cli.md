@@ -115,9 +115,12 @@ Errors cause exit code 1. Warnings are reported but don't affect exit code. Clea
 mdtask move TSK-001 docs/prd/other.md
 ```
 
-The entire task block (header line and indented body) is removed from the source file and appended to the target file. If the target file does not exist, it is created. If the source file becomes empty after the move, it is kept. Moving a task to the same file it already lives in is a no-op.
+The entire task block (header line and indented body) is removed from the source file and appended to the target file. If the target file does not exist, it is created (including parent directories). If the source file becomes empty after the move, it is kept. Moving a task to the same file it already lives in is a no-op (symlink-aware).
 
-If the task ID is not found or appears in multiple files (duplicate), the command exits with error code 1.
+Errors (exit code 1):
+- Task ID not found or duplicate
+- Source or target file is read-only (permission denied)
+- Target path is a directory
 
 ## Shell safety
 
@@ -352,9 +355,16 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - File paths with special characters handled safely by Node.js `fs` APIs
   - 11 tests added across list, view, done, move, and open commands proving safety with shell metacharacters
 
-- [ ] CLI-013 Move edge cases
+- [x] CLI-013 Move edge cases
   - move to read-only file — graceful error
   - source file becomes empty — keep or delete?
+
+  **Implemented:**
+  - Read-only source or target file: graceful "permission denied" error, exit 1, no partial writes
+  - Target path is a directory: graceful "is a directory" error, exit 1
+  - Parent directories for target created automatically if missing
+  - Same-file detection uses `realpathSync` to handle symlinks (e.g. `/tmp` → `/private/tmp`)
+  - Write order: target first, then source removal — prevents data loss on write failure
 
 - [ ] CLI-014 Symlinks
   How to handle:

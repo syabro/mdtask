@@ -1,6 +1,15 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import {
+	accessSync,
+	constants,
+	existsSync,
+	mkdirSync,
+	readFileSync,
+	realpathSync,
+	statSync,
+	writeFileSync,
+} from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { CAC } from 'cac';
 import p from 'picocolors';
 import { type FilesConfig, loadConfig, resolveSearchPath } from './config.js';
@@ -213,7 +222,12 @@ function handleMove(
 	const task = matches[0];
 	const resolvedTarget = resolve(targetFile);
 
-	if (task.filePath === resolvedTarget) {
+	// Compare real paths to handle symlinks (e.g. /tmp → /private/tmp on macOS)
+	const realSource = realpathSync(task.filePath);
+	const realTarget = existsSync(resolvedTarget)
+		? realpathSync(resolvedTarget)
+		: resolvedTarget;
+	if (realSource === realTarget) {
 		return;
 	}
 
@@ -252,11 +266,39 @@ function handleMove(
 
 	const blockLines = lines.slice(headerIndex, blockEnd);
 
-	// Remove block from source
-	lines.splice(headerIndex, blockEnd - headerIndex);
-	writeFileSync(task.filePath, lines.join('\n'));
+	// Pre-check: source must be writable
+	try {
+		accessSync(task.filePath, constants.W_OK);
+	} catch {
+		process.stderr.write(
+			`mdtask: cannot write to '${task.filePath}': permission denied\n`,
+		);
+		process.exit(1);
+		return;
+	}
 
-	// Append to target
+	// Pre-check: target must not be a directory
+	if (existsSync(resolvedTarget)) {
+		if (statSync(resolvedTarget).isDirectory()) {
+			process.stderr.write(`mdtask: '${resolvedTarget}' is a directory\n`);
+			process.exit(1);
+			return;
+		}
+		try {
+			accessSync(resolvedTarget, constants.W_OK);
+		} catch {
+			process.stderr.write(
+				`mdtask: cannot write to '${resolvedTarget}': permission denied\n`,
+			);
+			process.exit(1);
+			return;
+		}
+	} else {
+		// Ensure parent directories exist
+		mkdirSync(dirname(resolvedTarget), { recursive: true });
+	}
+
+	// Write target first (safer: avoids data loss if target write fails)
 	let targetContent = '';
 	if (existsSync(resolvedTarget)) {
 		targetContent = readFileSync(resolvedTarget, 'utf-8');
@@ -271,6 +313,10 @@ function handleMove(
 
 	targetContent += `${blockLines.join('\n')}\n`;
 	writeFileSync(resolvedTarget, targetContent);
+
+	// Remove block from source
+	lines.splice(headerIndex, blockEnd - headerIndex);
+	writeFileSync(task.filePath, lines.join('\n'));
 }
 
 function handleOpen(id: string, options: { path?: string }): void {

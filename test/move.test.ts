@@ -1,4 +1,5 @@
 import {
+	chmodSync,
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
@@ -205,6 +206,86 @@ describe('mdtask move', () => {
 		const content = readFileSync(target, 'utf-8');
 		expect(content).toContain('- [ ] TSK-001 Fix the bug');
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
+	});
+
+	it('gracefully errors when target file is read-only', () => {
+		const source = join(tempDir, 'source.md');
+		const target = join(tempDir, 'readonly-target.md');
+		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
+		writeFileSync(target, '# Target\n');
+		chmodSync(target, 0o444);
+
+		run(['move', 'TSK-001', target]);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('permission denied');
+		expect(exitSpy).toHaveBeenCalledWith(1);
+		// Source should be unchanged
+		const sourceContent = readFileSync(source, 'utf-8');
+		expect(sourceContent).toContain('TSK-001');
+		// Restore permissions for cleanup
+		chmodSync(target, 0o644);
+	});
+
+	it('gracefully errors when source file is read-only', () => {
+		const source = join(tempDir, 'readonly-source.md');
+		const target = join(tempDir, 'target.md');
+		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n- [ ] TSK-002 Other\n');
+		writeFileSync(target, '# Target\n');
+		chmodSync(source, 0o444);
+
+		run(['move', 'TSK-001', target]);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('permission denied');
+		expect(exitSpy).toHaveBeenCalledWith(1);
+		// Target should be unchanged
+		const targetContent = readFileSync(target, 'utf-8');
+		expect(targetContent).not.toContain('TSK-001');
+		// Restore permissions for cleanup
+		chmodSync(source, 0o644);
+	});
+
+	it('gracefully errors when target path is a directory', () => {
+		const source = join(tempDir, 'source.md');
+		const targetDir = join(tempDir, 'target-dir');
+		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
+		mkdirSync(targetDir);
+
+		run(['move', 'TSK-001', targetDir]);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('is a directory');
+		expect(exitSpy).toHaveBeenCalledWith(1);
+		// Source should be unchanged
+		const sourceContent = readFileSync(source, 'utf-8');
+		expect(sourceContent).toContain('TSK-001');
+	});
+
+	it('creates parent directories for target if they do not exist', () => {
+		const source = join(tempDir, 'source.md');
+		const target = join(tempDir, 'nested', 'deep', 'target.md');
+		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
+
+		run(['move', 'TSK-001', target]);
+
+		expect(existsSync(target)).toBe(true);
+		const content = readFileSync(target, 'utf-8');
+		expect(content).toContain('- [ ] TSK-001 Fix the bug');
+		expect(exitSpy).not.toHaveBeenCalledWith(1);
+	});
+
+	it('source file content is empty after moving only task', () => {
+		const source = join(tempDir, 'source.md');
+		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
+		const target = join(tempDir, 'target.md');
+		writeFileSync(target, '# Target\n');
+
+		run(['move', 'TSK-001', target]);
+
+		expect(existsSync(source)).toBe(true);
+		const sourceContent = readFileSync(source, 'utf-8');
+		expect(sourceContent.trim()).toBe('');
 	});
 
 	it('preserves task metadata after move', () => {
