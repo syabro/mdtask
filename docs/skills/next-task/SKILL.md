@@ -71,20 +71,20 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 > read @docs/spec-driven-development.md for the full workflow with examples.
 
-**Place 1 — In the TASK body itself:**
-- Find the completed task (the `- [ ] TSK-XXX ...` line you just worked on)
-- Mark it done: `[ ]` → `[x]`
-- Add an `**Implemented:**` block inside THAT TASK BODY ONLY with 2-5 bullets
-- Describe what is now working (outcomes only — no code, no internal implementation details)
-- **CRITICAL: Only touch the task you worked on. NEVER modify other tasks or their Implemented sections.**
-
-**Place 2 — Feature description (before ## Tasks):**
+**Place 1 — Feature description (before ## Tasks):**
 - Find the markdown file where the task lives (e.g., `docs/prd/config.md`)
 - If the task adds a **new feature** — create a new `## Section` above `## Tasks`
 - If the task **extends an existing feature** — update the existing section
 - Match the section to the feature, not to the task
 - Describe from user perspective: what commands to run, what config to use
 - Keep it concise — focus on HOW TO USE, not implementation details
+
+**Place 2 — In the TASK body itself:**
+- Find the completed task (the `- [ ] TSK-XXX ...` line you just worked on)
+- Mark it done: `[ ]` → `[x]`
+- Add an `**Implemented:**` block inside THAT TASK BODY ONLY with 2-5 bullets
+- Describe what is now working (outcomes only — no code, no internal implementation details)
+- **CRITICAL: Only touch the task you worked on. NEVER modify other tasks or their Implemented sections.**
 
 ### Step 8 — Commit
 
