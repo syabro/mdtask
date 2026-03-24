@@ -122,6 +122,12 @@ Errors (exit code 1):
 - Source or target file is read-only (permission denied)
 - Target path is a directory
 
+## Symlink handling
+
+File discovery follows symlinks — both symlinked `.md` files and symlinked directories are included in search results. Circular symlinks (e.g., a directory linking back to an ancestor) are detected and handled gracefully without hanging or errors.
+
+When a symlink and its target both appear in the search tree, only one entry is returned (deduplicated by resolved real path) to prevent duplicate task IDs in output.
+
 ## Shell safety
 
 All external process invocations use `execFileSync` or `spawnSync` without `shell: true`, so user input (task IDs, file paths, task content) is never interpreted by a shell. Task IDs are constrained to `[A-Z]+-\d+` by the parser regex, preventing metacharacters from entering IDs. File paths with special characters (spaces, `$()`, backticks, pipes) are handled safely by Node.js `fs` APIs. All output uses `process.stdout.write()` directly — no shell involved.
@@ -366,13 +372,19 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Same-file detection uses `realpathSync` to handle symlinks (e.g. `/tmp` → `/private/tmp`)
   - Write order: target first, then source removal — prevents data loss on write failure
 
-- [ ] CLI-014 Symlinks
+- [x] CLI-014 Symlinks
   How to handle:
   - symlink to md file
   - symlink to directory
   - circular symlinks
 
   Solution: follow symlinks, but detect cycles.
+
+  **Implemented:**
+  - `rg --follow` and `find -L` follow symlinks to files and directories
+  - Circular symlinks handled gracefully — no hang, valid results still returned
+  - Deduplication via `realpathSync` prevents same file appearing twice through different symlink paths
+  - Relaxed exit code checks to accept valid stdout even when tools warn about cycles
 
 - [x] CLI-015 Mock $EDITOR in tests
   Create mock-editor script:

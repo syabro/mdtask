@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { realpathSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 export type FindOptions = {
@@ -47,6 +48,7 @@ function tryRipgrep(
 			: [];
 	const args = [
 		'--files',
+		'--follow',
 		'--type-add',
 		'mdtask:*.md',
 		'-t',
@@ -68,8 +70,14 @@ function tryRipgrep(
 		return null;
 	}
 
-	if (result.status === 0 || result.status === 1) {
+	// rg exits 0 (matches), 1 (no matches), or 2 (errors like symlink cycles).
+	// With --follow, cycle warnings go to stderr but stdout still has valid results.
+	if (result.stdout) {
 		return parseOutput(result.stdout).map((p) => resolve(searchPath, p));
+	}
+
+	if (result.status === 0 || result.status === 1) {
+		return [];
 	}
 
 	return null;
@@ -85,7 +93,7 @@ function tryFind(
 	includePatterns?: string[],
 	excludePatterns?: string[],
 ): string[] | null {
-	const args = [searchPath];
+	const args = ['-L', searchPath];
 	for (const dir of excludeDirs) {
 		args.push('-type', 'd', '-name', dir, '-prune', '-o');
 	}
@@ -118,8 +126,13 @@ function tryFind(
 		return null;
 	}
 
-	if (result.status === 0) {
+	// find -L exits 1 on symlink cycles but stdout still has valid results.
+	if (result.stdout) {
 		return parseOutput(result.stdout);
+	}
+
+	if (result.status === 0) {
+		return [];
 	}
 
 	return null;
@@ -138,5 +151,21 @@ export function findMarkdownFiles(options?: FindOptions): string[] {
 		tryFind(resolvedPath, excludeDirs, includePatterns, excludePatterns) ??
 		[];
 
-	return results.sort();
+	// Deduplicate: symlinks and their targets resolve to the same real path.
+	// After sorting, the first path alphabetically wins for each unique real file.
+	const seen = new Set<string>();
+	const deduped: string[] = [];
+	for (const filePath of results.sort()) {
+		try {
+			const real = realpathSync(filePath);
+			if (!seen.has(real)) {
+				seen.add(real);
+				deduped.push(filePath);
+			}
+		} catch {
+			// Broken symlink or disappeared file — skip
+		}
+	}
+
+	return deduped;
 }

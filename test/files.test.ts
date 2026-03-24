@@ -3,6 +3,7 @@ import {
 	mkdtempSync,
 	readdirSync,
 	rmdirSync,
+	symlinkSync,
 	unlinkSync,
 	writeFileSync,
 } from 'node:fs';
@@ -261,6 +262,63 @@ describe('findMarkdownFiles', () => {
 
 			expect(result).toContain(join(tempDir, 'docs', 'prd', 'public.md'));
 			expect(result).not.toContain(join(tempDir, 'docs', 'prd', 'secret.md'));
+		});
+	});
+
+	describe('symlinks', () => {
+		it('follows symlink to md file', () => {
+			const realDir = join(tempDir, 'real');
+			mkdirSync(realDir);
+			writeFileSync(join(realDir, 'target.md'), '- [ ] TSK-001 Real task');
+
+			symlinkSync(join(realDir, 'target.md'), join(tempDir, 'link.md'));
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result.some((f) => f.endsWith('link.md'))).toBe(true);
+		});
+
+		it('follows symlink to directory', () => {
+			const realDir = join(tempDir, 'real');
+			mkdirSync(realDir);
+			writeFileSync(
+				join(realDir, 'inside.md'),
+				'- [ ] TSK-002 Inside symlinked dir',
+			);
+
+			symlinkSync(realDir, join(tempDir, 'linked-dir'));
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result.some((f) => f.includes('linked-dir'))).toBe(true);
+		});
+
+		it('handles circular symlinks without hanging', () => {
+			const dirA = join(tempDir, 'a');
+			mkdirSync(dirA);
+			writeFileSync(join(dirA, 'task.md'), '- [ ] TSK-003 In dir a');
+
+			// Create circular symlink: a/b -> tempDir (ancestor)
+			symlinkSync(tempDir, join(dirA, 'b'));
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			expect(result.some((f) => f.endsWith('task.md'))).toBe(true);
+		});
+
+		it('deduplicates when symlink and real file are both in search tree', () => {
+			writeFileSync(join(tempDir, 'task.md'), '- [ ] TSK-004 Real file');
+
+			// Symlink in same tree pointing to the same file
+			symlinkSync(join(tempDir, 'task.md'), join(tempDir, 'link-to-task.md'));
+
+			const result = findMarkdownFiles({ searchPath: tempDir });
+
+			// Should have exactly one entry for this physical file, not two
+			const taskFiles = result.filter(
+				(f) => f.endsWith('task.md') || f.endsWith('link-to-task.md'),
+			);
+			expect(taskFiles).toHaveLength(1);
 		});
 	});
 
