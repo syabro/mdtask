@@ -204,6 +204,57 @@ function handleOpen(id: string, options: { path?: string }): void {
 	});
 }
 
+const EMPTY_TAG_REGEX = /(?:^|\s)#(?:\s|$)/;
+const MALFORMED_PROPERTY_REGEX = /(?:^|\s)@([\w-]+)(?![:\w])/;
+
+function handleValidate(options: { path?: string }): void {
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const tasks = collectTasks(searchPath);
+
+	let hasErrors = false;
+
+	// Check duplicate IDs
+	const idMap = new Map<string, Task[]>();
+	for (const task of tasks) {
+		const existing = idMap.get(task.id) ?? [];
+		existing.push(task);
+		idMap.set(task.id, existing);
+	}
+
+	for (const [id, dupes] of idMap) {
+		if (dupes.length > 1) {
+			hasErrors = true;
+			const locations = dupes
+				.map((t) => `${t.filePath}:${t.lineNumber}`)
+				.join(', ');
+			process.stderr.write(`error: duplicate ID '${id}' in ${locations}\n`);
+		}
+	}
+
+	// Check empty tags and malformed metadata
+	for (const task of tasks) {
+		const raw = task.rawMetadata;
+
+		if (EMPTY_TAG_REGEX.test(raw)) {
+			process.stderr.write(
+				`warning: empty tag in ${task.filePath}:${task.lineNumber} (${task.id})\n`,
+			);
+		}
+
+		if (MALFORMED_PROPERTY_REGEX.test(raw)) {
+			process.stderr.write(
+				`warning: malformed metadata in ${task.filePath}:${task.lineNumber} (${task.id})\n`,
+			);
+		}
+	}
+
+	if (hasErrors) {
+		process.exit(1);
+		return;
+	}
+}
+
 const PRIORITY_WEIGHT: Record<string, number> = {
 	crit: 0,
 	high: 1,
@@ -297,9 +348,8 @@ export function run(args: string[]): number {
 		process.exit(1);
 	});
 
-	cli.command('validate', 'Check task integrity').action(() => {
-		process.stderr.write("mdtask: command 'validate' is not implemented yet\n");
-		process.exit(1);
+	cli.command('validate', 'Check task integrity').action((options) => {
+		handleValidate(options);
 	});
 
 	cli.help();

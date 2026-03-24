@@ -56,6 +56,10 @@ Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown;
 
 - `mdtask done <ID>` — toggle `[ ] ↔ [x]` in-place. Duplicate IDs cause an error.
 
+### 6.3 Validate
+
+- `mdtask validate` — check task integrity: duplicate IDs (error), empty tags and malformed metadata (warnings). Exit 1 on errors, 0 otherwise.
+
 ## 7. Task Identity
 
 ### 7.1 Source of Truth

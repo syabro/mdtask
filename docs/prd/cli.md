@@ -90,12 +90,27 @@ mdtask open TSK-001      # opens $EDITOR +lineNumber filePath
 
 If `$EDITOR` is not set, exits with error code 1. If the task ID is not found, exits with error code 1.
 
+## Validating tasks
+
+`mdtask validate` checks task integrity across all markdown files:
+
+```bash
+mdtask validate          # Check all files in search path
+mdtask validate --path docs/   # Check specific directory
+```
+
+Checks performed:
+- **Duplicate IDs** (error) — same task ID appears in multiple places. Reports all locations. Exits with code 1.
+- **Empty tags** (warning) — `#` followed by whitespace instead of a tag name. Reported to stderr.
+- **Malformed metadata** (warning) — `@key` without `:value`. Reported to stderr.
+
+Errors cause exit code 1. Warnings are reported but don't affect exit code. Clean files produce no output and exit 0.
+
 ## Planned commands
 
 Additional commands are planned for future implementation:
 
 - `mdtask move <ID> <file>` — move task to another file (planned)
-- `mdtask validate` — check ID uniqueness and metadata integrity (planned)
 
 ## Tasks
 
@@ -261,7 +276,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - move to non-existent file (create)
   - move to same file (no-op)
 
-- [ ] CLI-009 Command `mdtask validate`
+- [x] CLI-009 Command `mdtask validate`
   Integrity check:
   - ID uniqueness across all files
   - empty tags (`# `) — warning
@@ -273,6 +288,13 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - duplicate ID — error
   - empty tag — warning
   - valid file — ok
+
+  **Implemented:**
+  - `mdtask validate` checks ID uniqueness across all files — duplicate IDs reported as errors with file:line locations
+  - Empty tags (`# ` with no name) detected and reported as warnings
+  - Malformed properties (`@key` without `:value`) detected and reported as warnings
+  - Errors cause exit code 1, warnings only go to stderr without affecting exit code
+  - Respects `--path` option for scoping validation to specific directories
 
 - [x] CLI-010 Help system		@iter:mvp
   `mdtask --help` — list of commands.
