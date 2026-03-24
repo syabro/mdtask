@@ -98,9 +98,9 @@ If user confirms:
 2. Show the exact line where it was added
 3. Ask: **"Commit?"**
 
-**For new PRD:**
-1. Create file with header: `# <NAME> — mdtask` + blank line
-2. Append task after header
+**For new PRD:** (read @docs/spec-driven-development.md for PRD structure)
+1. Create file with header: `# <NAME> — mdtask` + blank line + `## Tasks` + blank line
+2. Append task after `## Tasks`
 3. Show file path and line
 4. Ask: **"Commit?"**
 
@@ -154,13 +154,8 @@ File: docs/prd/cli.md
 Task:
 - [ ] XXX-017 Show tags in list output
   Display `#tag` tokens from task metadata.
-  
+
   Format: `[ ] ID Title #tag1 #tag2`
-  
-  Tests:
-  - task with single tag
-  - task with multiple tags
-  - task without tags
 --- END ---
 
 Does this work?
@@ -199,10 +194,6 @@ File: docs/prd/out.md (NEW FILE)
 Task:
 - [ ] OUT-001 JSON export
   Export tasks to JSON format via `mdtask export json`.
-  
-  Tests:
-  - output matches schema
-  - handles empty task list
 --- END ---
 
 Does this work?

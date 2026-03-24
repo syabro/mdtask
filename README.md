@@ -52,24 +52,11 @@ Node.js + TypeScript + ripgrep. Minimal dependencies.
 
 When changing one — check the others for consistency.
 
-## PRDs
-
-PRDs (`docs/prd/`) are living documentation. When closing a task:
-1. Mark the task as done: `[ ]` → `[x]`
-2. Write a PRD section: what the feature does, what the user can do, how it works
-
-PRDs describe how the system works — not why it was built.
-
 ## Development Workflow
 
-**Spec-Driven Development:** No code without a task.
+Spec-driven development. PRD is both the spec and the manual.
 
-Before implementing any feature:
-1. Create task in appropriate PRD (`docs/prd/*.md`)
-2. Commit the task
-3. Only then start implementation
-
-Use `/create-task` skill to create tasks properly.
+See [docs/spec-driven-development.md](docs/spec-driven-development.md) for the full workflow with examples.
 
 ## Project Structure
 

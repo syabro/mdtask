@@ -13,7 +13,7 @@ Runs two parallel reviewers to find contradictions across project files.
 Both Subagent and Gemini use this exact prompt. Gemini needs `@` prefixes for file inclusion; Subagent ignores them.
 
 ```
-Step 1: Read @README.md @CLAUDE.md (symlink to AGENTS.md, do not read AGENTS.md separately).
+Step 1: Read @README.md @CLAUDE.md (symlink to AGENTS.md, do not read AGENTS.md separately) @docs/spec-driven-development.md.
 Step 2: Read @./ the rest of the project files. Skip: .git/, .claude/.
 Step 3: Check docs against each other and against code. Find any inconsistency — contradictions, stale references, outdated paths, missing entries, mismatched terminology. Do NOT check code against code.
 

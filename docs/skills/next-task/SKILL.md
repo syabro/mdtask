@@ -36,7 +36,6 @@ After reading this file you must say "I'll do all the steps as it described" and
    - What files to create/modify
    - What functions/modules
    - How to structure code
-   - Which tests to write
 
 ### Step 3 — Validate plan with Gemini
 
@@ -70,6 +69,8 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 ### Step 7 — Update PRD (TWO places - BOTH required)
 
+> read @docs/spec-driven-development.md for the full workflow with examples.
+
 **Place 1 — In the TASK body itself:**
 - Find the completed task (the `- [ ] TSK-XXX ...` line you just worked on)
 - Mark it done: `[ ]` → `[x]`
@@ -77,27 +78,11 @@ After reading this file you must say "I'll do all the steps as it described" and
 - Describe what is now working (outcomes only — no code, no internal implementation details)
 - **CRITICAL: Only touch the task you worked on. NEVER modify other tasks or their Implemented sections.**
 
-**Place 2 — In the PRD header (before ## Tasks):**
+**Place 2 — Feature description (before ## Tasks):**
 - Find the markdown file where the task lives (e.g., `docs/prd/config.md`)
-- The PRD structure should be:
-  ```
-  # Title — mdtask
-  
-  Brief description.
-  
-  ## Feature Name
-  
-  Brief description of the implemented feature:
-  - What users can do with it
-  - How to use it
-  
-  ## Tasks
-  
-  - [x] TSK-001 Task name
-  ...
-  ```
-- The feature description goes BEFORE ## Tasks
-- This lets users immediately see what's implemented without scrolling
+- If the task adds a **new feature** — create a new `## Section` above `## Tasks`
+- If the task **extends an existing feature** — update the existing section
+- Match the section to the feature, not to the task
 - Describe from user perspective: what commands to run, what config to use
 - Keep it concise — focus on HOW TO USE, not implementation details
 
