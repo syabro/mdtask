@@ -90,4 +90,4 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 1. Mark task as done: `[ ]` → `[x]` in the task's markdown file
 2. Commit with message describing what was built
-3. Run `/check` if docs changed
+3. If docs changed — run `/check` but tell it to only check YOUR changed files (pass the file list). Do NOT fix findings in files you didn't touch in this task.
