@@ -66,6 +66,19 @@ function formatBlocker(id: string, isTTY: boolean): string {
 	return p.red(text);
 }
 
+function formatProperties(properties: Record<string, string[]>): string {
+	const tokens: string[] = [];
+	const keys = Object.keys(properties)
+		.filter((k) => k !== 'blocked_by')
+		.sort();
+	for (const key of keys) {
+		for (const value of properties[key]) {
+			tokens.push(`@${key}:${value}`);
+		}
+	}
+	return tokens.join(' ');
+}
+
 function formatTaskLine(
 	task: Task,
 	statusMap: Map<string, Task['status']>,
@@ -84,14 +97,18 @@ function formatTaskLine(
 		.map((id) => formatBlocker(id, isTTY))
 		.join(' ');
 	const blockedBySuffix = blockedByStr ? ` ${blockedByStr}` : '';
+	const propsStr = formatProperties(task.properties);
+	const propsSuffix = propsStr ? ` ${propsStr}` : '';
 
 	if (task.status === 'done') {
-		// Apply gray to base parts, append colored blockers separately to avoid nesting issues
+		// Apply gray to base parts, append colored blockers separately to avoid nesting issues,
+		// then append properties in gray
 		const basePart = `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}`;
-		return p.gray(basePart) + blockedBySuffix;
+		const grayProps = propsSuffix ? p.gray(propsSuffix) : '';
+		return p.gray(basePart) + blockedBySuffix + grayProps;
 	}
 
-	return `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}${blockedBySuffix}`;
+	return `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}${blockedBySuffix}${propsSuffix}`;
 }
 
 function handleList(options: { all?: boolean; path?: string }): void {

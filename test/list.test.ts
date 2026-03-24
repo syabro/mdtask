@@ -415,4 +415,133 @@ describe('mdtask list', () => {
 			expect(output).toContain('@blocked_by:TSK-002');
 		});
 	});
+
+	describe('property display', () => {
+		it('shows @iter property in list output', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 MVP task @iter:mvp\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('MVP task');
+			expect(output).toContain('@iter:mvp');
+		});
+
+		it('shows multiple different properties', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Multi-prop task @iter:mvp @status:in-progress\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('@iter:mvp');
+			expect(output).toContain('@status:in-progress');
+		});
+
+		it('shows properties sorted alphabetically by key', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Sorted props @status:wip @iter:mvp\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// iter comes before status alphabetically
+			const iterIdx = output.indexOf('@iter:mvp');
+			const statusIdx = output.indexOf('@status:wip');
+			expect(iterIdx).toBeLessThan(statusIdx);
+		});
+
+		it('shows properties with priority and blockers', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Full metadata !high @blocked_by:TSK-002 @iter:mvp\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('!high');
+			expect(output).toContain('@blocked_by:TSK-002');
+			expect(output).toContain('@iter:mvp');
+			// Properties come after blockers
+			const blockerIdx = output.indexOf('@blocked_by:TSK-002');
+			const iterIdx = output.indexOf('@iter:mvp');
+			expect(blockerIdx).toBeLessThan(iterIdx);
+		});
+
+		it('shows multi-value properties as separate tokens', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Multi-val @tag:cli @tag:parser\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('@tag:cli');
+			expect(output).toContain('@tag:parser');
+		});
+
+		it('shows properties for done tasks in gray', () => {
+			Object.defineProperty(process.stdout, 'isTTY', {
+				value: true,
+				writable: true,
+				configurable: true,
+			});
+
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [x] TSK-001 Done with prop @iter:mvp\n',
+			);
+
+			const code = run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// @iter:mvp should be inside gray ANSI codes
+			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes
+			expect(output).toMatch(/\u001b\[90m.*@iter:mvp.*\u001b\[39m/);
+		});
+
+		it('shows properties after blockers for done tasks', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [x] TSK-001 Done blocked @blocked_by:TSK-002 @iter:mvp\n',
+			);
+
+			const code = run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('@blocked_by:TSK-002');
+			expect(output).toContain('@iter:mvp');
+			// Blockers come before properties (same order as open tasks)
+			const blockerIdx = output.indexOf('@blocked_by:TSK-002');
+			const iterIdx = output.indexOf('@iter:mvp');
+			expect(blockerIdx).toBeLessThan(iterIdx);
+		});
+
+		it('shows no properties for task without any', () => {
+			writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Plain task\n');
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toBe('[ ] TSK-001 Plain task\n');
+		});
+	});
 });

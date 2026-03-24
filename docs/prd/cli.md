@@ -11,11 +11,11 @@ mdtask list              # Show only open tasks
 mdtask list --all        # Show all tasks including done
 ```
 
-Output format shows status, ID, title, priority (if any), and @blocked_by (if any):
+Output format shows status, ID, title, priority (if any), blockers (if any), and all other `@key:value` properties:
 ```
 [ ] TSK-001 Fix authentication bug !high
-[ ] TSK-002 Update documentation @blocked_by:TSK-001
-[x] TSK-003 Refactor utils !low @blocked_by:CFG-001
+[ ] TSK-002 Update documentation @blocked_by:TSK-001 @iter:mvp
+[x] TSK-003 Refactor utils !low @status:done
 ```
 
 When output is to a terminal (TTY), priorities are color-coded:
@@ -262,8 +262,16 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Updated test expectations in `test/list.test.ts` to match new format
   - Output now consistently shows: `[status] ID Title !priority @blocked_by:ID`
 
-- [ ] CLI-019 Show all @property in list output
+- [x] CLI-019 Show all @property in list output
   Display all @key:value tokens from task metadata, not just @blocked_by.
+
+  **Implemented:**
+  - All `@key:value` properties displayed in list output, not just `@blocked_by`
+  - Properties sorted alphabetically by key for deterministic output
+  - Multi-value properties expand to separate tokens (e.g. `@tag:cli @tag:parser`)
+  - `@blocked_by` retains special handling (resolved filtering, red coloring)
+  - Other properties shown as plain text after blockers
+  - Done tasks: properties rendered in gray
 
 - [x] CLI-020 Hide resolved blockers in list output
   In `mdtask list`, only show @blocked_by for blockers that are still open.
