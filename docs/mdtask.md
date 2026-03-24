@@ -52,6 +52,10 @@ project/
 
 Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown; done blockers are hidden. Non-existent blockers are treated as open. Open blockers are shown in red when output is a terminal.
 
+### 6.2 Modify
+
+- `mdtask done <ID>` — toggle `[ ] ↔ [x]` in-place. Duplicate IDs cause an error.
+
 ## 7. Task Identity
 
 ### 7.1 Source of Truth

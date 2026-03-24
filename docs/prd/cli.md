@@ -43,11 +43,21 @@ Description line 2.
 
 If the task is not found, exits with error code 1.
 
+## Toggling task status
+
+`mdtask done <ID>` toggles a task between open and done:
+
+```bash
+mdtask done TSK-001      # [ ] → [x]
+mdtask done TSK-001      # [x] → [ ] (toggle back)
+```
+
+The file is modified in-place. If the ID is not found, exits with error code 1. If the ID appears in multiple files (duplicate), exits with error code 1.
+
 ## Planned commands
 
 Additional commands are planned for future implementation:
 
-- `mdtask done <ID>` — toggle `[ ] ↔ [x]` status (planned)
 - `mdtask open <ID>` — open task in `$EDITOR` at task line (planned)
 - `mdtask move <ID> <file>` — move task to another file (planned)
 - `mdtask validate` — check ID uniqueness and metadata integrity (planned)
@@ -155,7 +165,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   Tests:
   - filter by priority
 
-- [ ] CLI-006 Command `mdtask done <ID>`		@iter:mvp @blocked_by:TSK-001 @blocked_by:FLS-001
+- [x] CLI-006 Command `mdtask done <ID>`		@iter:mvp @blocked_by:TSK-001 @blocked_by:FLS-001
   Toggle `[ ]` ↔ `[x]` in task header.
   File modified in-place.
   Duplicate ID — error, exit 1.
@@ -166,6 +176,13 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - toggle [x] → [ ]
   - file not corrupted
   - duplicate ID — error
+
+  **Implemented:**
+  - `mdtask done <ID>` toggles task status between `[ ]` and `[x]`
+  - File modified in-place, other content preserved
+  - Duplicate ID detected across all files — exits with error
+  - Non-existent ID — exits with error
+  - Line verification before modification prevents stale data overwrites
 
 - [ ] CLI-007 Command `mdtask open <ID>`
   Open file with task in `$EDITOR +N` at task line.

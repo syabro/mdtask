@@ -39,6 +39,7 @@ CLI is only an interpreter, never the owner of data.
 mdtask list                  # list open tasks
 mdtask list --all            # all tasks including done
 mdtask view <ID>             # print full task block by ID
+mdtask done <ID>             # toggle task [ ] ↔ [x]
 ```
 
 ## Stack

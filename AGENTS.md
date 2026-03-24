@@ -14,7 +14,7 @@ read @docs/spec-driven-development.md — spec-driven development, PRD structure
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project)
-- `docs/skills/` — canonical skill files (mdtask, check, next-task)
+- `docs/skills/` — canonical skill files (mdtask, check, create-task, next-task)
 - `.claude/skills/` — symlinks to `docs/skills/`; edit `docs/skills/` only
 - `docs/mdtask.md` — goals, architecture
 - `docs/spec-driven-development.md` — development workflow

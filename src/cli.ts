@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { CAC } from 'cac';
 import p from 'picocolors';
 import { loadConfig, resolveSearchPath } from './config.js';
@@ -139,6 +139,46 @@ function handleView(id: string, options: { path?: string }): void {
 	}
 }
 
+function handleDone(id: string, options: { path?: string }): void {
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const tasks = collectTasks(searchPath);
+	const matches = tasks.filter((t) => t.id === id);
+
+	if (matches.length === 0) {
+		process.stderr.write(`mdtask: task '${id}' not found\n`);
+		process.exit(1);
+		return;
+	}
+
+	if (matches.length > 1) {
+		process.stderr.write(`mdtask: duplicate ID '${id}'\n`);
+		process.exit(1);
+		return;
+	}
+
+	const task = matches[0];
+	const content = readFileSync(task.filePath, 'utf-8');
+	const lines = content.split('\n');
+	const line = lines[task.lineNumber - 1];
+
+	if (!line.includes(task.id)) {
+		process.stderr.write(
+			`mdtask: file changed, task '${id}' not at expected line\n`,
+		);
+		process.exit(1);
+		return;
+	}
+
+	if (task.status === 'open') {
+		lines[task.lineNumber - 1] = line.replace(/^(- )\[ \]/, '$1[x]');
+	} else {
+		lines[task.lineNumber - 1] = line.replace(/^(- )\[x\]/, '$1[ ]');
+	}
+
+	writeFileSync(task.filePath, lines.join('\n'));
+}
+
 function handleList(options: { all?: boolean; path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
@@ -171,9 +211,8 @@ export function run(args: string[]): number {
 		handleView(id, options);
 	});
 
-	cli.command('done <id>', 'Toggle task done/open').action(() => {
-		process.stderr.write("mdtask: command 'done' is not implemented yet\n");
-		process.exit(1);
+	cli.command('done <id>', 'Toggle task done/open').action((id, options) => {
+		handleDone(id, options);
 	});
 
 	cli.command('open <id>', 'Open task in $EDITOR').action(() => {
