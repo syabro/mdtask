@@ -4,13 +4,7 @@ Project structure and entry point.
 
 ## Pattern Matching
 
-The CLI uses `ts-pattern` for type-safe pattern matching in two areas:
-
-1. **Command Routing** — `handleCommand()` uses `match().with().otherwise()` to route commands to their handlers, with a fallback for unimplemented commands.
-
-2. **Priority Colors** — `formatPriority()` uses pattern matching to map priority levels (`!crit`, `!high`, `!low`) to their respective colors, with a fallback for custom priority strings.
-
-Pattern matching provides compile-time exhaustiveness checking and cleaner syntax compared to switch statements.
+`ts-pattern` is available as a dependency. Use it where it improves clarity — e.g. exhaustive matching, complex conditionals, or multi-branch routing. Not required for simple cases where `switch` or `if` is clear enough.
 
 ## Tasks
 

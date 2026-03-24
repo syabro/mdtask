@@ -19,14 +19,10 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 **ALWAYS use `pnpm mdtask` CLI — NEVER parse markdown files manually.**
 
-1. Run `pnpm mdtask list` to get all open tasks
-2. Run `pnpm mdtask list --all` to see all tasks including done (for checking blockers)
-3. For each task with `@blocked_by`:
-   - Run `pnpm mdtask view <BLOCKER_ID>` to check if blocker is done
-   - Skip the current task if blocker checkbox is `[ ]`
-4. Ask user what direction they want to work on today (tags, area, specific task) if user didnt provide scope of the work
-5. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
-6. If no tasks remain: tell user, stop
+1. Run `pnpm mdtask list` to get all open tasks (blocked tasks are already filtered out)
+2. Ask user what direction they want to work on today (tags, area, specific task) if user didnt provide scope of the work
+3. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
+4. If no tasks remain: tell user, stop
 
 ### Step 2 — Plan
 
@@ -88,6 +84,5 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 ### Step 8 — Commit
 
-1. Mark task as done: `[ ]` → `[x]` in the task's markdown file
-2. Commit with message describing what was built
-3. Run `/check` — pass only the files you changed in this task. Do NOT fix findings in files you didn't touch.
+1. Commit with message describing what was built
+2. Run `/check` — pass only the files you changed in this task. Do NOT fix findings in files you didn't touch.

@@ -40,6 +40,9 @@ mdtask list                  # list open tasks
 mdtask list --all            # all tasks including done
 mdtask view <ID>             # print full task block by ID
 mdtask done <ID>             # toggle task [ ] ↔ [x]
+mdtask open <ID>             # open task in $EDITOR at line
+mdtask move <ID> <file>      # move task to another file
+mdtask validate              # check task integrity
 ```
 
 ## Stack
