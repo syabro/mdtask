@@ -374,13 +374,19 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 
   Solution: follow symlinks, but detect cycles.
 
-- [ ] CLI-015 Mock $EDITOR in tests
+- [x] CLI-015 Mock $EDITOR in tests
   Create mock-editor script:
   ```bash
   #!/bin/bash
   echo "$@" > /tmp/editor_args
   ```
   Verify that mdtask open passes correct arguments.
+
+  **Implemented:**
+  - Integration test file `test/open-integration.test.ts` with real process spawning (no execFileSync mock)
+  - Mock editor bash script created per-test in temp dir, captures args via `printf '%s\n' "$@"`
+  - Verifies correct `+lineNumber` and absolute file path are passed to `$EDITOR`
+  - Covers tasks at different line positions and file paths with spaces
 
 - [x] CLI-017 Color blockers by status in list output
   Show completed blockers in gray strikethrough, pending in red.
