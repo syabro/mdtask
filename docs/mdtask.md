@@ -48,6 +48,7 @@ project/
 
 - `mdtask list` — flat list of open tasks
 - `mdtask list --all` — include done tasks
+- `mdtask view <ID>` — print full task block (header + dedented body)
 
 Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown; done blockers are hidden. Non-existent blockers are treated as open. Open blockers are shown in red when output is a terminal.
 

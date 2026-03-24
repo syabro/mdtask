@@ -55,6 +55,8 @@ Additional commands are planned for future implementation:
 - `mdtask list #tag` — filter by tag (planned)
 - `mdtask list !high` — filter by priority (planned)
 
+## Tasks
+
 - [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
   Recursive search through `*.md` files.
   Use `rg --files -g '*.md' --hidden` for file discovery.
@@ -266,10 +268,10 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 
   **Implemented:**
   - Blocker status determined by looking up task IDs in a status map built from all collected tasks
-  - Done blockers shown with `gray + strikethrough` via `p.gray(p.strikethrough(text))`
   - Open or non-existent blockers shown in `red` via `p.red(text)`
   - ANSI nesting avoided by applying gray only to base task parts, appending colored blockers separately
   - Priority coloring disabled for done tasks to prevent ANSI reset codes breaking the gray wrapper
+  - Note: done blockers are now hidden entirely (superseded by CLI-020)
 
 - [x] CLI-018 Move priority after title in list output
   Change output format from `[ ] ID !priority Title` to `[ ] ID Title !priority`.

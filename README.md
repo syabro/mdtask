@@ -38,6 +38,7 @@ CLI is only an interpreter, never the owner of data.
 ```bash
 mdtask list                  # list open tasks
 mdtask list --all            # all tasks including done
+mdtask view <ID>             # print full task block by ID
 ```
 
 ## Stack
