@@ -19,7 +19,8 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 **ALWAYS use `pnpm mdtask` CLI — NEVER parse markdown files manually.**
 
-1. Run `pnpm mdtask list` to get all open tasks (blocked tasks are already filtered out)
+1. Run `pnpm mdtask list` to get all open tasks
+   - Tasks with unresolved `@blocked_by:ID` are still listed — skip them when picking
 2. Ask user what direction they want to work on today (tags, area, specific task) if user didnt provide scope of the work
 3. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
 4. If no tasks remain: tell user, stop

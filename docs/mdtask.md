@@ -30,7 +30,7 @@ See `docs/skills/mdtask/SKILL.md` — canonical reference for task format, metad
 
 ## 5. File Organization
 
-CLI always scans ALL `*.md` files recursively from current directory (including hidden directories). Excludes `node_modules` and `.git` by default.
+By default, CLI scans all `*.md` files recursively from current directory (including hidden directories). Excludes `node_modules` and `.git` by default. The search scope can be narrowed via `--path`, `.mdtaskrc` config (`path`, `files.include`, `files.exclude`), or `MDTASK_PATH` env.
 
 ```text
 project/
