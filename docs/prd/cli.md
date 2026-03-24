@@ -59,14 +59,14 @@ Additional commands are planned for future implementation:
   - --all flag shows [x]
   - colors on tty, no colors on pipe
 
-**Implemented:**
-- `mdtask list` command lists all open tasks from markdown files
-- Recursive search includes hidden directories, excludes node_modules and .git
-- `--all` flag shows both open and done tasks
-- Colored output when stdout is TTY: crit=red, high=yellow, low=green, done=gray
-- File read errors are logged to stderr as warnings
-- Output format: `[ ] ID !priority Title @blocked_by:ID1 @blocked_by:ID2` or `[x] ID Title` for done tasks
-- `@blocked_by` properties are displayed at the end of each task line
+  **Implemented:**
+  - `mdtask list` command lists all open tasks from markdown files
+  - Recursive search includes hidden directories, excludes node_modules and .git
+  - `--all` flag shows both open and done tasks
+  - Colored output when stdout is TTY: crit=red, high=yellow, low=green, done=gray
+  - File read errors are logged to stderr as warnings
+  - Output format: `[ ] ID !priority Title @blocked_by:ID1 @blocked_by:ID2` or `[x] ID Title` for done tasks
+  - `@blocked_by` properties are displayed at the end of each task line
 
 - [x] CLI-016 Show @blocked_by in list output
   Display `@blocked_by:ID` properties in `mdtask list` output.

@@ -16,7 +16,7 @@ Pattern matching provides compile-time exhaustiveness checking and cleaner synta
 
 - [x] PRJ-002 Add picocolors for CLI colors
   Install and use `picocolors` library for ANSI colors.
-  Replace manual color codes in `src/app.ts` with picocolors API.
+  Replace manual color codes in `src/cli.ts` with picocolors API.
   
   Library: `picocolors` (~2KB, zero dependencies)
   

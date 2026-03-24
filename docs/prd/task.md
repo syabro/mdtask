@@ -41,7 +41,7 @@ Example: `- [ ] TSK-123 Fix login		#bug !high @status:blocked @blocked_by:TSK-00
   - header with metadata on same line
   - header with `\t\t` separator before metadata
 
-  **Implementation:**
+  **Implemented:**
   - Function `parseTaskHeader(line: string): TaskHeader | null` in `src/task.ts`
   - Returns `null` for non-task lines
   - Extracts: status ('open'|'done'), ID, title, rawMetadata
