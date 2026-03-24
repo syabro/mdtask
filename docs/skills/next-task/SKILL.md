@@ -56,7 +56,7 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 ### Step 5 — Code review with Gemini
 
-1. use /code-review skill but call gemini only
+1. Load gemini skill and send code diff for review
 2. Ask: correctness, edge cases, style, security (blocker/warning/nitpick)
 3. Review code yourself
 4. Fix issues found
