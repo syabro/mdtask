@@ -1,8 +1,14 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
+export type FilesConfig = {
+	include?: string[];
+	exclude?: string[];
+};
+
 export type Config = {
 	path?: string;
+	files?: FilesConfig;
 };
 
 /**
@@ -29,6 +35,26 @@ export function findConfigPath(
 	}
 }
 
+function validateStringArray(value: unknown): string[] | undefined {
+	if (!Array.isArray(value)) return undefined;
+	const filtered = value.filter(
+		(item): item is string => typeof item === 'string',
+	);
+	return filtered.length > 0 ? filtered : undefined;
+}
+
+function validateFilesConfig(value: unknown): FilesConfig | undefined {
+	if (typeof value !== 'object' || value === null) return undefined;
+	const obj = value as Record<string, unknown>;
+	const include = validateStringArray(obj.include);
+	const exclude = validateStringArray(obj.exclude);
+	if (!include && !exclude) return undefined;
+	const files: FilesConfig = {};
+	if (include) files.include = include;
+	if (exclude) files.exclude = exclude;
+	return files;
+}
+
 function validateConfig(value: unknown): Config {
 	if (typeof value !== 'object' || value === null) {
 		return {};
@@ -37,6 +63,10 @@ function validateConfig(value: unknown): Config {
 	const config: Config = {};
 	if (typeof obj.path === 'string') {
 		config.path = obj.path;
+	}
+	const files = validateFilesConfig(obj.files);
+	if (files) {
+		config.files = files;
 	}
 	return config;
 }

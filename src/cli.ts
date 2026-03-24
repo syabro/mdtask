@@ -3,7 +3,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { CAC } from 'cac';
 import p from 'picocolors';
-import { loadConfig, resolveSearchPath } from './config.js';
+import { type FilesConfig, loadConfig, resolveSearchPath } from './config.js';
 import { findMarkdownFiles } from './files.js';
 import {
 	collectTaskBody,
@@ -12,8 +12,12 @@ import {
 	type Task,
 } from './task.js';
 
-function collectTasks(searchPath?: string): Task[] {
-	const files = findMarkdownFiles(searchPath ? { searchPath } : undefined);
+function collectTasks(searchPath?: string, filesConfig?: FilesConfig): Task[] {
+	const files = findMarkdownFiles({
+		searchPath,
+		includePatterns: filesConfig?.include,
+		excludePatterns: filesConfig?.exclude,
+	});
 	const tasks: Task[] = [];
 
 	for (const filePath of files) {
@@ -121,7 +125,7 @@ function formatTaskLine(
 function handleView(id: string, options: { path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath);
+	const tasks = collectTasks(searchPath, config?.files);
 	const task = tasks.find((t) => t.id === id);
 
 	if (!task) {
@@ -144,7 +148,7 @@ function handleView(id: string, options: { path?: string }): void {
 function handleDone(id: string, options: { path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath);
+	const tasks = collectTasks(searchPath, config?.files);
 	const matches = tasks.filter((t) => t.id === id);
 
 	if (matches.length === 0) {
@@ -188,7 +192,7 @@ function handleMove(
 ): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath);
+	const tasks = collectTasks(searchPath, config?.files);
 	const matches = tasks.filter((t) => t.id === id);
 
 	if (matches.length === 0) {
@@ -276,7 +280,7 @@ function handleOpen(id: string, options: { path?: string }): void {
 
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath);
+	const tasks = collectTasks(searchPath, config?.files);
 	const task = tasks.find((t) => t.id === id);
 
 	if (!task) {
@@ -296,7 +300,7 @@ const MALFORMED_PROPERTY_REGEX = /(?:^|\s)@([\w-]+)(?![:\w])/;
 function handleValidate(options: { path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath);
+	const tasks = collectTasks(searchPath, config?.files);
 
 	let hasErrors = false;
 
@@ -370,7 +374,7 @@ function handleList(
 ): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath);
+	const tasks = collectTasks(searchPath, config?.files);
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
 

@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 export type FindOptions = {
 	searchPath?: string;
 	excludeDirs?: string[];
+	includePatterns?: string[];
+	excludePatterns?: string[];
 };
 
 const DEFAULT_EXCLUDES = ['node_modules', '.git'];
@@ -24,21 +26,40 @@ function parseOutput(stdout: string): string[] {
 		.filter((line) => line.length > 0);
 }
 
+function normalizePattern(pattern: string): string {
+	return pattern.replace(/^\.\//, '').replace(/^\//, '');
+}
+
 function tryRipgrep(
 	searchPath: string,
 	excludeDirs: string[],
+	includePatterns?: string[],
+	excludePatterns?: string[],
 ): string[] | null {
-	const excludeArgs = excludeDirs.flatMap((dir) => ['-g', `!**/${dir}/**`]);
+	const excludeDirArgs = excludeDirs.flatMap((dir) => ['-g', `!**/${dir}/**`]);
+	const includeArgs =
+		includePatterns && includePatterns.length > 0
+			? includePatterns.flatMap((p) => ['-g', normalizePattern(p)])
+			: [];
+	const excludeArgs =
+		excludePatterns && excludePatterns.length > 0
+			? excludePatterns.flatMap((p) => ['-g', `!${normalizePattern(p)}`])
+			: [];
 	const args = [
 		'--files',
-		'-g',
-		'*.md',
+		'--type-add',
+		'mdtask:*.md',
+		'-t',
+		'mdtask',
 		'--hidden',
 		'--no-ignore',
+		...includeArgs,
+		...excludeDirArgs,
 		...excludeArgs,
-		searchPath,
+		'.',
 	];
 	const result = spawnSync('rg', args, {
+		cwd: searchPath,
 		encoding: 'utf-8',
 		stdio: ['pipe', 'pipe', 'ignore'],
 	});
@@ -48,18 +69,46 @@ function tryRipgrep(
 	}
 
 	if (result.status === 0 || result.status === 1) {
-		return parseOutput(result.stdout);
+		return parseOutput(result.stdout).map((p) => resolve(searchPath, p));
 	}
 
 	return null;
 }
 
-function tryFind(searchPath: string, excludeDirs: string[]): string[] | null {
+function globToFindPath(pattern: string): string {
+	return `*/${normalizePattern(pattern).replace(/\*\*/g, '*')}`;
+}
+
+function tryFind(
+	searchPath: string,
+	excludeDirs: string[],
+	includePatterns?: string[],
+	excludePatterns?: string[],
+): string[] | null {
 	const args = [searchPath];
 	for (const dir of excludeDirs) {
 		args.push('-type', 'd', '-name', dir, '-prune', '-o');
 	}
-	args.push('-type', 'f', '-name', '*.md', '-print');
+	args.push('-type', 'f', '-name', '*.md');
+
+	// Exclude patterns: ! -path
+	if (excludePatterns && excludePatterns.length > 0) {
+		for (const pattern of excludePatterns) {
+			args.push('!', '-path', globToFindPath(pattern));
+		}
+	}
+
+	// Include patterns: grouped with -o
+	if (includePatterns && includePatterns.length > 0) {
+		args.push('(');
+		for (let i = 0; i < includePatterns.length; i++) {
+			if (i > 0) args.push('-o');
+			args.push('-path', globToFindPath(includePatterns[i]));
+		}
+		args.push(')');
+	}
+
+	args.push('-print');
 	const result = spawnSync('find', args, {
 		encoding: 'utf-8',
 		stdio: ['pipe', 'pipe', 'ignore'],
@@ -81,9 +130,12 @@ export function findMarkdownFiles(options?: FindOptions): string[] {
 	const resolvedPath = resolve(searchPath);
 	const excludeDirs = getExcludeDirs(options);
 
+	const includePatterns = options?.includePatterns;
+	const excludePatterns = options?.excludePatterns;
+
 	const results =
-		tryRipgrep(resolvedPath, excludeDirs) ??
-		tryFind(resolvedPath, excludeDirs) ??
+		tryRipgrep(resolvedPath, excludeDirs, includePatterns, excludePatterns) ??
+		tryFind(resolvedPath, excludeDirs, includePatterns, excludePatterns) ??
 		[];
 
 	return results.sort();

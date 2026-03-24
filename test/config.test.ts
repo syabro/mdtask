@@ -19,6 +19,87 @@ describe('loadConfig', () => {
 		rmSync(tempDir, { recursive: true, force: true });
 	});
 
+	describe('files include/exclude config', () => {
+		it('loads files.include and files.exclude arrays', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({
+					files: {
+						include: ['docs/prd/**'],
+						exclude: ['docs/skills/**'],
+					},
+				}),
+			);
+
+			const config = loadConfig();
+			expect(config?.files).toEqual({
+				include: ['docs/prd/**'],
+				exclude: ['docs/skills/**'],
+			});
+		});
+
+		it('loads files with only include', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({
+					files: { include: ['docs/**'] },
+				}),
+			);
+
+			const config = loadConfig();
+			expect(config?.files).toEqual({ include: ['docs/**'] });
+		});
+
+		it('loads files with only exclude', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({
+					files: { exclude: ['test/**'] },
+				}),
+			);
+
+			const config = loadConfig();
+			expect(config?.files).toEqual({ exclude: ['test/**'] });
+		});
+
+		it('ignores non-array include/exclude values', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({
+					files: { include: 'not-array', exclude: 123 },
+				}),
+			);
+
+			const config = loadConfig();
+			expect(config?.files).toBeUndefined();
+		});
+
+		it('filters out non-string items in arrays', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({
+					files: { include: ['docs/**', 123, null], exclude: ['test/**'] },
+				}),
+			);
+
+			const config = loadConfig();
+			expect(config?.files).toEqual({
+				include: ['docs/**'],
+				exclude: ['test/**'],
+			});
+		});
+
+		it('ignores files when not an object', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({ files: 'not-object' }),
+			);
+
+			const config = loadConfig();
+			expect(config?.files).toBeUndefined();
+		});
+	});
+
 	describe('config file loading', () => {
 		it('returns null when no config file exists', () => {
 			const config = loadConfig();
