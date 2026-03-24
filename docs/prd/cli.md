@@ -103,6 +103,7 @@ Checks performed:
 - **Duplicate IDs** (error) — same task ID appears in multiple places. Reports all locations. Exits with code 1.
 - **Empty tags** (warning) — `#` followed by whitespace instead of a tag name. Reported to stderr.
 - **Malformed metadata** (warning) — `@key` without `:value`. Reported to stderr.
+- **Unknown priority** (warning) — `!word` that isn't `crit`, `high`, or `low`. Reported to stderr.
 
 Errors cause exit code 1. Warnings are reported but don't affect exit code. Clean files produce no output and exit 0.
 

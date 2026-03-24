@@ -17,7 +17,7 @@ Metadata can be separated by double tab (`\t\t`) or space before first `#`, `!`,
 After the task title, metadata tokens provide additional categorization:
 
 - **Tags** (`#tag`): Categories like `#feature`, `#bug`, `#v2`. Tags can contain letters and digits.
-- **Priority** (`!crit`, `!high`, `!low`): Task urgency. Tasks without priority are considered medium.
+- **Priority** (`!crit`, `!high`, `!low`): Task urgency. Tasks without priority are considered medium. Any `!\w+` token is accepted as priority; `mdtask validate` warns about values outside the known set.
 - **Properties** (`@key:value`): Key-value pairs for structured data like `@status:blocked` or `@blocked_by:TSK-001`. The same key can appear multiple times to store multiple values.
 
 Example: `- [ ] TSK-123 Fix login		#bug !high @status:blocked @blocked_by:TSK-001`
@@ -110,6 +110,12 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   When all subtasks are `[x]`, automatically mark parent as done.
   Requires parsing subtasks in description block.
 
-- [ ] TSK-005 Unknown priority tags
+- [x] TSK-005 Unknown priority tags
   Unknown `!` tags (not crit/high/low) — warning or ignore?
   Solution: parse any `!\w+`, validate in `mdtask validate` command.
+
+  **Implemented:**
+  - Parser accepts any `!\w+` as priority (first match wins), not just crit/high/low
+  - `mdtask validate` warns about unknown priority values (e.g., `!urgent`)
+  - Unknown priorities sort as medium and display without color
+  - Multiple priority tokens on one line: each unknown is warned individually

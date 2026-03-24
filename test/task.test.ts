@@ -320,10 +320,20 @@ describe('parseMetadata', () => {
 			expect(result.tags).toEqual(['#tag']);
 		});
 
-		it('ignores unknown priority values', () => {
+		it('parses unknown priority values', () => {
 			const result = parseMetadata('!urgent #tag');
-			expect(result.priority).toBeNull();
+			expect(result.priority).toBe('urgent');
 			expect(result.tags).toEqual(['#tag']);
+		});
+
+		it('takes first priority when first is unknown', () => {
+			const result = parseMetadata('!urgent !high');
+			expect(result.priority).toBe('urgent');
+		});
+
+		it('takes first priority when known comes before unknown', () => {
+			const result = parseMetadata('!high !urgent');
+			expect(result.priority).toBe('high');
 		});
 
 		it('takes first priority when duplicate', () => {

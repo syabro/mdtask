@@ -165,6 +165,49 @@ describe('mdtask validate', () => {
 		expect(exitSpy).not.toHaveBeenCalled();
 	});
 
+	it('unknown priority — warning on stderr, no exit 1', () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 Task with unknown priority\t\t!urgent\n',
+		);
+
+		run(['validate']);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('warning');
+		expect(stderr).toContain('unknown priority');
+		expect(stderr).toContain('!urgent');
+		expect(exitSpy).not.toHaveBeenCalledWith(1);
+	});
+
+	it('known priority — no warning', () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 High priority task\t\t!high\n',
+		);
+
+		run(['validate']);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toBe('');
+		expect(exitSpy).not.toHaveBeenCalled();
+	});
+
+	it('multiple priorities with unknown — warns for each unknown', () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 Task\t\t!high !urgent\n',
+		);
+
+		run(['validate']);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('warning');
+		expect(stderr).toContain('!urgent');
+		expect(stderr).not.toContain('!high');
+		expect(exitSpy).not.toHaveBeenCalledWith(1);
+	});
+
 	it('respects --path option', () => {
 		const subDir = join(tempDir, 'sub');
 		mkdirSync(subDir);

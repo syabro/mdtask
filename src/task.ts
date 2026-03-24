@@ -9,7 +9,7 @@ export type TaskHeader = {
 
 export type TaskMetadata = {
 	tags: string[];
-	priority: 'crit' | 'high' | 'low' | null;
+	priority: string | null;
 	properties: Record<string, string[]>;
 };
 
@@ -110,14 +110,14 @@ export function collectTaskBody(lines: string[], headerIndex: number): string {
 }
 
 const TAG_REGEX = /#[\w-]+/g;
-const PRIORITY_REGEX = /!(\w+)/g;
+export const PRIORITY_REGEX = /!(\w+)/g;
 const PROPERTY_REGEX = /(?<=^|\s)@([\w-]+):(\S+)/g;
 
-const VALID_PRIORITIES = new Set(['crit', 'high', 'low']);
+export const VALID_PRIORITIES = new Set(['crit', 'high', 'low']);
 
 export function parseMetadata(rawMetadata: string): TaskMetadata {
 	const tags: string[] = [];
-	let priority: 'crit' | 'high' | 'low' | null = null;
+	let priority: string | null = null;
 	const properties: Record<string, string[]> = Object.create(null);
 
 	for (const match of rawMetadata.matchAll(TAG_REGEX)) {
@@ -125,9 +125,8 @@ export function parseMetadata(rawMetadata: string): TaskMetadata {
 	}
 
 	for (const match of rawMetadata.matchAll(PRIORITY_REGEX)) {
-		const prio = match[1];
-		if (VALID_PRIORITIES.has(prio) && priority === null) {
-			priority = prio as 'crit' | 'high' | 'low';
+		if (priority === null) {
+			priority = match[1];
 		}
 	}
 

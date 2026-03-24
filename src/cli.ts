@@ -7,9 +7,11 @@ import { type FilesConfig, loadConfig, resolveSearchPath } from './config.js';
 import { findMarkdownFiles } from './files.js';
 import {
 	collectTaskBody,
+	PRIORITY_REGEX,
 	parseMetadata,
 	parseTaskHeader,
 	type Task,
+	VALID_PRIORITIES,
 } from './task.js';
 
 function collectTasks(searchPath?: string, filesConfig?: FilesConfig): Task[] {
@@ -337,6 +339,14 @@ function handleValidate(options: { path?: string }): void {
 			process.stderr.write(
 				`warning: malformed metadata in ${task.filePath}:${task.lineNumber} (${task.id})\n`,
 			);
+		}
+
+		for (const match of raw.matchAll(PRIORITY_REGEX)) {
+			if (!VALID_PRIORITIES.has(match[1])) {
+				process.stderr.write(
+					`warning: unknown priority !${match[1]} in ${task.filePath}:${task.lineNumber} (${task.id})\n`,
+				);
+			}
 		}
 	}
 
