@@ -6,16 +6,23 @@ disable-model-invocation: false
 
 # /check — Consistency check
 
-Runs Gemini as reviewer to find contradictions across project files.
+Runs Gemini as reviewer to find contradictions **in changed files only**.
+
+## Preparation
+
+Before building the prompt, run `git diff --name-only HEAD` (unstaged + staged) to get the list of changed files. If nothing changed, stop — nothing to check.
 
 ## Prompt
 
-Gemini needs `@` prefixes for file inclusion.
+Gemini needs `@` prefixes for file inclusion. Insert the actual changed file list into `CHANGED_FILES` below.
 
 ```
+CHANGED FILES (only check consistency FOR these):
+<list each changed file with @ prefix, one per line>
+
 Step 1: Read @README.md @CLAUDE.md (symlink to AGENTS.md, do not read AGENTS.md separately) @docs/spec-driven-development.md.
 Step 2: Read @./ the rest of the project files. Skip: .git/, .claude/.
-Step 3: Check docs against each other and against code. Find any inconsistency — contradictions, stale references, outdated paths, missing entries, mismatched terminology. Do NOT check code against code.
+Step 3: Check ONLY the changed files listed above against the rest of the project. Find inconsistencies — contradictions, stale references, outdated paths, missing entries, mismatched terminology — but ONLY if at least one side of the inconsistency is a changed file. Do NOT report issues between unchanged files. Do NOT check code against code.
 
 For each finding:
 - <description> !blocker|!warning|!nit
