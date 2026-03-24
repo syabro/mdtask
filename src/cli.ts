@@ -179,16 +179,43 @@ function handleDone(id: string, options: { path?: string }): void {
 	writeFileSync(task.filePath, lines.join('\n'));
 }
 
-function handleList(options: { all?: boolean; path?: string }): void {
+const PRIORITY_WEIGHT: Record<string, number> = {
+	crit: 0,
+	high: 1,
+	low: 3,
+};
+const DEFAULT_PRIORITY_WEIGHT = 2; // medium (no priority)
+
+function sortByPriority(tasks: Task[]): Task[] {
+	return [...tasks].sort((a, b) => {
+		const wa = a.priority
+			? (PRIORITY_WEIGHT[a.priority] ?? DEFAULT_PRIORITY_WEIGHT)
+			: DEFAULT_PRIORITY_WEIGHT;
+		const wb = b.priority
+			? (PRIORITY_WEIGHT[b.priority] ?? DEFAULT_PRIORITY_WEIGHT)
+			: DEFAULT_PRIORITY_WEIGHT;
+		return wa - wb;
+	});
+}
+
+function handleList(options: {
+	all?: boolean;
+	sort?: string;
+	path?: string;
+}): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
 	const tasks = collectTasks(searchPath);
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
 
-	const filteredTasks = options.all
+	let filteredTasks = options.all
 		? tasks
 		: tasks.filter((t) => t.status === 'open');
+
+	if (options.sort === 'priority') {
+		filteredTasks = sortByPriority(filteredTasks);
+	}
 
 	for (const task of filteredTasks) {
 		process.stdout.write(`${formatTaskLine(task, statusMap, isTTY)}\n`);
@@ -203,6 +230,7 @@ export function run(args: string[]): number {
 	cli
 		.command('list', 'List tasks')
 		.option('--all', 'Show all tasks including done')
+		.option('--sort <field>', 'Sort tasks (e.g. --sort=priority)')
 		.action((options) => {
 			handleList(options);
 		});

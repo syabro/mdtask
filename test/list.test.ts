@@ -416,6 +416,71 @@ describe('mdtask list', () => {
 		});
 	});
 
+	describe('sorting', () => {
+		it('sorts by priority with --sort=priority (crit → high → medium → low)', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Low task !low',
+					'- [ ] TSK-002 Medium task',
+					'- [ ] TSK-003 Critical task !crit',
+					'- [ ] TSK-004 High task !high',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '--sort=priority']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			const lines = output.trim().split('\n');
+			expect(lines).toHaveLength(4);
+			expect(lines[0]).toContain('TSK-003'); // crit
+			expect(lines[1]).toContain('TSK-004'); // high
+			expect(lines[2]).toContain('TSK-002'); // medium (no priority)
+			expect(lines[3]).toContain('TSK-001'); // low
+		});
+
+		it('preserves file order within same priority', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 First high !high',
+					'- [ ] TSK-002 Second high !high',
+					'- [ ] TSK-003 Third high !high',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list', '--sort=priority']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			const lines = output.trim().split('\n');
+			expect(lines[0]).toContain('TSK-001');
+			expect(lines[1]).toContain('TSK-002');
+			expect(lines[2]).toContain('TSK-003');
+		});
+
+		it('default list (no --sort) preserves file order', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Low task !low',
+					'- [ ] TSK-002 Critical task !crit',
+					'- [ ] TSK-003 High task !high',
+				].join('\n') + '\n',
+			);
+
+			const code = run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			const lines = output.trim().split('\n');
+			expect(lines[0]).toContain('TSK-001'); // low, but first in file
+			expect(lines[1]).toContain('TSK-002'); // crit, second in file
+			expect(lines[2]).toContain('TSK-003'); // high, third in file
+		});
+	});
+
 	describe('property display', () => {
 		it('shows @iter property in list output', () => {
 			writeFileSync(

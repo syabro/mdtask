@@ -26,6 +26,14 @@ When output is to a terminal (TTY), priorities are color-coded:
 
 When piped to another command, colors are disabled for clean parsing.
 
+### Sorting
+
+```bash
+mdtask list --sort=priority    # Sort by priority: crit → high → medium → low
+```
+
+Tasks with the same priority retain their original file order (stable sort).
+
 ## Viewing a task
 
 `mdtask view <ID>` prints the full task block — header line (raw from file) followed by the dedented body:
@@ -61,7 +69,6 @@ Additional commands are planned for future implementation:
 - `mdtask open <ID>` — open task in `$EDITOR` at task line (planned)
 - `mdtask move <ID> <file>` — move task to another file (planned)
 - `mdtask validate` — check ID uniqueness and metadata integrity (planned)
-- `mdtask list --sort=priority` — sort by priority (planned)
 - `mdtask list #tag` — filter by tag (planned)
 - `mdtask list !high` — filter by priority (planned)
 
@@ -130,12 +137,17 @@ When output is to a terminal (TTY), open blockers are shown in red. When piped, 
 
 Full blocker info (including resolved ones) remains in the task file, visible via `mdtask view`.
 
-- [ ] CLI-002 Command `mdtask list` — sorting
+- [x] CLI-002 Command `mdtask list` — sorting
   Flags:
   - `--sort=priority` (crit → high → med → low)
 
   Tests:
   - sort by priority
+
+  **Implemented:**
+  - `--sort=priority` flag sorts tasks by priority: crit → high → medium (no priority) → low
+  - Stable sort preserves original file order within same priority level
+  - Works with `--all` flag to sort both open and done tasks
 
 - [x] CLI-003 Command `mdtask view <ID>`		@iter:mvp @blocked_by:TSK-002 @blocked_by:FLS-001
   Print full task block by ID.
