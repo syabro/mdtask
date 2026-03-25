@@ -128,6 +128,24 @@ File discovery follows symlinks — both symlinked `.md` files and symlinked dir
 
 When a symlink and its target both appear in the search tree, only one entry is returned (deduplicated by resolved real path) to prevent duplicate task IDs in output.
 
+## Setting metadata on tasks
+
+`mdtask set <ID...> <tokens...>` adds metadata tokens to task header lines:
+
+```bash
+mdtask set TSK-001 @iter:new-ids           # add property
+mdtask set TSK-001 TSK-002 #backend        # multiple IDs
+mdtask set TSK-001,TSK-002 !high #feature  # comma-separated IDs
+```
+
+Args are parsed by first character: `#` = tag, `!` = priority, `@` = property. Everything else is a task ID.
+
+- **Tags:** skipped if already present (exact match)
+- **Priority:** replaces existing priority (only one allowed)
+- **Properties:** always appended (multiple values per key allowed)
+
+Metadata is appended after `\t\t` separator. If no metadata exists, `\t\t` is added.
+
 ## Shell safety
 
 All external process invocations use `execFileSync` or `spawnSync` without `shell: true`, so user input (task IDs, file paths, task content) is never interpreted by a shell. Task IDs are constrained to `[A-Z]+-\d+` by the parser regex, preventing metacharacters from entering IDs. File paths with special characters (spaces, `$()`, backticks, pipes) are handled safely by Node.js `fs` APIs. All output uses `process.stdout.write()` directly — no shell involved.
@@ -480,7 +498,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Numeric suffix match (42 → CLI-042)
   - Error if not found
 
-- [ ] CLI-023 Command `mdtask set <ID...> <tokens...>` — add metadata to tasks
+- [x] CLI-023 Command `mdtask set <ID...> <tokens...>` — add metadata to tasks
   Add/update metadata tokens on task header lines.
   Accepts multiple IDs (spaces or commas).
 
@@ -491,6 +509,13 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 
   Args parsed by first char: #=tag, !=priority, @=property, otherwise=ID.
   File modified in-place. Error if any task not found.
+
+  **Implemented:**
+  - `mdtask set` command with multiple ID support (space and comma separated)
+  - Tags skipped if already present, priority replaced, properties always appended
+  - Grouped file writes — multiple tasks in one file modified in single read/write
+  - Priority replacement targets metadata only, not title text
+  - 14 tests covering all token types, duplicates, errors, and edge cases
 
 - [ ] CLI-024 Default command — view task by ID
   `mdtask EXMPL-023` without a command name defaults to `view`.

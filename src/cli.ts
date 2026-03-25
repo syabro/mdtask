@@ -496,6 +496,140 @@ function handleList(
 	}
 }
 
+function isToken(arg: string): boolean {
+	return arg.startsWith('#') || arg.startsWith('!') || arg.startsWith('@');
+}
+
+function handleSet(args: string[], options: { path?: string }): void {
+	// Split comma-separated args and flatten
+	const allArgs = args.flatMap((a) => a.split(',').filter(Boolean));
+
+	const ids = allArgs.filter((a) => !isToken(a));
+	const tokens = allArgs.filter((a) => isToken(a));
+
+	if (ids.length === 0) {
+		process.stderr.write('mdtask: no task IDs provided\n');
+		process.exit(1);
+		return;
+	}
+
+	if (tokens.length === 0) {
+		process.stderr.write('mdtask: no metadata tokens provided\n');
+		process.exit(1);
+		return;
+	}
+
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const tasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
+
+	// Validate all IDs first
+	const matched: Task[] = [];
+	for (const id of ids) {
+		const matches = tasks.filter((t) => t.id === id);
+		if (matches.length === 0) {
+			process.stderr.write(`mdtask: task '${id}' not found\n`);
+			process.exit(1);
+			return;
+		}
+		if (matches.length > 1) {
+			process.stderr.write(`mdtask: duplicate ID '${id}'\n`);
+			process.exit(1);
+			return;
+		}
+		matched.push(matches[0]);
+	}
+
+	// Group by file to minimize reads/writes
+	const byFile = new Map<string, Task[]>();
+	for (const task of matched) {
+		const existing = byFile.get(task.filePath) ?? [];
+		existing.push(task);
+		byFile.set(task.filePath, existing);
+	}
+
+	const newTags = tokens.filter((t) => t.startsWith('#'));
+	const newPriority = tokens.find((t) => t.startsWith('!'));
+	const newProps = tokens.filter((t) => t.startsWith('@'));
+
+	for (const [filePath, fileTasks] of byFile) {
+		const content = readFileSync(filePath, 'utf-8');
+		const lines = content.split('\n');
+
+		for (const task of fileTasks) {
+			const lineIdx = task.lineNumber - 1;
+			const line = lines[lineIdx];
+
+			if (!line.includes(task.id)) {
+				process.stderr.write(
+					`mdtask: file changed, task '${task.id}' not at expected line\n`,
+				);
+				process.exit(1);
+				return;
+			}
+
+			// Parse existing metadata to check for duplicates
+			const existingMeta = parseMetadata(task.rawMetadata);
+
+			// Build tokens to add
+			const addTokens: string[] = [];
+
+			for (const tag of newTags) {
+				if (!existingMeta.tags.includes(tag)) {
+					addTokens.push(tag);
+				}
+			}
+
+			for (const prop of newProps) {
+				addTokens.push(prop);
+			}
+
+			// Handle priority: remove existing from metadata, add new
+			let updatedLine = line;
+			if (newPriority) {
+				if (existingMeta.priority !== null) {
+					// Remove existing priority token from metadata portion only
+					const oldPriority = `!${existingMeta.priority}`;
+					const metaStart = updatedLine.lastIndexOf(oldPriority);
+					if (metaStart !== -1) {
+						const before = updatedLine.slice(0, metaStart).replace(/\s+$/, '');
+						const after = updatedLine.slice(metaStart + oldPriority.length);
+						updatedLine = before + after;
+					}
+				}
+				addTokens.push(newPriority);
+			}
+
+			if (addTokens.length === 0) {
+				continue;
+			}
+
+			const suffix = addTokens.join(' ');
+
+			// Append tokens
+			const doubleTabIdx = updatedLine.indexOf('\t\t');
+			if (doubleTabIdx !== -1) {
+				// Has tab separator — append after existing metadata
+				updatedLine = `${updatedLine.trimEnd()} ${suffix}`;
+			} else if (task.rawMetadata) {
+				// Has metadata without tab separator — append with space
+				updatedLine = `${updatedLine.trimEnd()} ${suffix}`;
+			} else {
+				// No metadata — add with tab separator
+				updatedLine = `${updatedLine.trimEnd()}\t\t${suffix}`;
+			}
+
+			lines[lineIdx] = updatedLine;
+		}
+
+		writeFileSync(filePath, lines.join('\n'));
+	}
+}
+
 export function run(args: string[]): number {
 	const cli = new CAC('mdtask');
 
@@ -530,6 +664,12 @@ export function run(args: string[]): number {
 	cli.command('validate', 'Check task integrity').action((options) => {
 		handleValidate(options);
 	});
+
+	cli
+		.command('set <...args>', 'Add metadata to tasks')
+		.action((args: string[], options) => {
+			handleSet(args, options);
+		});
 
 	cli.help();
 	cli.version('0.1.0');
