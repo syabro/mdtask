@@ -479,3 +479,15 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Exact match first (CLI-042)
   - Numeric suffix match (42 → CLI-042)
   - Error if not found
+
+- [ ] CLI-023 Command `mdtask set <ID...> <tokens...>` — add metadata to tasks		@iter:new-ids @blocked_by:CLI-022
+  Add/update metadata tokens on task header lines.
+  Accepts multiple IDs (spaces or commas).
+
+  Usage:
+  mdtask set 21 22 @iter:new-ids
+  mdtask set 21,22,7,8,9 #feature !high
+  mdtask set 21 @iter:new-ids #backend
+
+  Args parsed by first char: #=tag, !=priority, @=property, otherwise=ID.
+  File modified in-place. Error if any task not found.
