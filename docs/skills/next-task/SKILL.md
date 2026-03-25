@@ -17,14 +17,16 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 > **`#noqa` tag:** If the picked task has `#noqa`, skip Steps 3, 5, and 8 (no Gemini reviews, no /check).
 
+> **Mode:** By default, work autonomously — pick the most logical task, approve your own plan, fix /check warnings and blockers, skip nits. If user passes `--interactive` (or `--i`), ask questions at decision points: task selection, plan approval, /check findings.
+
 ### Step 1 — Pick a task
 
 **ALWAYS use `pnpm mdtask` CLI — NEVER parse markdown files manually.**
 
 1. Run `pnpm mdtask list` to get all open tasks
    - Tasks with unresolved `@blocked_by:ID` are still listed — skip them when picking
-2. Ask user what direction they want to work on today (tags, area, specific task) if user didnt provide scope of the work
-3. Filter and present matching tasks, ask user to pick one (via "Ask a User Question")
+2. If user provided scope (tag, area, specific task) — filter by it. Otherwise pick the most logical next task.
+3. In `--interactive` mode: present matching tasks and ask user to choose.
 4. If no tasks remain: tell user, stop
 
 ### Step 2 — Plan
@@ -44,7 +46,7 @@ After reading this file you must say "I'll do all the steps as it described" and
 2. Send plan + task spec + relevant project files for review
 3. Ask Gemini: is the plan correct? Any missing pieces? Better approach?
 4. Combine feedback into a refined plan
-5. Present the refined plan to user for single approval
+5. In `--interactive` mode: present the refined plan to user for approval. Otherwise proceed.
 
 ### Step 4 — Execute (TDD)
 
