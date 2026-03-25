@@ -16,10 +16,13 @@ import { type FilesConfig, loadConfig, resolveSearchPath } from './config.js';
 import { findMarkdownFiles } from './files.js';
 import {
 	collectTaskBody,
+	extractNumericPart,
 	PRIORITY_REGEX,
 	parseMetadata,
 	parseTaskHeader,
+	parseUnidentifiedTaskLine,
 	type Task,
+	type UnidentifiedTask,
 	VALID_PRIORITIES,
 } from './task.js';
 
@@ -630,6 +633,149 @@ function handleSet(args: string[], options: { path?: string }): void {
 	}
 }
 
+function handleIds(options: { path?: string }): void {
+	const config = loadConfig();
+	const searchPath = resolveSearchPath(options.path, config);
+	const existingTasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
+
+	// Find global max NNN across all existing IDs
+	let globalMax = 0;
+	for (const task of existingTasks) {
+		const num = extractNumericPart(task.id);
+		if (num > globalMax) globalMax = num;
+	}
+
+	// Detect duplicate numeric parts across prefixes
+	const numericMap = new Map<number, string[]>();
+	for (const task of existingTasks) {
+		const num = extractNumericPart(task.id);
+		const existing = numericMap.get(num) ?? [];
+		existing.push(task.id);
+		numericMap.set(num, existing);
+	}
+	for (const [num, ids] of numericMap) {
+		if (ids.length > 1) {
+			const prefixes = [...new Set(ids.map((id) => id.replace(/-\d+$/, '')))];
+			if (prefixes.length > 1) {
+				process.stderr.write(
+					`warning: duplicate numeric part ${String(num).padStart(3, '0')} across prefixes: ${ids.join(', ')}\n`,
+				);
+			}
+		}
+	}
+
+	// Scan all files for unidentified tasks
+	const files = findMarkdownFiles({
+		searchPath,
+		includePatterns: config?.files?.include,
+		excludePatterns: config?.files?.exclude,
+	});
+
+	// Determine minimum padding width from existing IDs (at least 3)
+	let padWidth = 3;
+	for (const task of existingTasks) {
+		const match = /(\d+)$/.exec(task.id);
+		if (match && match[1].length > padWidth) {
+			padWidth = match[1].length;
+		}
+	}
+
+	// Pass 1: parse all files, determine prefixes, validate before any mutations
+	type FileWork = {
+		filePath: string;
+		lines: string[];
+		unidentified: UnidentifiedTask[];
+		filePrefix: string;
+	};
+	const workItems: FileWork[] = [];
+
+	for (const filePath of files) {
+		let content: string;
+		try {
+			content = readFileSync(filePath, 'utf-8');
+		} catch {
+			continue;
+		}
+
+		const lines = content.split('\n');
+		const unidentified: UnidentifiedTask[] = [];
+
+		for (let i = 0; i < lines.length; i++) {
+			const ut = parseUnidentifiedTaskLine(lines[i], i);
+			if (ut) {
+				unidentified.push(ut);
+			}
+		}
+
+		if (unidentified.length === 0) continue;
+
+		// Determine prefix for this file
+		// 1. From existing IDed tasks in this file
+		const fileExisting = existingTasks.filter((t) => t.filePath === filePath);
+		let filePrefix: string | null = null;
+
+		if (fileExisting.length > 0) {
+			const prefixCounts = new Map<string, number>();
+			for (const t of fileExisting) {
+				const p = t.id.replace(/-\d+$/, '');
+				prefixCounts.set(p, (prefixCounts.get(p) ?? 0) + 1);
+			}
+			let maxCount = 0;
+			for (const [p, count] of prefixCounts) {
+				if (count > maxCount) {
+					maxCount = count;
+					filePrefix = p;
+				}
+			}
+		}
+
+		// 2. Fallback: seed prefix from unidentified tasks
+		if (!filePrefix) {
+			const seed = unidentified.find((ut) => ut.seedPrefix);
+			if (seed) {
+				filePrefix = seed.seedPrefix!;
+			}
+		}
+
+		if (!filePrefix) {
+			process.stderr.write(
+				`mdtask: no prefix found for ${filePath} — add a task with an ID or a seed line like '- [ ] PRJ- Task title'\n`,
+			);
+			process.exit(1);
+			return;
+		}
+
+		workItems.push({ filePath, lines, unidentified, filePrefix });
+	}
+
+	// Pass 2: assign IDs and write files (all prefixes validated)
+	let nextNum = globalMax + 1;
+	const assigned: string[] = [];
+
+	for (const { filePath, lines, unidentified, filePrefix } of workItems) {
+		for (const ut of unidentified) {
+			const activePrefix = ut.seedPrefix ?? filePrefix;
+			const id = `${activePrefix}-${String(nextNum).padStart(padWidth, '0')}`;
+			const checkbox = ut.status === 'done' ? '[x]' : '[ ]';
+
+			lines[ut.lineIndex] = `- ${checkbox} ${id} ${ut.title}`;
+
+			assigned.push(id);
+			nextNum++;
+		}
+
+		writeFileSync(filePath, lines.join('\n'));
+	}
+
+	for (const id of assigned) {
+		process.stdout.write(`${id}\n`);
+	}
+}
+
 export function run(args: string[]): number {
 	const cli = new CAC('mdtask');
 
@@ -669,6 +815,12 @@ export function run(args: string[]): number {
 		.command('set <...args>', 'Add metadata to tasks')
 		.action((args: string[], options) => {
 			handleSet(args, options);
+		});
+
+	cli
+		.command('ids', 'Auto-assign IDs to unidentified tasks')
+		.action((options) => {
+			handleIds(options);
 		});
 
 	cli.help();

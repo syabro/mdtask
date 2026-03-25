@@ -109,6 +109,62 @@ export function collectTaskBody(lines: string[], headerIndex: number): string {
 	return dedented.join('\n');
 }
 
+// Matches unidentified task lines: `- [ ] Title` or `- [x] Title` without [A-Z]+-\d+ ID
+const UNIDENTIFIED_TASK_REGEX = /^- \[([ x])\] (.+)$/;
+
+// Matches seed prefix lines: `- [ ] CLI- Title` (prefix without number)
+const SEED_PREFIX_REGEX = /^- \[([ x])\] ([A-Z]+)- (.+)$/;
+
+export type UnidentifiedTask = {
+	status: TaskStatus;
+	title: string;
+	rawLine: string;
+	lineIndex: number;
+	seedPrefix?: string;
+};
+
+export function parseUnidentifiedTaskLine(
+	line: string,
+	lineIndex: number,
+): UnidentifiedTask | null {
+	const lineNoCR = line.replace(/\r$/, '');
+
+	// Skip if it's already an identified task
+	if (TASK_HEADER_REGEX.test(lineNoCR)) {
+		return null;
+	}
+
+	// Check for seed prefix first (e.g. `- [ ] CLI- Title`)
+	const seedMatch = SEED_PREFIX_REGEX.exec(lineNoCR);
+	if (seedMatch) {
+		return {
+			status: seedMatch[1] === 'x' ? 'done' : 'open',
+			title: seedMatch[3],
+			rawLine: lineNoCR,
+			lineIndex,
+			seedPrefix: seedMatch[2],
+		};
+	}
+
+	// Check for plain unidentified task
+	const match = UNIDENTIFIED_TASK_REGEX.exec(lineNoCR);
+	if (!match) {
+		return null;
+	}
+
+	return {
+		status: match[1] === 'x' ? 'done' : 'open',
+		title: match[2],
+		rawLine: lineNoCR,
+		lineIndex,
+	};
+}
+
+export function extractNumericPart(id: string): number {
+	const match = /\d+$/.exec(id);
+	return match ? Number.parseInt(match[0], 10) : 0;
+}
+
 const TAG_REGEX = /#[\w-]+/g;
 export const PRIORITY_REGEX = /!(\w+)/g;
 const PROPERTY_REGEX = /(?<=^|\s)@([\w-]+):(\S+)/g;

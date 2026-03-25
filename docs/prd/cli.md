@@ -146,6 +146,26 @@ Args are parsed by first character: `#` = tag, `!` = priority, `@` = property. E
 
 Metadata is appended after `\t\t` separator. If no metadata exists, `\t\t` is added.
 
+## Auto-assigning IDs
+
+`mdtask ids` scans all files for tasks without IDs and assigns globally unique `PREFIX-NNN`:
+
+```bash
+mdtask ids                   # assign IDs to all unidentified tasks
+```
+
+Prefix is derived automatically — no configuration needed:
+1. From existing IDed tasks in the same file (most frequent prefix wins)
+2. From a seed line like `- [ ] CLI- Task title` (prefix without number)
+
+NNN is globally unique across all prefixes. If the highest existing number is 023 (from any prefix), the next assigned ID will be 024.
+
+A seed prefix on a specific task overrides the file-level prefix for that task. After `mdtask ids`, the seed marker is consumed — the task gets a proper `PREFIX-NNN` ID.
+
+Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-005`) are reported as warnings to stderr.
+
+If a file has unidentified tasks but no prefix source, `mdtask ids` exits with an error without modifying any files.
+
 ## Shell safety
 
 All external process invocations use `execFileSync` or `spawnSync` without `shell: true`, so user input (task IDs, file paths, task content) is never interpreted by a shell. Task IDs are constrained to `[A-Z]+-\d+` by the parser regex, preventing metacharacters from entering IDs. File paths with special characters (spaces, `$()`, backticks, pipes) are handled safely by Node.js `fs` APIs. All output uses `process.stdout.write()` directly — no shell involved.
@@ -482,14 +502,22 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - When all blockers are resolved, no `@blocked_by` suffix appears
   - Full blocker info preserved in task files for `mdtask view`
 
-- [ ] CLI-021 Command `mdtask ids` — auto-assign globally unique IDs		@iter:new-ids
+- [x] CLI-021 Command `mdtask ids` — auto-assign globally unique IDs		@iter:new-ids
   New command that scans all files for tasks without IDs (`- [ ] Title without prefix`)
   and assigns PREFIX-NNN where:
-  - PREFIX derived from file via `.mdtaskrc` `prefixes` mapping
+  - PREFIX derived from existing tasks in the file or a seed line (`- [ ] CLI- Title`)
   - NNN is globally unique across all prefixes (next after global max)
   - Multiple un-IDed tasks in one file get sequential numbers top-to-bottom
   - Also detects and reports ambiguous/duplicate numeric parts across prefixes
-  Error if file has no prefix mapping.
+  Error if file has no prefix source.
+
+  **Implemented:**
+  - `mdtask ids` command scans files and assigns PREFIX-NNN to unidentified tasks
+  - Prefix derived from existing IDed tasks (most frequent) or seed line — no config needed
+  - NNN globally unique across all prefixes, zero-padded to at least 3 digits
+  - Two-pass approach: validates all prefixes before any file mutations
+  - Seed prefix on a task overrides file-level prefix for that task
+  - Duplicate numeric parts across prefixes reported as warnings
 
 - [ ] CLI-022 Short numeric lookup in all commands		@iter:new-ids
   All commands accept plain number: `mdtask view 42` resolves to the task whose NNN=42.
