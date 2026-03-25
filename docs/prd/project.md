@@ -112,10 +112,17 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - EXMPL/KTL example IDs untouched
   - `mdtask validate` passes clean after migration
 
-- [ ] PRJ-036 Update create-task skill for new ID scheme		@iter:new-ids
+- [x] PRJ-036 Update create-task skill for new ID scheme		@iter:new-ids
   Simplify create-task skill: write task without ID, then run `mdtask ids`.
   Remove manual ID computation from Step 4.
   Update prefix-to-PRD table to match `.mdtaskrc` `prefixes` field.
+
+  **Implemented:**
+  - Removed manual ID computation (old Step 4), replaced with `mdtask ids` after save
+  - Documented three task header formats: no ID, seed prefix, full ID
+  - Default is write without ID — `mdtask ids` assigns automatically
+  - Added TST prefix to PRD table
+  - Updated examples to show new workflow
 
 - [ ] PRJ-037 Document globally unique ID scheme		@iter:new-ids
   Update docs/mdtask.md section 7 "Task Identity" and docs/skills/mdtask/SKILL.md:
