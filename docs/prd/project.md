@@ -101,6 +101,23 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - Steps 3, 5, and 8 each have "Skip if task has `#noqa` tag" note
   - Feature description added to docs/prd/project.md
 
+- [ ] PRJ-007 Migrate to globally unique numeric IDs
+  Renumber all existing tasks so NNN is unique across all prefixes.
+  Update all `@blocked_by:OLD-ID` references.
+  Single atomic commit. Do not touch EXMPL/KTL example IDs.
+
+- [ ] PRJ-008 Update create-task skill for new ID scheme
+  Simplify create-task skill: write task without ID, then run `mdtask ids`.
+  Remove manual ID computation from Step 4.
+  Update prefix-to-PRD table to match `.mdtaskrc` `prefixes` field.
+
+- [ ] PRJ-009 Document globally unique ID scheme
+  Update docs/mdtask.md section 7 "Task Identity" and docs/skills/mdtask/SKILL.md:
+  - NNN is globally unique across all prefixes
+  - Short numeric lookup: `mdtask view 42`
+  - `mdtask ids` auto-assigns IDs
+  - Prefix-to-file mapping in `.mdtaskrc`
+
 - [ ] PRJ-006 Define layered architecture
   Analyze current code and define clear data flow layers.
   Create docs/architecture.md describing:
