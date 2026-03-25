@@ -57,6 +57,8 @@ Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown;
 
 - `mdtask done <ID>` — toggle `[ ] ↔ [x]` in-place. Duplicate IDs cause an error.
 - `mdtask move <ID> <file>` — move task block to another file. Creates target if needed.
+- `mdtask set <ID...> <tokens...>` — add metadata (tags, priority, properties) to tasks.
+- `mdtask ids` — auto-assign globally unique IDs to unidentified tasks.
 
 ### 6.3 Validate
 
