@@ -6,14 +6,20 @@ CLI task manager where Markdown is the single source of truth. No database, no s
 
 English is the project language — docs, commit messages, code comments, and communication.
 
-## Principle
+## Principles
 
-Markdown is not presentation — it is a structured table:
+### Markdown is the data model
+
+It is a structured table:
 - line = record
 - indent = block boundary
 - inline tokens = columns (tags, priority, properties)
 
 CLI is only an interpreter, never the owner of data.
+
+### Help, don't hinder
+
+Every feature must reduce user effort, not add configuration burden. Derive what you can from existing data in files — don't ask users to maintain mappings, schemas, or config that the tool could figure out on its own.
 
 ## Task Format
 
