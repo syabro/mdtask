@@ -1,3 +1,4 @@
 {
-	"path": "docs/prd"
+	"path": "docs/prd",
+	"excludePrefixes": ["EXMPL", "KTL"]
 }

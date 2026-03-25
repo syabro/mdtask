@@ -9,6 +9,7 @@ export type FilesConfig = {
 export type Config = {
 	path?: string;
 	files?: FilesConfig;
+	excludePrefixes?: string[];
 };
 
 /**
@@ -67,6 +68,10 @@ function validateConfig(value: unknown): Config {
 	const files = validateFilesConfig(obj.files);
 	if (files) {
 		config.files = files;
+	}
+	const excludePrefixes = validateStringArray(obj.excludePrefixes);
+	if (excludePrefixes) {
+		config.excludePrefixes = excludePrefixes;
 	}
 	return config;
 }

@@ -20,7 +20,7 @@ After the task title, metadata tokens provide additional categorization:
 - **Priority** (`!crit`, `!high`, `!low`): Task urgency. Tasks without priority are considered medium. Any `!\w+` token is accepted as priority; `mdtask validate` warns about values outside the known set.
 - **Properties** (`@key:value`): Key-value pairs for structured data like `@status:blocked` or `@blocked_by:TSK-001`. The same key can appear multiple times to store multiple values.
 
-Example: `- [ ] TSK-123 Fix login		#bug !high @status:blocked @blocked_by:TSK-001`
+Example: `- [ ] EXMPL-123 Fix login		#bug !high @status:blocked @blocked_by:EXMPL-001`
 
 ## Task body
 
@@ -29,7 +29,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 `collectTaskBody(lines, headerIndex)` returns the body as a single dedented string — the minimum common indent is stripped, preserving relative indentation of nested content (sub-lists, code blocks). Trailing empty lines are trimmed.
 
 ```markdown
-- [ ] TSK-001 Title
+- [ ] EXMPL-001 Title
   Body line 1
   Body line 2
 

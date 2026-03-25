@@ -15,7 +15,7 @@ Use `mdtask` CLI to work with tasks. Example: `mdtask list`.
 Every task is a markdown checkbox item with ID and optional metadata on the header line:
 
 ```md
-- [ ] TSK-123 Short task title		#tag1 #tag2 !high @status:blocked
+- [ ] EXMPL-123 Short task title		#tag1 #tag2 !high @status:blocked
   Description body goes here.
   Can be multi-line.
   - [ ] subtask one
@@ -29,7 +29,7 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 ```
 
 - Checkbox: `[ ]` (open) or `[x]` (done)
-- ID: `[A-Z]+-\d+` — mandatory, globally unique (e.g. `TSK-123`, `CLI-001`)
+- ID: `[A-Z]+-\d+` — mandatory, globally unique (e.g. `EXMPL-123`, `CLI-001`)
 - Title: free text until first metadata token or end of line
 - ` ` (space) or `\t\t` (double tab): optional separator before metadata
 
@@ -61,12 +61,12 @@ Appear on the header line. First `#`, `!`, or `@` marks the start of metadata.
 
 Minimal task:
 ```md
-- [ ] BUG-42 Fix null pointer in parser
+- [ ] EXMPL-042 Fix null pointer in parser
 ```
 
 Full task with metadata and body:
 ```md
-- [ ] FEAT-7 Add export command		#cli #export !low @status:in-progress
+- [ ] EXMPL-007 Add export command		#cli #export !low @status:in-progress
   Export tasks to JSON format.
   Should support:
   - filtering by tag
@@ -75,7 +75,7 @@ Full task with metadata and body:
 
 Done task:
 ```md
-- [x] MVP-001 Implement header regex		#parser
+- [x] EXMPL-100 Implement header regex		#parser
 ```
 
 ## Parsing Hints

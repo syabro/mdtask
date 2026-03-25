@@ -949,4 +949,42 @@ describe('mdtask list', () => {
 			}
 		});
 	});
+
+	describe('excludePrefixes', () => {
+		it('hides tasks with excluded ID prefix from list', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Real task\n- [ ] EXMPL-001 Example task\n- [ ] EXMPL-002 Another example\n',
+			);
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({ excludePrefixes: ['EXMPL'] }),
+			);
+
+			run(['list']);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).not.toContain('EXMPL-001');
+			expect(output).not.toContain('EXMPL-002');
+		});
+
+		it('supports multiple excluded prefixes', () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Real task\n- [ ] EXMPL-001 Example\n- [ ] TEST-001 Test example\n',
+			);
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({ excludePrefixes: ['EXMPL', 'TEST'] }),
+			);
+
+			run(['list']);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).not.toContain('EXMPL-001');
+			expect(output).not.toContain('TEST-001');
+		});
+	});
 });

@@ -31,6 +31,18 @@ Control which files are scanned for tasks using `files.include` and `files.exclu
 - Patterns are relative to the search path
 - Uses ripgrep's native `-g` flag for matching
 
+## Exclude Prefixes
+
+Hide tasks whose ID starts with a given prefix from all commands:
+
+```json
+{
+  "excludePrefixes": ["EXMPL", "KTL"]
+}
+```
+
+Tasks with matching prefixes are skipped during collection — they won't appear in `list`, `validate`, or any other command. Useful for filtering out example/documentation tasks.
+
 ## Tasks
 
 - [x] CFG-001 Limit search directory
@@ -63,14 +75,21 @@ Control which files are scanned for tasks using `files.include` and `files.exclu
   - Fallback to `find -path` when ripgrep unavailable
   - Validated config parsing: non-array/non-string values are ignored
 
-- [ ] CFG-003 Exclude tasks by ID prefix		#noqa @blocked_by:PRJ-005
-  Add `excludeIds` array to `.mdtaskrc` config.
+- [x] CFG-003 Exclude tasks by ID prefix		#noqa @blocked_by:PRJ-005
+  Add `excludePrefixes` array to `.mdtaskrc` config.
   Tasks whose ID starts with any listed prefix are hidden from all commands (list, validate, etc.).
 
   Example config:
   ```json
-  { "excludeIds": ["EXMPL"] }
+  { "excludePrefixes": ["EXMPL"] }
   ```
 
   After implementing, rename all example task IDs in docs to use `EXMPL-` prefix
   (spec-driven-development.md, SKILL.md, create-task SKILL.md, cli.md view output example, task.md body example).
+
+  **Implemented:**
+  - `excludePrefixes` config field parsed and validated in config.ts
+  - Tasks with matching ID prefixes skipped during collection in all commands
+  - All example IDs in docs renamed to EXMPL-* prefix
+  - Project `.mdtaskrc` configured with `["EXMPL", "KTL"]`
+  - Phantom tasks eliminated: `mdtask list` shows only real tasks

@@ -13,9 +13,9 @@ mdtask list --all        # Show all tasks including done
 
 Output format shows status, ID, title, priority (if any), blockers (if any), and all other `@key:value` properties:
 ```
-[ ] TSK-001 Fix authentication bug !high
-[ ] TSK-002 Update documentation @blocked_by:TSK-001 @iter:mvp
-[x] TSK-003 Refactor utils !low @status:done
+[ ] EXMPL-001 Fix authentication bug !high
+[ ] EXMPL-002 Update documentation @blocked_by:EXMPL-001 @iter:mvp
+[x] EXMPL-003 Refactor utils !low @status:done
 ```
 
 When output is to a terminal (TTY), priorities are color-coded:
@@ -57,12 +57,12 @@ Multiple priorities use OR logic — tasks matching any of the specified priorit
 `mdtask view <ID>` prints the full task block — header line (raw from file) followed by the dedented body:
 
 ```bash
-mdtask view TSK-001
+mdtask view EXMPL-001
 ```
 
 Output:
 ```
-- [ ] TSK-001 Fix the bug		@blocked_by:TSK-002 !high
+- [ ] EXMPL-001 Fix the bug		@blocked_by:EXMPL-002 !high
 Description line 1.
 Description line 2.
 ```
@@ -188,10 +188,10 @@ All external process invocations use `execFileSync` or `spawnSync` without `shel
 `mdtask list` only shows **unresolved** blockers — if a blocker task is done, it is hidden from the output:
 
 ```
-[ ] TSK-005 Fix auth bug @blocked_by:TSK-003
+[ ] EXMPL-005 Fix auth bug @blocked_by:EXMPL-003
 ```
 
-Here TSK-001 was also a blocker but is already done, so it's not shown. Non-existent blockers are treated as open and always displayed.
+Here EXMPL-001 was also a blocker but is already done, so it's not shown. Non-existent blockers are treated as open and always displayed.
 
 When output is to a terminal (TTY), open blockers are shown in red. When piped, plain text is output for clean parsing.
 
@@ -409,8 +409,8 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 
   Example:
   ```
-  [ ] TSK-005 Fix auth bug @blocked_by:TSK-001 @blocked_by:TSK-003 @blocked_by:TSK-004
-                              gray+strike      red             gray+strike
+  [ ] EXMPL-005 Fix auth bug @blocked_by:EXMPL-001 @blocked_by:EXMPL-003 @blocked_by:EXMPL-004
+                                gray+strike        red               gray+strike
   ```
 
   Tests:

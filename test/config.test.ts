@@ -100,6 +100,38 @@ describe('loadConfig', () => {
 		});
 	});
 
+	describe('excludePrefixes config', () => {
+		it('loads excludePrefixes array', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({ excludePrefixes: ['EXMPL', 'TEST'] }),
+			);
+
+			const config = loadConfig();
+			expect(config?.excludePrefixes).toEqual(['EXMPL', 'TEST']);
+		});
+
+		it('ignores non-array excludePrefixes', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({ excludePrefixes: 'not-array' }),
+			);
+
+			const config = loadConfig();
+			expect(config?.excludePrefixes).toBeUndefined();
+		});
+
+		it('filters out non-string items', () => {
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({ excludePrefixes: ['EXMPL', 123, null] }),
+			);
+
+			const config = loadConfig();
+			expect(config?.excludePrefixes).toEqual(['EXMPL']);
+		});
+	});
+
 	describe('config file loading', () => {
 		it('returns null when no config file exists', () => {
 			const config = loadConfig();

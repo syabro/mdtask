@@ -23,7 +23,11 @@ import {
 	VALID_PRIORITIES,
 } from './task.js';
 
-function collectTasks(searchPath?: string, filesConfig?: FilesConfig): Task[] {
+function collectTasks(
+	searchPath?: string,
+	filesConfig?: FilesConfig,
+	excludePrefixes?: string[],
+): Task[] {
 	const files = findMarkdownFiles({
 		searchPath,
 		includePatterns: filesConfig?.include,
@@ -40,6 +44,9 @@ function collectTasks(searchPath?: string, filesConfig?: FilesConfig): Task[] {
 				const line = lines[i];
 				const header = parseTaskHeader(line);
 				if (header) {
+					if (excludePrefixes?.some((prefix) => header.id.startsWith(prefix))) {
+						continue;
+					}
 					const metadata = parseMetadata(header.rawMetadata);
 					tasks.push({
 						status: header.status,
@@ -137,7 +144,11 @@ function formatTaskLine(
 function handleView(id: string, options: { path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath, config?.files);
+	const tasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
 	const task = tasks.find((t) => t.id === id);
 
 	if (!task) {
@@ -160,7 +171,11 @@ function handleView(id: string, options: { path?: string }): void {
 function handleDone(id: string, options: { path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath, config?.files);
+	const tasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
 	const matches = tasks.filter((t) => t.id === id);
 
 	if (matches.length === 0) {
@@ -204,7 +219,11 @@ function handleMove(
 ): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath, config?.files);
+	const tasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
 	const matches = tasks.filter((t) => t.id === id);
 
 	if (matches.length === 0) {
@@ -329,7 +348,11 @@ function handleOpen(id: string, options: { path?: string }): void {
 
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath, config?.files);
+	const tasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
 	const task = tasks.find((t) => t.id === id);
 
 	if (!task) {
@@ -349,7 +372,11 @@ const MALFORMED_PROPERTY_REGEX = /(?:^|\s)@([\w-]+)(?![:\w])/;
 function handleValidate(options: { path?: string }): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath, config?.files);
+	const tasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
 
 	let hasErrors = false;
 
@@ -431,7 +458,11 @@ function handleList(
 ): void {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(searchPath, config?.files);
+	const tasks = collectTasks(
+		searchPath,
+		config?.files,
+		config?.excludePrefixes,
+	);
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
 

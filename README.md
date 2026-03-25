@@ -18,7 +18,7 @@ CLI is only an interpreter, never the owner of data.
 ## Task Format
 
 ```markdown
-- [ ] TSK-123 Short task title		#feature !high @status:doing
+- [ ] EXMPL-123 Short task title		#feature !high @status:doing
   Description body goes here.
   Can be multi-line.
 
