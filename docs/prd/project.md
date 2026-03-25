@@ -124,12 +124,17 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - Added TST prefix to PRD table
   - Updated examples to show new workflow
 
-- [ ] PRJ-037 Document globally unique ID scheme		@iter:new-ids
+- [x] PRJ-037 Document globally unique ID scheme		@iter:new-ids
   Update docs/mdtask.md section 7 "Task Identity" and docs/skills/mdtask/SKILL.md:
   - NNN is globally unique across all prefixes
   - Short numeric lookup: `mdtask view 42`
   - `mdtask ids` auto-assigns IDs
   - Prefix-to-file mapping in `.mdtaskrc`
+
+  **Implemented:**
+  - Updated mdtask.md section 7 with globally unique NNN, short numeric lookup, `mdtask ids`
+  - Updated SKILL.md ID description to reflect PREFIX-NNN with auto-assignment
+  - Removed mention of `.mdtaskrc` prefix mapping (not needed — prefix derived from files)
 
 - [ ] PRJ-034 Define layered architecture
   Analyze current code and define clear data flow layers.

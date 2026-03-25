@@ -66,13 +66,21 @@ Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown;
 
 ## 7. Task Identity
 
-### 7.1 Source of Truth
+### 7.1 ID Format
 
-- Only header ID: `TSK-123`
-- Format: `[A-Z]+-\d+`
-- Must be globally unique across all files
+- Format: `PREFIX-NNN` (e.g. `CLI-022`, `TSK-038`)
+- PREFIX: `[A-Z]+` — identifies the domain (CLI, TSK, PRJ, etc.)
+- NNN: globally unique **across all prefixes** — no two tasks share the same number
+- Short numeric lookup: `mdtask view 22` resolves to the task whose NNN=22
 
-### 7.2 Forbidden
+### 7.2 Auto-assigning IDs
+
+`mdtask ids` scans files for tasks without IDs and assigns `PREFIX-NNN`:
+- Prefix derived from existing tasks in the file, or from a seed line (`- [ ] CLI- Title`)
+- NNN continues from the global maximum across all prefixes
+- No configuration needed — prefix lives in the files themselves
+
+### 7.3 Forbidden
 
 - `@id:...`
 - positional indexes

@@ -27,7 +27,7 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 ```
 
 - Checkbox: `[ ]` (open) or `[x]` (done)
-- ID: `[A-Z]+-\d+` — mandatory, globally unique (e.g. `EXMPL-123`, `CLI-001`)
+- ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `CLI-022`, `TSK-038`). Auto-assigned by `mdtask ids`.
 - Title: free text until first metadata token or end of line
 - ` ` (space) or `\t\t` (double tab): optional separator before metadata
 
