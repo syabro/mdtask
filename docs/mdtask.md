@@ -22,7 +22,7 @@ Build a task management system where:
 - **Vitest** — testing framework
 - **$EDITOR** — for edit command
 
-Minimal dependencies: rg (required), Node.js (required).
+Minimal dependencies: Node.js (required), rg (recommended, falls back to `find`).
 
 ## 4. Data Model (Canonical Format)
 

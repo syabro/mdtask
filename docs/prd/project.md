@@ -52,9 +52,8 @@ Project structure and entry point.
 
   **Implemented:**
   - `ts-pattern` installed as production dependency
-  - `handleCommand()` refactored to use `match().with().otherwise()` chains
-  - `formatPriority()` refactored to use pattern matching with fallback
-  - All 87 tests pass, lint clean
+  - Available for use where it improves clarity (see project.md "Pattern Matching" section)
+  - Not yet adopted in existing code — `cac` handles command routing, `switch` handles priority formatting
 
 - [x] PRJ-004 Dev script `pnpm mdtask` — proxy to tsx		@iter:mvp
   Add npm script `mdtask` that runs `tsx src/cli.ts` for local development.

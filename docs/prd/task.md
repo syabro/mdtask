@@ -106,10 +106,6 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   - First priority wins when multiple specified
   - Protected against prototype pollution with `Object.create(null)` and `Object.hasOwn()`
 
-- [ ] TSK-004 Auto-complete parent task
-  When all subtasks are `[x]`, automatically mark parent as done.
-  Requires parsing subtasks in description block.
-
 - [x] TSK-005 Unknown priority tags
   Unknown `!` tags (not crit/high/low) — warning or ignore?
   Solution: parse any `!\w+`, validate in `mdtask validate` command.
