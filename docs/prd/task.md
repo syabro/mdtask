@@ -115,3 +115,17 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   - `mdtask validate` warns about unknown priority values (e.g., `!urgent`)
   - Unknown priorities sort as medium and display without color
   - Multiple priority tokens on one line: each unknown is warned individually
+
+- [ ] TSK-006 Document @blocked_by as well-known property		#noqa
+  Add a section in docs/skills/mdtask/SKILL.md describing `@blocked_by:ID` as
+  the only property with special behavior:
+  - Unresolved blockers shown in red in `mdtask list`
+  - Resolved (done) blockers hidden from list output
+  - Full blocker info preserved in file, visible via `mdtask view`
+
+  All other properties (@status, @iter, etc.) are per-project conventions
+  with no built-in behavior.
+
+- [ ] TSK-007 Support @bb as shorthand for @blocked_by		#noqa
+  `@bb:ID` should be parsed as equivalent to `@blocked_by:ID`.
+  Same behavior: filtering in list, red coloring, resolved hiding.

@@ -62,3 +62,15 @@ Control which files are scanned for tasks using `files.include` and `files.exclu
   - Exclude patterns override include when both match
   - Fallback to `find -path` when ripgrep unavailable
   - Validated config parsing: non-array/non-string values are ignored
+
+- [ ] CFG-003 Exclude tasks by ID prefix		#noqa @blocked_by:PRJ-005
+  Add `excludeIds` array to `.mdtaskrc` config.
+  Tasks whose ID starts with any listed prefix are hidden from all commands (list, validate, etc.).
+
+  Example config:
+  ```json
+  { "excludeIds": ["EXMPL"] }
+  ```
+
+  After implementing, rename all example task IDs in docs to use `EXMPL-` prefix
+  (spec-driven-development.md, SKILL.md, create-task SKILL.md, cli.md view output example, task.md body example).

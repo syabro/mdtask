@@ -83,3 +83,22 @@ Project structure and entry point.
 
   Tests:
   - entry point works
+
+- [ ] PRJ-005 Tag #noqa skips Gemini and /check in /next-task
+  When a task has `#noqa` tag, /next-task should skip:
+  - Step 3 (validate plan with Gemini)
+  - Step 5 (code review with Gemini)
+  - Step 8 /check
+
+  Update docs/skills/next-task/SKILL.md accordingly.
+
+- [ ] PRJ-006 Define layered architecture
+  Analyze current code and define clear data flow layers.
+  Create docs/architecture.md describing:
+  - What modules/layers exist (discovery, parsing, collection, mutation, presentation)
+  - How data flows between them
+  - Which functions belong to which layer
+  - Where to put new code
+
+  Use Gemini, Codex, and general agent to research and propose architecture.
+  Documentation only. Code refactoring is separate tasks.
