@@ -464,7 +464,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - When all blockers are resolved, no `@blocked_by` suffix appears
   - Full blocker info preserved in task files for `mdtask view`
 
-- [ ] CLI-021 Command `mdtask ids` — auto-assign globally unique IDs
+- [ ] CLI-021 Command `mdtask ids` — auto-assign globally unique IDs		@iter:new-ids
   New command that scans all files for tasks without IDs (`- [ ] Title without prefix`)
   and assigns PREFIX-NNN where:
   - PREFIX derived from file via `.mdtaskrc` `prefixes` mapping
@@ -473,7 +473,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Also detects and reports ambiguous/duplicate numeric parts across prefixes
   Error if file has no prefix mapping.
 
-- [ ] CLI-022 Short numeric lookup in all commands
+- [ ] CLI-022 Short numeric lookup in all commands		@iter:new-ids
   All commands accept plain number: `mdtask view 42` resolves to the task whose NNN=42.
   Add `resolveTaskId(input, tasks)` shared function:
   - Exact match first (CLI-042)
