@@ -2,6 +2,22 @@
 
 User-facing commands, security, edge cases, and testing infrastructure.
 
+## Short numeric lookup
+
+All commands that accept a task ID also accept a plain number. The number is matched against the numeric part (NNN) of task IDs:
+
+```bash
+mdtask view 22          # resolves to CLI-022 (or whichever task has NNN=22)
+mdtask done 38          # resolves to TSK-038
+mdtask open 1           # resolves to CLI-001
+```
+
+Resolution order:
+1. Exact match (`CLI-022`) — always preferred
+2. Numeric suffix match (`22` → find task where NNN=22)
+
+Errors: not found (exit 1), ambiguous (multiple prefixes share the same NNN), duplicate ID.
+
 ## Listing tasks
 
 The `mdtask list` command searches all `.md` files recursively from the current directory and displays tasks in a compact format:
@@ -519,12 +535,18 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Seed prefix on a task overrides file-level prefix for that task
   - Duplicate numeric parts across prefixes reported as warnings
 
-- [ ] CLI-022 Short numeric lookup in all commands		@iter:new-ids
+- [x] CLI-022 Short numeric lookup in all commands		@iter:new-ids
   All commands accept plain number: `mdtask view 42` resolves to the task whose NNN=42.
   Add `resolveTaskId(input, tasks)` shared function:
   - Exact match first (CLI-042)
   - Numeric suffix match (42 → CLI-042)
   - Error if not found
+
+  **Implemented:**
+  - `resolveTaskId(input, tasks)` shared function in task.ts
+  - All commands (view, done, open, move, set) accept plain numbers
+  - Exact ID match takes priority, then numeric suffix lookup
+  - Errors on not found, duplicate ID, or ambiguous numeric match
 
 - [x] CLI-023 Command `mdtask set <ID...> <tokens...>` — add metadata to tasks
   Add/update metadata tokens on task header lines.

@@ -165,6 +165,42 @@ export function extractNumericPart(id: string): number {
 	return match ? Number.parseInt(match[0], 10) : 0;
 }
 
+const EXACT_ID_REGEX = /^[A-Z]+-\d+$/;
+const NUMERIC_REGEX = /^\d+$/;
+
+export function resolveTaskId(input: string, tasks: Task[]): Task {
+	const isExact = EXACT_ID_REGEX.test(input);
+	const isNumeric = NUMERIC_REGEX.test(input);
+
+	if (!isExact && !isNumeric) {
+		throw new Error(`invalid task ID format: '${input}'`);
+	}
+
+	if (isExact) {
+		const matches = tasks.filter((t) => t.id === input);
+		if (matches.length === 0) throw new Error(`task '${input}' not found`);
+		if (matches.length > 1) throw new Error(`duplicate ID '${input}'`);
+		return matches[0];
+	}
+
+	const searchNum = Number.parseInt(input, 10);
+	const matches = tasks.filter((t) => extractNumericPart(t.id) === searchNum);
+
+	if (matches.length === 0) throw new Error(`task '${input}' not found`);
+
+	const uniqueIds = [...new Set(matches.map((t) => t.id))];
+	if (uniqueIds.length > 1) {
+		throw new Error(
+			`ambiguous numeric ID '${input}' matches: ${uniqueIds.join(', ')}`,
+		);
+	}
+	if (matches.length > 1) {
+		throw new Error(`duplicate ID '${matches[0].id}'`);
+	}
+
+	return matches[0];
+}
+
 const TAG_REGEX = /#[\w-]+/g;
 export const PRIORITY_REGEX = /!(\w+)/g;
 const PROPERTY_REGEX = /(?<=^|\s)@([\w-]+):(\S+)/g;

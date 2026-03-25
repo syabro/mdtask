@@ -21,6 +21,7 @@ import {
 	parseMetadata,
 	parseTaskHeader,
 	parseUnidentifiedTaskLine,
+	resolveTaskId,
 	type Task,
 	type UnidentifiedTask,
 	VALID_PRIORITIES,
@@ -152,10 +153,14 @@ function handleView(id: string, options: { path?: string }): void {
 		config?.files,
 		config?.excludePrefixes,
 	);
-	const task = tasks.find((t) => t.id === id);
 
-	if (!task) {
-		process.stderr.write(`mdtask: task '${id}' not found\n`);
+	let task: Task;
+	try {
+		task = resolveTaskId(id, tasks);
+	} catch (err: unknown) {
+		process.stderr.write(
+			`mdtask: ${err instanceof Error ? err.message : err}\n`,
+		);
 		process.exit(1);
 		return;
 	}
@@ -179,21 +184,17 @@ function handleDone(id: string, options: { path?: string }): void {
 		config?.files,
 		config?.excludePrefixes,
 	);
-	const matches = tasks.filter((t) => t.id === id);
 
-	if (matches.length === 0) {
-		process.stderr.write(`mdtask: task '${id}' not found\n`);
+	let task: Task;
+	try {
+		task = resolveTaskId(id, tasks);
+	} catch (err: unknown) {
+		process.stderr.write(
+			`mdtask: ${err instanceof Error ? err.message : err}\n`,
+		);
 		process.exit(1);
 		return;
 	}
-
-	if (matches.length > 1) {
-		process.stderr.write(`mdtask: duplicate ID '${id}'\n`);
-		process.exit(1);
-		return;
-	}
-
-	const task = matches[0];
 	const content = readFileSync(task.filePath, 'utf-8');
 	const lines = content.split('\n');
 	const line = lines[task.lineNumber - 1];
@@ -227,21 +228,18 @@ function handleMove(
 		config?.files,
 		config?.excludePrefixes,
 	);
-	const matches = tasks.filter((t) => t.id === id);
 
-	if (matches.length === 0) {
-		process.stderr.write(`mdtask: task '${id}' not found\n`);
+	let task: Task;
+	try {
+		task = resolveTaskId(id, tasks);
+	} catch (err: unknown) {
+		process.stderr.write(
+			`mdtask: ${err instanceof Error ? err.message : err}\n`,
+		);
 		process.exit(1);
 		return;
 	}
 
-	if (matches.length > 1) {
-		process.stderr.write(`mdtask: duplicate ID '${id}'\n`);
-		process.exit(1);
-		return;
-	}
-
-	const task = matches[0];
 	const resolvedTarget = resolve(targetFile);
 
 	// Compare real paths to handle symlinks (e.g. /tmp → /private/tmp on macOS)
@@ -356,10 +354,14 @@ function handleOpen(id: string, options: { path?: string }): void {
 		config?.files,
 		config?.excludePrefixes,
 	);
-	const task = tasks.find((t) => t.id === id);
 
-	if (!task) {
-		process.stderr.write(`mdtask: task '${id}' not found\n`);
+	let task: Task;
+	try {
+		task = resolveTaskId(id, tasks);
+	} catch (err: unknown) {
+		process.stderr.write(
+			`mdtask: ${err instanceof Error ? err.message : err}\n`,
+		);
 		process.exit(1);
 		return;
 	}
@@ -533,18 +535,15 @@ function handleSet(args: string[], options: { path?: string }): void {
 	// Validate all IDs first
 	const matched: Task[] = [];
 	for (const id of ids) {
-		const matches = tasks.filter((t) => t.id === id);
-		if (matches.length === 0) {
-			process.stderr.write(`mdtask: task '${id}' not found\n`);
+		try {
+			matched.push(resolveTaskId(id, tasks));
+		} catch (err: unknown) {
+			process.stderr.write(
+				`mdtask: ${err instanceof Error ? err.message : err}\n`,
+			);
 			process.exit(1);
 			return;
 		}
-		if (matches.length > 1) {
-			process.stderr.write(`mdtask: duplicate ID '${id}'\n`);
-			process.exit(1);
-			return;
-		}
-		matched.push(matches[0]);
 	}
 
 	// Group by file to minimize reads/writes
