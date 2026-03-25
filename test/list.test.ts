@@ -188,6 +188,9 @@ describe('mdtask list', () => {
 		it('handles empty directory', () => {
 			const code = run(['list']);
 			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toBe('');
 		});
 
 		it('handles files with no tasks', () => {
@@ -891,7 +894,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('pipe behavior', () => {
-		it('outputs no ANSI codes when stdout is not a TTY', () => {
+		it('outputs no ANSI codes and correct plain text when stdout is not a TTY', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -908,21 +911,10 @@ describe('mdtask list', () => {
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes absence
 			expect(output).not.toMatch(/\u001b\[/);
-		});
-
-		it('done tasks have no color codes when piped', () => {
-			writeFileSync(
-				join(tempDir, 'tasks.md'),
-				'- [x] TSK-001 Done task !low @iter:mvp\n',
+			// Done tasks render as plain text with all metadata intact
+			expect(output).toContain(
+				'[x] TSK-002 Done task !low @blocked_by:TSK-003 @iter:mvp',
 			);
-
-			const code = run(['list', '--all']);
-			expect(code).toBe(0);
-
-			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes absence
-			expect(output).not.toMatch(/\u001b\[/);
-			expect(output).toContain('[x] TSK-001 Done task !low @iter:mvp');
 		});
 
 		it('output lines are parseable when piped', () => {
@@ -951,28 +943,10 @@ describe('mdtask list', () => {
 	});
 
 	describe('excludePrefixes', () => {
-		it('hides tasks with excluded ID prefix from list', () => {
+		it('hides tasks matching excluded prefixes', () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
-				'- [ ] TSK-001 Real task\n- [ ] EXMPL-001 Example task\n- [ ] EXMPL-002 Another example\n',
-			);
-			writeFileSync(
-				join(tempDir, '.mdtaskrc'),
-				JSON.stringify({ excludePrefixes: ['EXMPL'] }),
-			);
-
-			run(['list']);
-
-			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-			expect(output).toContain('TSK-001');
-			expect(output).not.toContain('EXMPL-001');
-			expect(output).not.toContain('EXMPL-002');
-		});
-
-		it('supports multiple excluded prefixes', () => {
-			writeFileSync(
-				join(tempDir, 'tasks.md'),
-				'- [ ] TSK-001 Real task\n- [ ] EXMPL-001 Example\n- [ ] TEST-001 Test example\n',
+				'- [ ] TSK-001 Real task\n- [ ] EXMPL-001 Example task\n- [ ] EXMPL-002 Another example\n- [ ] TEST-001 Test example\n',
 			);
 			writeFileSync(
 				join(tempDir, '.mdtaskrc'),
@@ -984,6 +958,7 @@ describe('mdtask list', () => {
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toContain('TSK-001');
 			expect(output).not.toContain('EXMPL-001');
+			expect(output).not.toContain('EXMPL-002');
 			expect(output).not.toContain('TEST-001');
 		});
 	});

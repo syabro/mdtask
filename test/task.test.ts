@@ -24,19 +24,12 @@ describe('parseTaskHeader', () => {
 			expect(result?.title).toBe('Done task');
 		});
 
-		it('parses task with single-digit ID', () => {
-			const result = parseTaskHeader('- [ ] X-1 Title');
-			expect(result?.id).toBe('X-1');
-		});
-
-		it('parses task with multi-digit ID', () => {
-			const result = parseTaskHeader('- [ ] PROJ-99999 Title');
-			expect(result?.id).toBe('PROJ-99999');
-		});
-
-		it('parses task with long prefix', () => {
-			const result = parseTaskHeader('- [ ] LONGPREFIX-123 Title');
-			expect(result?.id).toBe('LONGPREFIX-123');
+		it('parses various ID formats', () => {
+			expect(parseTaskHeader('- [ ] X-1 Title')?.id).toBe('X-1');
+			expect(parseTaskHeader('- [ ] PROJ-99999 Title')?.id).toBe('PROJ-99999');
+			expect(parseTaskHeader('- [ ] LONGPREFIX-123 Title')?.id).toBe(
+				'LONGPREFIX-123',
+			);
 		});
 	});
 
@@ -97,37 +90,26 @@ describe('parseTaskHeader', () => {
 	});
 
 	describe('edge cases - metadata at title start', () => {
-		it('returns null when metadata starts immediately after ID (tag)', () => {
-			const result = parseTaskHeader('- [ ] TSK-123 #tag');
-			expect(result).toBeNull();
-		});
-
-		it('returns null when metadata starts immediately after ID (priority)', () => {
-			const result = parseTaskHeader('- [ ] TSK-123 !high');
-			expect(result).toBeNull();
-		});
-
-		it('returns null when metadata starts immediately after ID (property)', () => {
-			const result = parseTaskHeader('- [ ] TSK-123 @status:blocked');
-			expect(result).toBeNull();
+		it('returns null when metadata starts immediately after ID', () => {
+			expect(parseTaskHeader('- [ ] TSK-123 #tag')).toBeNull();
+			expect(parseTaskHeader('- [ ] TSK-123 !high')).toBeNull();
+			expect(parseTaskHeader('- [ ] TSK-123 @status:blocked')).toBeNull();
 		});
 	});
 
 	describe('edge cases - hyphenated property keys', () => {
-		it('parses property with hyphen in key', () => {
-			const result = parseTaskHeader(
+		it('parses property keys with hyphens and underscores', () => {
+			const hyphen = parseTaskHeader(
 				'- [ ] TSK-123 Title @build-status:blocked',
 			);
-			expect(result?.title).toBe('Title');
-			expect(result?.rawMetadata).toBe('@build-status:blocked');
-		});
+			expect(hyphen?.title).toBe('Title');
+			expect(hyphen?.rawMetadata).toBe('@build-status:blocked');
 
-		it('parses property with underscore in key', () => {
-			const result = parseTaskHeader(
+			const underscore = parseTaskHeader(
 				'- [ ] TSK-123 Title @build_status:blocked',
 			);
-			expect(result?.title).toBe('Title');
-			expect(result?.rawMetadata).toBe('@build_status:blocked');
+			expect(underscore?.title).toBe('Title');
+			expect(underscore?.rawMetadata).toBe('@build_status:blocked');
 		});
 	});
 
@@ -140,74 +122,30 @@ describe('parseTaskHeader', () => {
 	});
 
 	describe('invalid headers', () => {
-		it('returns null for missing checkbox', () => {
-			const result = parseTaskHeader('TSK-123 Title');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for missing ID', () => {
-			const result = parseTaskHeader('- [ ] Title only');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for lowercase ID prefix', () => {
-			const result = parseTaskHeader('- [ ] tsk-123 Title');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for lowercase ID number only', () => {
-			// This should still match if prefix is uppercase
-			const result = parseTaskHeader('- [ ] TSK-abc Title');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for uppercase X in checkbox', () => {
-			const result = parseTaskHeader('- [X] TSK-123 Title');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for double space after dash', () => {
-			const result = parseTaskHeader('-  [ ] TSK-123 Title');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for double space before ID', () => {
-			const result = parseTaskHeader('- [ ]  TSK-123 Title');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for empty line', () => {
-			const result = parseTaskHeader('');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for whitespace only', () => {
-			const result = parseTaskHeader('   ');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for regular text', () => {
-			const result = parseTaskHeader('This is just text');
-			expect(result).toBeNull();
-		});
-
-		it('returns null for markdown list without task', () => {
-			const result = parseTaskHeader('- Just a list item');
-			expect(result).toBeNull();
+		it('returns null for invalid formats', () => {
+			expect(parseTaskHeader('TSK-123 Title')).toBeNull(); // missing checkbox
+			expect(parseTaskHeader('- [ ] Title only')).toBeNull(); // missing ID
+			expect(parseTaskHeader('- [ ] tsk-123 Title')).toBeNull(); // lowercase ID prefix
+			expect(parseTaskHeader('- [ ] TSK-abc Title')).toBeNull(); // non-numeric ID
+			expect(parseTaskHeader('- [X] TSK-123 Title')).toBeNull(); // uppercase X in checkbox
+			expect(parseTaskHeader('-  [ ] TSK-123 Title')).toBeNull(); // double space after dash
+			expect(parseTaskHeader('- [ ]  TSK-123 Title')).toBeNull(); // double space before ID
+			expect(parseTaskHeader('')).toBeNull(); // empty line
+			expect(parseTaskHeader('   ')).toBeNull(); // whitespace only
+			expect(parseTaskHeader('This is just text')).toBeNull(); // regular text
+			expect(parseTaskHeader('- Just a list item')).toBeNull(); // markdown list without task
 		});
 	});
 
 	describe('CRLF handling', () => {
-		it('strips carriage return from end', () => {
-			const result = parseTaskHeader('- [ ] TSK-123 Title\r');
-			expect(result).not.toBeNull();
-			expect(result?.title).toBe('Title');
-		});
+		it('strips carriage return', () => {
+			const plain = parseTaskHeader('- [ ] TSK-123 Title\r');
+			expect(plain).not.toBeNull();
+			expect(plain?.title).toBe('Title');
 
-		it('strips carriage return with metadata', () => {
-			const result = parseTaskHeader('- [ ] TSK-123 Title #tag\r');
-			expect(result).not.toBeNull();
-			expect(result?.rawMetadata).toBe('#tag');
+			const withMeta = parseTaskHeader('- [ ] TSK-123 Title #tag\r');
+			expect(withMeta).not.toBeNull();
+			expect(withMeta?.rawMetadata).toBe('#tag');
 		});
 	});
 });
@@ -221,25 +159,21 @@ describe('parseMetadata', () => {
 			expect(result.properties).toEqual({});
 		});
 
-		it('parses priority !crit', () => {
-			const result = parseMetadata('!crit');
-			expect(result.tags).toEqual([]);
-			expect(result.priority).toBe('crit');
-			expect(result.properties).toEqual({});
-		});
+		it('parses all priority levels', () => {
+			const crit = parseMetadata('!crit');
+			expect(crit.tags).toEqual([]);
+			expect(crit.priority).toBe('crit');
+			expect(crit.properties).toEqual({});
 
-		it('parses priority !high', () => {
-			const result = parseMetadata('!high');
-			expect(result.tags).toEqual([]);
-			expect(result.priority).toBe('high');
-			expect(result.properties).toEqual({});
-		});
+			const high = parseMetadata('!high');
+			expect(high.tags).toEqual([]);
+			expect(high.priority).toBe('high');
+			expect(high.properties).toEqual({});
 
-		it('parses priority !low', () => {
-			const result = parseMetadata('!low');
-			expect(result.tags).toEqual([]);
-			expect(result.priority).toBe('low');
-			expect(result.properties).toEqual({});
+			const low = parseMetadata('!low');
+			expect(low.tags).toEqual([]);
+			expect(low.priority).toBe('low');
+			expect(low.properties).toEqual({});
 		});
 
 		it('parses property @key:value', () => {
@@ -280,19 +214,14 @@ describe('parseMetadata', () => {
 	});
 
 	describe('tags with digits', () => {
-		it('parses tag with version number', () => {
-			const result = parseMetadata('#v2');
-			expect(result.tags).toEqual(['#v2']);
-		});
-
-		it('parses tag with only digits', () => {
-			const result = parseMetadata('#123');
-			expect(result.tags).toEqual(['#123']);
-		});
-
-		it('parses mixed tags with digits', () => {
-			const result = parseMetadata('#v2 #feature #123');
-			expect(result.tags).toEqual(['#v2', '#feature', '#123']);
+		it('parses tags with digits', () => {
+			expect(parseMetadata('#v2').tags).toEqual(['#v2']);
+			expect(parseMetadata('#123').tags).toEqual(['#123']);
+			expect(parseMetadata('#v2 #feature #123').tags).toEqual([
+				'#v2',
+				'#feature',
+				'#123',
+			]);
 		});
 	});
 
@@ -304,20 +233,21 @@ describe('parseMetadata', () => {
 			expect(result.properties).toEqual({});
 		});
 
-		it('ignores standalone # without tag name', () => {
-			const result = parseMetadata('# #tag');
-			expect(result.tags).toEqual(['#tag']);
-		});
+		it('ignores standalone tokens without names', () => {
+			const hash = parseMetadata('# #tag');
+			expect(hash.tags).toEqual(['#tag']);
+			expect(hash.priority).toBeNull();
+			expect(hash.properties).toEqual({});
 
-		it('ignores standalone ! without priority', () => {
-			const result = parseMetadata('! #tag');
-			expect(result.tags).toEqual(['#tag']);
-			expect(result.priority).toBeNull();
-		});
+			const bang = parseMetadata('! #tag');
+			expect(bang.tags).toEqual(['#tag']);
+			expect(bang.priority).toBeNull();
+			expect(bang.properties).toEqual({});
 
-		it('ignores standalone @ without property', () => {
-			const result = parseMetadata('@ #tag');
-			expect(result.tags).toEqual(['#tag']);
+			const at = parseMetadata('@ #tag');
+			expect(at.tags).toEqual(['#tag']);
+			expect(at.priority).toBeNull();
+			expect(at.properties).toEqual({});
 		});
 
 		it('parses unknown priority values', () => {
@@ -326,31 +256,17 @@ describe('parseMetadata', () => {
 			expect(result.tags).toEqual(['#tag']);
 		});
 
-		it('takes first priority when first is unknown', () => {
-			const result = parseMetadata('!urgent !high');
-			expect(result.priority).toBe('urgent');
+		it('takes first priority when multiple specified', () => {
+			expect(parseMetadata('!urgent !high').priority).toBe('urgent');
+			expect(parseMetadata('!high !urgent').priority).toBe('high');
+			expect(parseMetadata('!high !low').priority).toBe('high');
 		});
 
-		it('takes first priority when known comes before unknown', () => {
-			const result = parseMetadata('!high !urgent');
-			expect(result.priority).toBe('high');
-		});
-
-		it('takes first priority when duplicate', () => {
-			const result = parseMetadata('!high !low');
-			expect(result.priority).toBe('high');
-		});
-
-		it('parses property with hyphen in key', () => {
-			const result = parseMetadata('@build-status:done');
-			expect(result.properties).toEqual({
+		it('parses property keys with special characters', () => {
+			expect(parseMetadata('@build-status:done').properties).toEqual({
 				'build-status': ['done'],
 			});
-		});
-
-		it('parses property with underscore in key', () => {
-			const result = parseMetadata('@build_status:done');
-			expect(result.properties).toEqual({
+			expect(parseMetadata('@build_status:done').properties).toEqual({
 				build_status: ['done'],
 			});
 		});
@@ -400,16 +316,11 @@ describe('collectTaskBody', () => {
 		expect(result).toBe('Body line');
 	});
 
-	it('returns empty string when no body', () => {
-		const lines = ['- [ ] TSK-001 Title', '- [ ] TSK-002 Next task'];
-		const result = collectTaskBody(lines, 0);
-		expect(result).toBe('');
-	});
-
-	it('returns empty string when header is last line', () => {
-		const lines = ['- [ ] TSK-001 Title'];
-		const result = collectTaskBody(lines, 0);
-		expect(result).toBe('');
+	it('returns empty string when no body lines', () => {
+		expect(
+			collectTaskBody(['- [ ] TSK-001 Title', '- [ ] TSK-002 Next task'], 0),
+		).toBe('');
+		expect(collectTaskBody(['- [ ] TSK-001 Title'], 0)).toBe('');
 	});
 
 	it('trims trailing empty lines', () => {
