@@ -126,6 +126,6 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   All other properties (@status, @iter, etc.) are per-project conventions
   with no built-in behavior.
 
-- [ ] TSK-007 Support @bb as shorthand for @blocked_by		#noqa
+- [ ] TSK-007 Support @bb as shorthand for @blocked_by
   `@bb:ID` should be parsed as equivalent to `@blocked_by:ID`.
   Same behavior: filtering in list, red coloring, resolved hiding.
