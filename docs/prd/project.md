@@ -6,6 +6,10 @@ Project structure and entry point.
 
 `ts-pattern` is available as a dependency. Use it where it improves clarity — e.g. exhaustive matching, complex conditionals, or multi-branch routing. Not required for simple cases where `switch` or `if` is clear enough.
 
+## Task tag: #noqa
+
+Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan validation (Step 3), Gemini code review (Step 5), and /check (Step 8) are skipped. Use for small, low-risk changes where full review is overkill.
+
 ## Tasks
 
 - [x] PRJ-002 Add picocolors for CLI colors
@@ -84,13 +88,18 @@ Project structure and entry point.
   Tests:
   - entry point works
 
-- [ ] PRJ-005 Tag #noqa skips Gemini and /check in /next-task
+- [x] PRJ-005 Tag #noqa skips Gemini and /check in /next-task
   When a task has `#noqa` tag, /next-task should skip:
   - Step 3 (validate plan with Gemini)
   - Step 5 (code review with Gemini)
   - Step 8 /check
 
   Update docs/skills/next-task/SKILL.md accordingly.
+
+  **Implemented:**
+  - Added `#noqa` callout at top of Flow section in next-task SKILL.md
+  - Steps 3, 5, and 8 each have "Skip if task has `#noqa` tag" note
+  - Feature description added to docs/prd/project.md
 
 - [ ] PRJ-006 Define layered architecture
   Analyze current code and define clear data flow layers.
