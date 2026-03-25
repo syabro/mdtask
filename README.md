@@ -27,9 +27,6 @@ Every feature must reduce user effort, not add configuration burden. Derive what
 - [ ] EXMPL-123 Short task title		#feature !high @status:doing
   Description body goes here.
   Can be multi-line.
-
-  - [ ] subtask
-  - [x] completed subtask
 ```
 
 - **ID**: header in format `[A-Z]+-\d+`, globally unique

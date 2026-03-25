@@ -18,8 +18,6 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 - [ ] EXMPL-123 Short task title		#tag1 #tag2 !high @status:blocked
   Description body goes here.
   Can be multi-line.
-  - [ ] subtask one
-  - [x] subtask two
 ```
 
 ## Header Line
@@ -48,7 +46,6 @@ Appear on the header line. First `#`, `!`, or `@` marks the start of metadata.
 - All lines indented by ≥1 space after header
 - Empty lines within body are allowed
 - Block ends at first non-indented non-empty line
-- Subtasks are indented checkbox items within the body
 
 ## File Organization
 
