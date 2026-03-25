@@ -19,6 +19,10 @@ read @docs/spec-driven-development.md — spec-driven development, PRD structure
 - `docs/mdtask.md` — goals, architecture
 - `docs/spec-driven-development.md` — development workflow
 
+## Example IDs in docs
+
+Use `EXMPL-` prefix for example task IDs in documentation and PRD task bodies. Never use real task IDs (CLI-001, TSK-003, etc.) in examples — they get picked up by `mdtask list`. The `EXMPL` prefix is excluded via `.mdtaskrc` `excludePrefixes`.
+
 ## Before Committing
 
 If `docs/mdtask.md` changed — check if `docs/skills/mdtask/SKILL.md` needs updating (and vice versa).
