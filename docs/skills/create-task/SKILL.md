@@ -66,9 +66,9 @@ Include metadata (`#tag`, `!priority`, `@blocked_by`) only if relevant or reques
 Three ways to write a task header:
 
 ```
-- [ ] Short title                    # no ID — mdtask ids derives prefix from file
-- [ ] CLI- Short title               # seed prefix — for new files with no existing tasks
-- [ ] CLI-025 Short title            # full ID — manual assignment
+- [ ] Short title                     # no ID — mdtask ids derives prefix from file
+- [ ] EXMPL- Short title             # seed prefix — for new files with no existing tasks
+- [ ] EXMPL-025 Short title          # full ID — manual assignment
 ```
 
 Default: **write without ID**. Use seed prefix only for new PRD files. Full ID only if you have a reason.

@@ -178,7 +178,7 @@ NNN is globally unique across all prefixes. If the highest existing number is 02
 
 A seed prefix on a specific task overrides the file-level prefix for that task. After `mdtask ids`, the seed marker is consumed — the task gets a proper `PREFIX-NNN` ID.
 
-Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-041`) are reported as warnings to stderr.
+Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-005`) are reported as warnings to stderr.
 
 If a file has unidentified tasks but no prefix source, `mdtask ids` exits with an error without modifying any files.
 
