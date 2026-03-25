@@ -18,7 +18,7 @@ After the task title, metadata tokens provide additional categorization:
 
 - **Tags** (`#tag`): Categories like `#feature`, `#bug`, `#v2`. Tags can contain letters and digits.
 - **Priority** (`!crit`, `!high`, `!low`): Task urgency. Tasks without priority are considered medium. Any `!\w+` token is accepted as priority; `mdtask validate` warns about values outside the known set.
-- **Properties** (`@key:value`): Key-value pairs for structured data like `@status:blocked` or `@blocked_by:TSK-001`. The same key can appear multiple times to store multiple values.
+- **Properties** (`@key:value`): Key-value pairs for structured data like `@status:blocked` or `@blocked_by:TSK-038`. The same key can appear multiple times to store multiple values.
 
 Example: `- [ ] EXMPL-123 Fix login		#bug !high @status:blocked @blocked_by:EXMPL-001`
 
@@ -40,7 +40,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 
 ## Tasks
 
-- [x] TSK-001 Implement regex for task header recognition		@iter:mvp
+- [x] TSK-038 Implement regex for task header recognition		@iter:mvp
   Regex: `^- \[[ x]\] [A-Z]+-\d+ `
   Must correctly match:
   - `- [ ] TSK-123 Title`
@@ -65,7 +65,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   - Rejects empty titles (metadata immediately after ID)
   - Property keys allow hyphens: `@build-status:value`
 
-- [x] TSK-002 Implement task body collection (indented block)		@iter:mvp @blocked_by:TSK-001
+- [x] TSK-039 Implement task body collection (indented block)		@iter:mvp @blocked_by:TSK-038
   Collect all lines with ≥1 space indent after header.
   Empty lines within block are allowed.
   Block ends at first non-indented non-empty line.
@@ -82,7 +82,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   - CRLF line endings handled consistently with `parseTaskHeader`
   - Tab-only indentation not treated as body (spec requires spaces)
 
-- [x] TSK-003 Parse metadata from header line		@iter:mvp @blocked_by:TSK-001
+- [x] TSK-040 Parse metadata from header line		@iter:mvp @blocked_by:TSK-038
   Metadata = tokens on header line after title.
   First `#`, `!`, or `@` token marks start of metadata.
   Extract:
@@ -102,11 +102,11 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   - Tags stored as array: `['#feature', '#v2']`
   - Priority parsed as `'crit' | 'high' | 'low' | null` (null = medium)
   - Properties stored as `Record<string, string[]>` supporting multiple values per key
-  - Duplicate property keys accumulate values in array (e.g., `@blocked_by:TSK-001 @blocked_by:FLS-001`)
+  - Duplicate property keys accumulate values in array (e.g., `@blocked_by:TSK-038 @blocked_by:FLS-028`)
   - First priority wins when multiple specified
   - Protected against prototype pollution with `Object.create(null)` and `Object.hasOwn()`
 
-- [x] TSK-005 Unknown priority tags
+- [x] TSK-041 Unknown priority tags
   Unknown `!` tags (not crit/high/low) — warning or ignore?
   Solution: parse any `!\w+`, validate in `mdtask validate` command.
 
@@ -116,7 +116,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   - Unknown priorities sort as medium and display without color
   - Multiple priority tokens on one line: each unknown is warned individually
 
-- [ ] TSK-006 Document @blocked_by as well-known property		#noqa
+- [ ] TSK-042 Document @blocked_by as well-known property		#noqa
   Add a section in docs/skills/mdtask/SKILL.md describing `@blocked_by:ID` as
   the only property with special behavior:
   - Unresolved blockers shown in red in `mdtask list`
@@ -126,6 +126,6 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   All other properties (@status, @iter, etc.) are per-project conventions
   with no built-in behavior.
 
-- [ ] TSK-007 Support @bb as shorthand for @blocked_by
+- [ ] TSK-043 Support @bb as shorthand for @blocked_by
   `@bb:ID` should be parsed as equivalent to `@blocked_by:ID`.
   Same behavior: filtering in list, red coloring, resolved hiding.

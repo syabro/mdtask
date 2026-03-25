@@ -10,7 +10,7 @@ Do NOT merge tests that require different filesystem setup (different `writeFile
 
 ## Tasks
 
-- [x] TST-001 Group related assertions into fewer test blocks
+- [x] TST-044 Group related assertions into fewer test blocks
   Many tests are single-assertion one-liners, creating vertical noise.
   Group logically related assertions into shared `it()` blocks.
 

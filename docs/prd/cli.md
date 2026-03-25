@@ -74,8 +74,8 @@ If the task is not found, exits with error code 1.
 `mdtask done <ID>` toggles a task between open and done:
 
 ```bash
-mdtask done TSK-001      # [ ] → [x]
-mdtask done TSK-001      # [x] → [ ] (toggle back)
+mdtask done TSK-038      # [ ] → [x]
+mdtask done TSK-038      # [x] → [ ] (toggle back)
 ```
 
 The file is modified in-place. If the ID is not found, exits with error code 1. If the ID appears in multiple files (duplicate), exits with error code 1.
@@ -85,7 +85,7 @@ The file is modified in-place. If the ID is not found, exits with error code 1. 
 `mdtask open <ID>` opens the file containing the task in `$EDITOR` at the task's line number:
 
 ```bash
-mdtask open TSK-001      # opens $EDITOR +lineNumber filePath
+mdtask open TSK-038      # opens $EDITOR +lineNumber filePath
 ```
 
 If `$EDITOR` is not set, exits with error code 1. If the task ID is not found, exits with error code 1.
@@ -112,7 +112,7 @@ Errors cause exit code 1. Warnings are reported but don't affect exit code. Clea
 `mdtask move <ID> <file>` moves a task (header + body) from its current file to another file:
 
 ```bash
-mdtask move TSK-001 docs/prd/other.md
+mdtask move TSK-038 docs/prd/other.md
 ```
 
 The entire task block (header line and indented body) is removed from the source file and appended to the target file. If the target file does not exist, it is created (including parent directories). If the source file becomes empty after the move, it is kept. Moving a task to the same file it already lives in is a no-op (symlink-aware).
@@ -133,9 +133,9 @@ When a symlink and its target both appear in the search tree, only one entry is 
 `mdtask set <ID...> <tokens...>` adds metadata tokens to task header lines:
 
 ```bash
-mdtask set TSK-001 @iter:new-ids           # add property
-mdtask set TSK-001 TSK-002 #backend        # multiple IDs
-mdtask set TSK-001,TSK-002 !high #feature  # comma-separated IDs
+mdtask set TSK-038 @iter:new-ids           # add property
+mdtask set TSK-038 TSK-039 #backend        # multiple IDs
+mdtask set TSK-038,TSK-039 !high #feature  # comma-separated IDs
 ```
 
 Args are parsed by first character: `#` = tag, `!` = priority, `@` = property. Everything else is a task ID.
@@ -162,7 +162,7 @@ NNN is globally unique across all prefixes. If the highest existing number is 02
 
 A seed prefix on a specific task overrides the file-level prefix for that task. After `mdtask ids`, the seed marker is consumed — the task gets a proper `PREFIX-NNN` ID.
 
-Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-005`) are reported as warnings to stderr.
+Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-041`) are reported as warnings to stderr.
 
 If a file has unidentified tasks but no prefix source, `mdtask ids` exits with an error without modifying any files.
 
@@ -172,7 +172,7 @@ All external process invocations use `execFileSync` or `spawnSync` without `shel
 
 ## Tasks
 
-- [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-003 @blocked_by:FLS-001
+- [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-040 @blocked_by:FLS-028
   Recursive search through `*.md` files.
   Use `rg --files -g '*.md' --hidden` for file discovery.
   By default show only open `[ ]` tasks.
@@ -204,9 +204,9 @@ All external process invocations use `execFileSync` or `spawnSync` without `shel
 - [x] CLI-016 Show @blocked_by in list output
   Display `@blocked_by:ID` properties in `mdtask list` output.
   
-  When a task has `@blocked_by:TSK-001` in its metadata, show it in the output:
+  When a task has `@blocked_by:TSK-038` in its metadata, show it in the output:
   ```
-  [ ] CLI-003 Command `mdtask view <ID>` @blocked_by:TSK-002 @blocked_by:FLS-001
+  [ ] CLI-003 Command `mdtask view <ID>` @blocked_by:TSK-039 @blocked_by:FLS-028
   ```
 
   Tests:
@@ -247,7 +247,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Stable sort preserves original file order within same priority level
   - Works with `--all` flag to sort both open and done tasks
 
-- [x] CLI-003 Command `mdtask view <ID>`		@iter:mvp @blocked_by:TSK-002 @blocked_by:FLS-001
+- [x] CLI-003 Command `mdtask view <ID>`		@iter:mvp @blocked_by:TSK-039 @blocked_by:FLS-028
   Print full task block by ID.
   If not found — error, exit 1.
 
@@ -259,7 +259,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - `mdtask view <ID>` prints raw header line + dedented body
   - Task found by ID across all markdown files in search path
   - Exits with code 1 and error message if task not found
-  - Body dedented using `collectTaskBody` from TSK-002
+  - Body dedented using `collectTaskBody` from TSK-039
 
 - [x] CLI-004 Filter by tag `mdtask list #tag`
   Filter tasks by tag.
@@ -287,7 +287,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Combines with `--all`, `--sort=priority`, and tag filters
   - No matches produces empty output (exit 0)
 
-- [x] CLI-006 Command `mdtask done <ID>`		@iter:mvp @blocked_by:TSK-001 @blocked_by:FLS-001
+- [x] CLI-006 Command `mdtask done <ID>`		@iter:mvp @blocked_by:TSK-038 @blocked_by:FLS-028
   Toggle `[ ]` ↔ `[x]` in task header.
   File modified in-place.
   Duplicate ID — error, exit 1.
@@ -466,8 +466,8 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 - [x] CLI-018 Move priority after title in list output
   Change output format from `[ ] ID !priority Title` to `[ ] ID Title !priority`.
 
-  Currently: `[ ] TSK-001 !high Fix bug`
-  New:       `[ ] TSK-001 Fix bug !high`
+  Currently: `[ ] TSK-038 !high Fix bug`
+  New:       `[ ] TSK-038 Fix bug !high`
 
   Update tests that check output format.
 

@@ -12,7 +12,7 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
 
 ## Tasks
 
-- [x] PRJ-002 Add picocolors for CLI colors
+- [x] PRJ-030 Add picocolors for CLI colors
   Install and use `picocolors` library for ANSI colors.
   Replace manual color codes in `src/cli.ts` with picocolors API.
   
@@ -35,7 +35,7 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - `formatPriority()` and `formatTaskLine()` simplified
   - All 87 tests pass, lint clean
 
-- [x] PRJ-003 Add ts-pattern for pattern matching
+- [x] PRJ-031 Add ts-pattern for pattern matching
   Install and use `ts-pattern` library for type-safe pattern matching.
 
   Library: `ts-pattern` (~47KB bundled)
@@ -59,7 +59,7 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - Available for use where it improves clarity (see project.md "Pattern Matching" section)
   - Not yet adopted in existing code — `cac` handles command routing, `switch` handles priority formatting
 
-- [x] PRJ-004 Dev script `pnpm mdtask` — proxy to tsx		@iter:mvp
+- [x] PRJ-032 Dev script `pnpm mdtask` — proxy to tsx		@iter:mvp
   Add npm script `mdtask` that runs `tsx src/cli.ts` for local development.
   This allows running `pnpm mdtask list` without building.
 
@@ -77,7 +77,7 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - Arguments pass directly: `pnpm mdtask list --all` works without `--` delimiter
   - `pnpm mdtask list` and `pnpm mdtask --help` verified working
 
-- [x] PRJ-001 Project structure and entry point		@iter:mvp
+- [x] PRJ-029 Project structure and entry point		@iter:mvp
   Node.js + TypeScript project.
   Create:
   - `src/` — source code
@@ -88,7 +88,7 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   Tests:
   - entry point works
 
-- [x] PRJ-005 Tag #noqa skips Gemini and /check in /next-task
+- [x] PRJ-033 Tag #noqa skips Gemini and /check in /next-task
   When a task has `#noqa` tag, /next-task should skip:
   - Step 3 (validate plan with Gemini)
   - Step 5 (code review with Gemini)
@@ -101,24 +101,30 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - Steps 3, 5, and 8 each have "Skip if task has `#noqa` tag" note
   - Feature description added to docs/prd/project.md
 
-- [ ] PRJ-007 Migrate to globally unique numeric IDs		@iter:new-ids
+- [x] PRJ-035 Migrate to globally unique numeric IDs		@iter:new-ids
   Renumber all existing tasks so NNN is unique across all prefixes.
   Update all `@blocked_by:OLD-ID` references.
   Single atomic commit. Do not touch EXMPL/KTL example IDs.
 
-- [ ] PRJ-008 Update create-task skill for new ID scheme		@iter:new-ids
+  **Implemented:**
+  - CLI-001–024 kept as-is, all other prefixes renumbered to 025–044
+  - All `@blocked_by` references updated to new IDs
+  - EXMPL/KTL example IDs untouched
+  - `mdtask validate` passes clean after migration
+
+- [ ] PRJ-036 Update create-task skill for new ID scheme		@iter:new-ids
   Simplify create-task skill: write task without ID, then run `mdtask ids`.
   Remove manual ID computation from Step 4.
   Update prefix-to-PRD table to match `.mdtaskrc` `prefixes` field.
 
-- [ ] PRJ-009 Document globally unique ID scheme		@iter:new-ids
+- [ ] PRJ-037 Document globally unique ID scheme		@iter:new-ids
   Update docs/mdtask.md section 7 "Task Identity" and docs/skills/mdtask/SKILL.md:
   - NNN is globally unique across all prefixes
   - Short numeric lookup: `mdtask view 42`
   - `mdtask ids` auto-assigns IDs
   - Prefix-to-file mapping in `.mdtaskrc`
 
-- [ ] PRJ-006 Define layered architecture
+- [ ] PRJ-034 Define layered architecture
   Analyze current code and define clear data flow layers.
   Create docs/architecture.md describing:
   - What modules/layers exist (discovery, parsing, collection, mutation, presentation)

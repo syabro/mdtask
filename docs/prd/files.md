@@ -15,7 +15,7 @@ The function:
 
 ## Tasks
 
-- [x] FLS-001 File search function		@iter:mvp
+- [x] FLS-028 File search function		@iter:mvp
   Recursive search `*.md` including hidden directories.
   Use `rg --files -g '*.md' --hidden`.
   Exclude: node_modules, .git (default).
