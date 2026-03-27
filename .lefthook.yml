@@ -7,4 +7,5 @@ pre-commit:
       run: npx biome check --write {staged_files}
       stage_fixed: true
     typecheck:
+      glob: "*.ts"
       run: npx tsc --noEmit
