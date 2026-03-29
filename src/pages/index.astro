@@ -176,7 +176,7 @@ import '../styles/global.css'
                 <p class="text-on-surface-variant text-sm leading-relaxed mb-8 flex-grow">
                   <Fragment set:html={desc} />
                 </p>
-                <div class="bg-on-background p-5 font-mono text-[0.7rem] border border-surface-variant/10 h-28 flex items-center overflow-hidden">
+                <div class="bg-on-background p-5 font-mono text-[0.7rem] border border-surface-variant/10 h-24 flex items-center overflow-hidden">
                   <pre class="text-surface/60 leading-tight"><Fragment set:html={code} /></pre>
                 </div>
               </div>
@@ -274,14 +274,14 @@ import '../styles/global.css'
     </main>
 
     <!-- Footer -->
-    <footer class="bg-surface-container-low flex flex-col md:flex-row justify-between items-center w-full px-8 py-12 gap-6 border-t border-surface-container">
-      <div class="flex flex-col gap-2">
+    <footer class="bg-surface-container-low flex flex-col items-center w-full px-8 py-16 gap-10 border-t border-surface-container">
+      <div class="flex flex-col items-center gap-2 text-center">
         <div class="text-sm font-bold text-on-background">MDTASK</div>
         <div class="font-body text-[0.6875rem] uppercase tracking-widest text-on-surface-variant">
           Checkboxes are the database.
         </div>
       </div>
-      <div class="flex gap-8">
+      <div class="flex gap-12">
         <a class="font-body text-[0.6875rem] uppercase tracking-widest text-on-surface-variant hover:text-on-background transition-colors" href="https://github.com/syabro/mdtask" target="_blank" rel="noopener">GitHub</a>
         <a class="font-body text-[0.6875rem] uppercase tracking-widest text-on-surface-variant hover:text-on-background transition-colors" href="https://www.npmjs.com/package/mdtask" target="_blank" rel="noopener">npm</a>
       </div>
