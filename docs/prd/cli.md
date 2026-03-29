@@ -571,3 +571,15 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   `mdtask EXMPL-023` without a command name defaults to `view`.
   Only when the first positional arg looks like a task ID (matches [A-Z]+-\d+ or plain number).
   Otherwise fall through to help/error as usual.
+
+- [ ] CLI-045 Tabular output for `mdtask list`
+  Render list output as a compact table with aligned columns: ID, Title, Priority, Tags, Properties.
+  Current flat format: `[ ] CLI-001 Fix bug !high @iter:mvp`
+  New table format with column headers and separators.
+  Columns auto-sized to content width.
+  Keep flat format when piped (non-TTY) for parseability.
+
+- [ ] CLI-046 Show file location in `mdtask view` output
+  Display file path and line number in `mdtask view` output header.
+  Example: `docs/prd/cli.md:191`
+  Users can see where the task lives without running `mdtask open`.
