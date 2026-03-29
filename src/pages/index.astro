@@ -147,50 +147,40 @@ import '../styles/global.css'
       </section>
 
       <!-- Why Section -->
-      <section class="py-32 px-6 md:px-24" id="why">
-        <div class="mb-20">
-          <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 02. RATIONALE</span>
-          <h2 class="text-[2.5rem] font-bold tracking-tight">The Three Pains</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div class="flex flex-col">
-            <div class="bg-surface-container-low p-8 flex-grow">
-              <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">AI Visibility</h3>
-              <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
-                LLMs and AI agents can't "see" inside your Jira or Linear without complex API setups. If your tasks are in the file, the agent already knows what to do.
-              </p>
-              <div class="bg-on-background p-5 mt-auto font-mono text-[0.75rem] border border-surface-variant/10 w-full">
-                <pre class="text-surface/60"><span class="text-surface/40 italic"># claude / codex / opencode</span>
-<span class="text-surface/30 select-none mr-2">❯</span>Read docs/features/search.md
-  and complete all marked #urgent</pre>
-              </div>
-            </div>
+      <section class="py-32 px-6 md:px-24 border-t border-surface-container" id="why">
+        <div class="max-w-5xl mx-auto">
+          <div class="mb-20">
+            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 02. RATIONALE</span>
+            <h2 class="text-[2.5rem] font-bold tracking-tight">The Three Pains</h2>
           </div>
-          <div class="flex flex-col">
-            <div class="bg-surface-container-low p-8 flex-grow">
-              <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">Zero Overhead</h3>
-              <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
-                No new accounts. No "Second Brain" apps. If you have a code editor, you have a task manager. Tasks are version controlled with your code.
-              </p>
-              <div class="bg-on-background p-5 mt-auto font-mono text-[0.75rem] border border-surface-variant/10 w-full">
-                <pre class="text-surface/60"><span class="text-surface/30 select-none mr-2">$</span>git commit \
-  -m "feat: finish CORE-01"</pre>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            {[
+              {
+                title: 'AI Visibility',
+                desc: 'LLMs and AI agents can\'t "see" inside your Jira or Linear without complex API setups. If your tasks are in the file, the agent already knows what to do.',
+                code: `<span class="text-surface/40 italic"># claude / codex / opencode</span>\n<span class="text-surface/30 select-none mr-2">❯</span>Read docs/features/search.md\n  and complete all marked #urgent`
+              },
+              {
+                title: 'Zero Overhead',
+                desc: 'No new accounts. No "Second Brain" apps. If you have a code editor, you have a task manager. Tasks are version controlled with your code.',
+                code: `<span class="text-surface/30 select-none mr-2">$</span>git commit \\\n  -m "feat: finish CORE-01"`
+              },
+              {
+                title: 'Single Source',
+                desc: 'Specs and backlogs stay in sync because they are the same document. <br/>No more "the README says one thing, Jira says another."',
+                code: `<span class="text-tertiary-fixed-dim font-bold"># PRD - Search</span>\n- [ ] API-010 Pagination\n- [x] API-011 Filters`
+              }
+            ].map(({ title, desc, code }) => (
+              <div class="flex flex-col">
+                <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-tertiary">{title}</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed mb-8 flex-grow">
+                  <Fragment set:html={desc} />
+                </p>
+                <div class="bg-on-background p-5 font-mono text-[0.7rem] border border-surface-variant/10 h-28 flex items-center overflow-hidden">
+                  <pre class="text-surface/60 leading-tight"><Fragment set:html={code} /></pre>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="flex flex-col">
-            <div class="bg-surface-container-low p-8 flex-grow">
-              <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">Single Source</h3>
-              <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
-                Specs and backlogs stay in sync because they are the same document.
-                <br/>No more "the README says one thing, Jira says another."
-              </p>
-              <div class="bg-on-background p-5 mt-auto font-mono text-[0.75rem] border border-surface-variant/10 w-full">
-                <pre class="text-surface/60"><span class="text-tertiary-fixed-dim font-bold"># PRD - Search</span>
-- [ ] API-010 Pagination
-- [x] API-011 Filters</pre>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
