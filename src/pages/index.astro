@@ -58,7 +58,7 @@ import '../styles/global.css'
         <div class="grid grid-cols-1 gap-4">
           <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary">
             <div class="flex justify-between items-center mb-4">
-              <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">README.md</span>
+              <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">docs/features/search.md</span>
               <div class="flex gap-1">
                 <div class="w-2 h-2 rounded-full bg-outline-variant opacity-40"></div>
                 <div class="w-2 h-2 rounded-full bg-outline-variant opacity-40"></div>
@@ -148,37 +148,36 @@ import '../styles/global.css'
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div class="flex flex-col">
-            <div class="bg-surface-container-low p-8 flex-grow border border-transparent hover:border-outline-variant transition-colors">
+            <div class="bg-surface-container-low p-8 flex-grow">
               <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">AI Visibility</h3>
               <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
                 LLMs and AI agents can't "see" inside your Jira or Linear without complex API setups. If your tasks are in the file, the agent already knows what to do.
               </p>
               <div class="bg-on-background p-4 mt-auto">
-                <pre class="text-[0.75rem] text-surface/60"># Prompt
-"Read README.md and
-complete all tasks
-marked #urgent"</pre>
+                <pre class="text-[0.75rem] text-surface/60"># claude / codex / opencode
+❯ Read docs/features/search.md
+  and complete all marked #urgent</pre>
               </div>
             </div>
           </div>
           <div class="flex flex-col">
-            <div class="bg-surface-container-low p-8 flex-grow border border-transparent hover:border-outline-variant transition-colors">
+            <div class="bg-surface-container-low p-8 flex-grow">
               <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">Zero Overhead</h3>
               <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
                 No new accounts. No "Second Brain" apps. If you have a code editor, you have a task manager. Tasks are version controlled with your code.
               </p>
               <div class="bg-on-background p-4 mt-auto">
-                <pre class="text-[0.75rem] text-surface/60">$ git commit -m \
-"feat: finish
-[x] CORE-01"</pre>
+                <pre class="text-[0.75rem] text-surface/60">$ git commit \
+  -m "feat: finish CORE-01"</pre>
               </div>
             </div>
           </div>
           <div class="flex flex-col">
-            <div class="bg-surface-container-low p-8 flex-grow border border-transparent hover:border-outline-variant transition-colors">
+            <div class="bg-surface-container-low p-8 flex-grow">
               <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">Single Source</h3>
               <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
-                Specs and backlogs stay in sync because they are the same document. No more "the README says one thing, Jira says another."
+                Specs and backlogs stay in sync because they are the same document.
+                <br/>No more "the README says one thing, Jira says another."
               </p>
               <div class="bg-on-background p-4 mt-auto">
                 <pre class="text-[0.75rem] text-surface/60"># PRD - Search
@@ -292,7 +291,7 @@ marked #urgent"</pre>
         <a class="font-body text-[0.6875rem] uppercase tracking-widest text-on-surface-variant hover:text-on-background transition-colors" href="https://www.npmjs.com/package/mdtask" target="_blank" rel="noopener">npm</a>
       </div>
       <div class="text-[0.6875rem] uppercase tracking-widest text-on-surface-variant opacity-40">
-        &copy; 2025 MDTASK
+        &copy; 2026 MDTASK
       </div>
     </footer>
   </body>
