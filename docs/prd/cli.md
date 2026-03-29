@@ -116,7 +116,7 @@ If `$EDITOR` is not set, exits with error code 1. If the task ID is not found, e
 `mdtask validate` checks task integrity across all markdown files:
 
 ```bash
-mdtask validate          # Check all files in search path
+mdtask validate          # Check all files in base directory
 mdtask validate --path docs/   # Check specific directory
 ```
 
@@ -299,7 +299,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 
   **Implemented:**
   - `mdtask view <ID>` prints raw header line + dedented body
-  - Task found by ID across all markdown files in search path
+  - Task found by ID across all markdown files in base directory
   - Exits with code 1 and error message if task not found
   - Body dedented using `collectTaskBody` from TSK-039
 
@@ -661,8 +661,15 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Empty lines in body remain unindented
   - `collectTaskBody` unchanged — indent applied in `handleView` presentation layer
 
-- [ ] CLI-055 Rename `searchPath` to `basePath` across codebase
+- [x] CLI-055 Rename `searchPath` to `basePath` across codebase
   Internal variable/parameter name `searchPath` should be `basePath` to match
   the concept of base directory. Rename in src/cli.ts, src/files.ts,
   src/config.ts, and tests. Update --path help text from "Search path" to
   "Base directory".
+
+  **Implemented:**
+  - Renamed `FindOptions.searchPath` → `basePath` in src/files.ts
+  - Renamed `resolveSearchPath()` → `resolveBasePath()` in src/config.ts
+  - Renamed all `searchPath` variables/params in src/cli.ts (collectTasks + 8 handlers)
+  - Updated `--path` help text to "Base directory for tasks"
+  - Updated all test references in test/files.test.ts and test/config.test.ts

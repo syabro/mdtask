@@ -14,7 +14,7 @@ import * as rl from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { CAC } from 'cac';
 import p from 'picocolors';
-import { type FilesConfig, loadConfig, resolveSearchPath } from './config.js';
+import { type FilesConfig, loadConfig, resolveBasePath } from './config.js';
 import { findMarkdownFiles } from './files.js';
 import {
 	collectTaskBody,
@@ -30,12 +30,12 @@ import {
 } from './task.js';
 
 function collectTasks(
-	searchPath?: string,
+	basePath?: string,
 	filesConfig?: FilesConfig,
 	excludePrefixes?: string[],
 ): Task[] {
 	const files = findMarkdownFiles({
-		searchPath,
+		basePath,
 		includePatterns: filesConfig?.include,
 		excludePatterns: filesConfig?.exclude,
 	});
@@ -149,12 +149,8 @@ function formatTaskLine(
 
 function handleView(id: string, options: { path?: string }): void {
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(
-		searchPath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const basePath = resolveBasePath(options.path, config);
+	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let task: Task;
 	try {
@@ -186,12 +182,8 @@ function handleView(id: string, options: { path?: string }): void {
 
 function handleDone(id: string, options: { path?: string }): void {
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(
-		searchPath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const basePath = resolveBasePath(options.path, config);
+	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let task: Task;
 	try {
@@ -230,12 +222,8 @@ function handleMove(
 	options: { path?: string },
 ): void {
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(
-		searchPath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const basePath = resolveBasePath(options.path, config);
+	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let task: Task;
 	try {
@@ -356,12 +344,8 @@ function handleOpen(id: string, options: { path?: string }): void {
 	}
 
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(
-		searchPath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const basePath = resolveBasePath(options.path, config);
+	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let task: Task;
 	try {
@@ -384,12 +368,8 @@ const MALFORMED_PROPERTY_REGEX = /(?:^|\s)@([\w-]+)(?![:\w])/;
 
 function handleValidate(options: { path?: string }): void {
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(
-		searchPath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const basePath = resolveBasePath(options.path, config);
+	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let hasErrors = false;
 
@@ -470,12 +450,8 @@ function handleList(
 	},
 ): void {
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(
-		searchPath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const basePath = resolveBasePath(options.path, config);
+	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
 
@@ -533,12 +509,8 @@ function handleSet(args: string[], options: { path?: string }): void {
 	}
 
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
-	const tasks = collectTasks(
-		searchPath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const basePath = resolveBasePath(options.path, config);
+	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	// Validate all IDs first
 	const matched: Task[] = [];
@@ -642,9 +614,9 @@ function handleSet(args: string[], options: { path?: string }): void {
 
 async function handleIds(options: { path?: string }): Promise<void> {
 	const config = loadConfig();
-	const searchPath = resolveSearchPath(options.path, config);
+	const basePath = resolveBasePath(options.path, config);
 	const existingTasks = collectTasks(
-		searchPath,
+		basePath,
 		config?.files,
 		config?.excludePrefixes,
 	);
@@ -677,7 +649,7 @@ async function handleIds(options: { path?: string }): Promise<void> {
 
 	// Scan all files for unidentified tasks
 	const files = findMarkdownFiles({
-		searchPath,
+		basePath,
 		includePatterns: config?.files?.include,
 		excludePatterns: config?.files?.exclude,
 	});
@@ -759,10 +731,15 @@ async function handleIds(options: { path?: string }): Promise<void> {
 			}
 
 			if (!iface) {
-				iface = rl.createInterface({ input: process.stdin, output: process.stderr });
+				iface = rl.createInterface({
+					input: process.stdin,
+					output: process.stderr,
+				});
 			}
 			const displayPath = relative(process.cwd(), filePath) || filePath;
-			const answer = (await iface.question(`Enter prefix for ${displayPath}: `)).trim().toUpperCase();
+			const answer = (await iface.question(`Enter prefix for ${displayPath}: `))
+				.trim()
+				.toUpperCase();
 			if (!answer || !/^[A-Z][A-Z0-9]*$/.test(answer)) {
 				iface.close();
 				process.stderr.write(
@@ -819,7 +796,7 @@ const KNOWN_COMMANDS = new Set([
 export async function run(args: string[]): Promise<number> {
 	const cli = new CAC('mdtask');
 
-	cli.option('--path <path>', 'Search path for tasks (default: .)');
+	cli.option('--path <path>', 'Base directory for tasks (default: .)');
 
 	cli
 		.command('list [...filters]', 'List tasks')
@@ -865,7 +842,12 @@ export async function run(args: string[]): Promise<number> {
 
 	cli.help();
 
-	const pkgPath = resolve(fileURLToPath(import.meta.url), '..', '..', 'package.json');
+	const pkgPath = resolve(
+		fileURLToPath(import.meta.url),
+		'..',
+		'..',
+		'package.json',
+	);
 	const pkgVersion = existsSync(pkgPath)
 		? JSON.parse(readFileSync(pkgPath, 'utf-8')).version
 		: 'unknown';

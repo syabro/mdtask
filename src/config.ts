@@ -100,13 +100,13 @@ export function loadConfig(startDir?: string): Config | null {
 }
 
 /**
- * Resolve search path with priority:
+ * Resolve base path with priority:
  * 1. CLI flag
  * 2. MDTASK_PATH env variable
  * 3. Config file path
  * 4. Default (.)
  */
-export function resolveSearchPath(
+export function resolveBasePath(
 	cliPath: string | undefined,
 	config: Config | null,
 ): string {

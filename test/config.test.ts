@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { loadConfig, resolveSearchPath } from '../src/config.js';
+import { loadConfig, resolveBasePath } from '../src/config.js';
 
 describe('loadConfig', () => {
 	let tempDir: string;
@@ -195,7 +195,7 @@ describe('loadConfig', () => {
 	});
 });
 
-describe('resolveSearchPath', () => {
+describe('resolveBasePath', () => {
 	const originalEnv = process.env;
 
 	beforeEach(() => {
@@ -211,7 +211,7 @@ describe('resolveSearchPath', () => {
 		process.env.MDTASK_PATH = './from-env';
 		const config = { path: './from-config' };
 
-		const result = resolveSearchPath('./from-flag', config);
+		const result = resolveBasePath('./from-flag', config);
 		expect(result).toBe('./from-flag');
 	});
 
@@ -219,26 +219,26 @@ describe('resolveSearchPath', () => {
 		process.env.MDTASK_PATH = './from-env';
 		const config = { path: './from-config' };
 
-		const result = resolveSearchPath(undefined, config);
+		const result = resolveBasePath(undefined, config);
 		expect(result).toBe('./from-env');
 	});
 
 	it('uses config when no CLI flag or env', () => {
 		const config = { path: './from-config' };
 
-		const result = resolveSearchPath(undefined, config);
+		const result = resolveBasePath(undefined, config);
 		expect(result).toBe('./from-config');
 	});
 
 	it('uses default (.) when nothing provided', () => {
-		const result = resolveSearchPath(undefined, null);
+		const result = resolveBasePath(undefined, null);
 		expect(result).toBe('.');
 	});
 
 	it('CLI flag takes precedence over env', () => {
 		process.env.MDTASK_PATH = './from-env';
 
-		const result = resolveSearchPath('./from-flag', null);
+		const result = resolveBasePath('./from-flag', null);
 		expect(result).toBe('./from-flag');
 	});
 
@@ -246,14 +246,14 @@ describe('resolveSearchPath', () => {
 		process.env.MDTASK_PATH = './from-env';
 		const config = { path: './from-config' };
 
-		const result = resolveSearchPath(undefined, config);
+		const result = resolveBasePath(undefined, config);
 		expect(result).toBe('./from-env');
 	});
 
 	it('empty string CLI flag is treated as undefined', () => {
 		process.env.MDTASK_PATH = './from-env';
 
-		const result = resolveSearchPath('', null);
+		const result = resolveBasePath('', null);
 		expect(result).toBe('./from-env');
 	});
 });

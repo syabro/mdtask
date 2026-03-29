@@ -45,7 +45,7 @@ describe('findMarkdownFiles', () => {
 			mkdirSync(subDir);
 			writeFileSync(join(subDir, 'nested.md'), '# Nested');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toHaveLength(2);
 			expect(result).toContain(join(tempDir, 'root.md'));
@@ -55,7 +55,7 @@ describe('findMarkdownFiles', () => {
 		it('returns empty array when no .md files found', () => {
 			writeFileSync(join(tempDir, 'readme.txt'), 'not markdown');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toEqual([]);
 		});
@@ -65,7 +65,7 @@ describe('findMarkdownFiles', () => {
 			writeFileSync(join(tempDir, 'alpha.md'), '# A');
 			writeFileSync(join(tempDir, 'beta.md'), '# B');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toEqual([
 				join(tempDir, 'alpha.md'),
@@ -83,7 +83,7 @@ describe('findMarkdownFiles', () => {
 			mkdirSync(nodeModules);
 			writeFileSync(join(nodeModules, 'pkg.md'), '# Package');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toHaveLength(1);
 			expect(result).toContain(join(tempDir, 'root.md'));
@@ -97,7 +97,7 @@ describe('findMarkdownFiles', () => {
 			mkdirSync(gitDir);
 			writeFileSync(join(gitDir, 'config.md'), '# Config');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toHaveLength(1);
 			expect(result).toContain(join(tempDir, 'readme.md'));
@@ -119,7 +119,7 @@ describe('findMarkdownFiles', () => {
 				mkdirSync(tmpDir);
 				writeFileSync(join(tmpDir, 'temp.md'), '# Temp');
 
-				const result = findMarkdownFiles({ searchPath: tempDir });
+				const result = findMarkdownFiles({ basePath: tempDir });
 
 				expect(result).toHaveLength(1);
 				expect(result).toContain(join(tempDir, 'root.md'));
@@ -140,7 +140,7 @@ describe('findMarkdownFiles', () => {
 			writeFileSync(join(cacheDir, 'cached.md'), '# Cached');
 
 			const result = findMarkdownFiles({
-				searchPath: tempDir,
+				basePath: tempDir,
 				excludeDirs: ['cache'],
 			});
 
@@ -157,7 +157,7 @@ describe('findMarkdownFiles', () => {
 			mkdirSync(hiddenDir);
 			writeFileSync(join(hiddenDir, 'secret.md'), '# Secret');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toHaveLength(2);
 			expect(result).toContain(join(tempDir, 'visible.md'));
@@ -169,7 +169,7 @@ describe('findMarkdownFiles', () => {
 		it('handles spaces in file names', () => {
 			writeFileSync(join(tempDir, 'my file.md'), '# My File');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toHaveLength(1);
 			expect(result).toContain(join(tempDir, 'my file.md'));
@@ -180,7 +180,7 @@ describe('findMarkdownFiles', () => {
 			mkdirSync(specialDir);
 			writeFileSync(join(specialDir, 'file.md'), '# File');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toHaveLength(1);
 			expect(result).toContain(join(specialDir, 'file.md'));
@@ -196,7 +196,7 @@ describe('findMarkdownFiles', () => {
 			writeFileSync(join(tempDir, 'docs', 'skills', 'example.md'), '# Example');
 
 			const result = findMarkdownFiles({
-				searchPath: tempDir,
+				basePath: tempDir,
 				excludePatterns: ['docs/skills/**'],
 			});
 
@@ -214,7 +214,7 @@ describe('findMarkdownFiles', () => {
 			writeFileSync(join(tempDir, 'root.md'), '# Root');
 
 			const result = findMarkdownFiles({
-				searchPath: tempDir,
+				basePath: tempDir,
 				includePatterns: ['docs/prd/**'],
 			});
 
@@ -230,7 +230,7 @@ describe('findMarkdownFiles', () => {
 			writeFileSync(join(tempDir, 'docs', 'drafts', 'wip.md'), '# WIP');
 
 			const result = findMarkdownFiles({
-				searchPath: tempDir,
+				basePath: tempDir,
 				includePatterns: ['docs/**'],
 				excludePatterns: ['docs/drafts/**'],
 			});
@@ -244,7 +244,7 @@ describe('findMarkdownFiles', () => {
 			writeFileSync(join(tempDir, 'root.md'), '# Root');
 			writeFileSync(join(tempDir, 'a', 'nested.md'), '# Nested');
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result).toHaveLength(2);
 		});
@@ -255,7 +255,7 @@ describe('findMarkdownFiles', () => {
 			writeFileSync(join(tempDir, 'docs', 'prd', 'public.md'), '# Public');
 
 			const result = findMarkdownFiles({
-				searchPath: tempDir,
+				basePath: tempDir,
 				includePatterns: ['docs/**'],
 				excludePatterns: ['**/secret.md'],
 			});
@@ -273,7 +273,7 @@ describe('findMarkdownFiles', () => {
 
 			symlinkSync(join(realDir, 'target.md'), join(tempDir, 'link.md'));
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result.some((f) => f.endsWith('link.md'))).toBe(true);
 		});
@@ -288,7 +288,7 @@ describe('findMarkdownFiles', () => {
 
 			symlinkSync(realDir, join(tempDir, 'linked-dir'));
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result.some((f) => f.includes('linked-dir'))).toBe(true);
 		});
@@ -301,7 +301,7 @@ describe('findMarkdownFiles', () => {
 			// Create circular symlink: a/b -> tempDir (ancestor)
 			symlinkSync(tempDir, join(dirA, 'b'));
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			expect(result.some((f) => f.endsWith('task.md'))).toBe(true);
 		});
@@ -312,7 +312,7 @@ describe('findMarkdownFiles', () => {
 			// Symlink in same tree pointing to the same file
 			symlinkSync(join(tempDir, 'task.md'), join(tempDir, 'link-to-task.md'));
 
-			const result = findMarkdownFiles({ searchPath: tempDir });
+			const result = findMarkdownFiles({ basePath: tempDir });
 
 			// Should have exactly one entry for this physical file, not two
 			const taskFiles = result.filter(
@@ -322,8 +322,8 @@ describe('findMarkdownFiles', () => {
 		});
 	});
 
-	describe('default search path', () => {
-		it('uses current directory when searchPath not specified', () => {
+	describe('default base path', () => {
+		it('uses current directory when basePath not specified', () => {
 			expect(() => findMarkdownFiles()).not.toThrow();
 		});
 	});

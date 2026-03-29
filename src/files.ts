@@ -3,7 +3,7 @@ import { realpathSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 export type FindOptions = {
-	searchPath?: string;
+	basePath?: string;
 	excludeDirs?: string[];
 	includePatterns?: string[];
 	excludePatterns?: string[];
@@ -32,7 +32,7 @@ function normalizePattern(pattern: string): string {
 }
 
 function tryRipgrep(
-	searchPath: string,
+	basePath: string,
 	excludeDirs: string[],
 	includePatterns?: string[],
 	excludePatterns?: string[],
@@ -61,7 +61,7 @@ function tryRipgrep(
 		'.',
 	];
 	const result = spawnSync('rg', args, {
-		cwd: searchPath,
+		cwd: basePath,
 		encoding: 'utf-8',
 		stdio: ['pipe', 'pipe', 'ignore'],
 	});
@@ -73,7 +73,7 @@ function tryRipgrep(
 	// rg exits 0 (matches), 1 (no matches), or 2 (errors like symlink cycles).
 	// With --follow, cycle warnings go to stderr but stdout still has valid results.
 	if (result.stdout) {
-		return parseOutput(result.stdout).map((p) => resolve(searchPath, p));
+		return parseOutput(result.stdout).map((p) => resolve(basePath, p));
 	}
 
 	if (result.status === 0 || result.status === 1) {
@@ -88,12 +88,12 @@ function globToFindPath(pattern: string): string {
 }
 
 function tryFind(
-	searchPath: string,
+	basePath: string,
 	excludeDirs: string[],
 	includePatterns?: string[],
 	excludePatterns?: string[],
 ): string[] | null {
-	const args = ['-L', searchPath];
+	const args = ['-L', basePath];
 	for (const dir of excludeDirs) {
 		args.push('-type', 'd', '-name', dir, '-prune', '-o');
 	}
@@ -139,8 +139,8 @@ function tryFind(
 }
 
 export function findMarkdownFiles(options?: FindOptions): string[] {
-	const searchPath = options?.searchPath ?? '.';
-	const resolvedPath = resolve(searchPath);
+	const basePath = options?.basePath ?? '.';
+	const resolvedPath = resolve(basePath);
 	const excludeDirs = getExcludeDirs(options);
 
 	const includePatterns = options?.includePatterns;

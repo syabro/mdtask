@@ -2,9 +2,9 @@
 
 Search scope and file filtering configuration.
 
-## Search Path
+## Base Directory
 
-The search directory for task files can be configured via three methods (in priority order):
+The base directory for task files can be configured via three methods (in priority order):
 
 1. **CLI Flag**: `mdtask list --path ./docs`
 2. **Environment Variable**: `MDTASK_PATH=./docs mdtask list`  
@@ -28,7 +28,7 @@ Control which files are scanned for tasks using `files.include` and `files.exclu
 
 - **include** — only scan files matching these glob patterns (default: all `.md` files)
 - **exclude** — skip files matching these patterns (overrides include)
-- Patterns are relative to the search path
+- Patterns are relative to the base directory
 - Uses ripgrep's native `-g` flag for matching
 
 ## Exclude Prefixes
