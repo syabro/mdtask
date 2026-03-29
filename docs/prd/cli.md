@@ -623,3 +623,9 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 - [ ] CLI-054 `mdtask view` body should be indented with 6 spaces
   Currently `collectTaskBody` fully dedents the body (0 indent).
   Add 6-space indent prefix to every non-empty body line in view output.
+
+- [ ] CLI-055 Rename `searchPath` to `basePath` across codebase
+  Internal variable/parameter name `searchPath` should be `basePath` to match
+  the concept of base directory. Rename in src/cli.ts, src/files.ts,
+  src/config.ts, and tests. Update --path help text from "Search path" to
+  "Base directory".
