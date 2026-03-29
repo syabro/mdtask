@@ -599,3 +599,17 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Invalid/empty input exits with error and descriptive message
   - Non-TTY mode preserves existing error behavior
   - Readline interface reused across multiple files, closed after loop
+
+- [ ] CLI-051 Show unidentified tasks in list output with warning
+  `mdtask list` should display tasks without IDs after the main list,
+  separated by a warning header:
+  ```
+  Warning: tasks without IDs (run `mdtask ids` to assign):
+  - [ ] Basic boiling                    README.md:5
+  - [ ] Tea presets                      README.md:6
+  ```
+  Show file path (relative) and line number for each.
+
+- [ ] CLI-052 `mdtask ids` output should include `- [ ]` prefix
+  Currently prints `KTL-001 Title`, should print `- [ ] KTL-001 Title`
+  (or `- [x]` for done tasks) to match task format.
