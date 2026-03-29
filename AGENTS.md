@@ -2,6 +2,8 @@
 
 Use **pnpm** for package operations.
 
+**Always read @justfile at the start of every session.** It defines project commands — use `just` instead of raw pnpm/npm for build, test, release, etc.
+
 ## Running mdtask
 
 `pnpm mdtask <command>` — runs CLI via tsx (no build needed). Use this for local development and testing.
