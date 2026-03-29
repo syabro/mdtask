@@ -195,6 +195,23 @@ If a file has unidentified tasks but no prefix source:
 
 All external process invocations use `execFileSync` or `spawnSync` without `shell: true`, so user input (task IDs, file paths, task content) is never interpreted by a shell. Task IDs are constrained to `[A-Z]+-\d+` by the parser regex, preventing metacharacters from entering IDs. File paths with special characters (spaces, `$()`, backticks, pipes) are handled safely by Node.js `fs` APIs. All output uses `process.stdout.write()` directly — no shell involved.
 
+## Default command shortcuts
+
+`mdtask` without arguments defaults to `list`:
+
+```bash
+mdtask                   # same as: mdtask list
+```
+
+A task ID as the sole argument defaults to `view`:
+
+```bash
+mdtask EXMPL-023         # same as: mdtask view EXMPL-023
+mdtask 23                # same as: mdtask view 23
+```
+
+Only matches the pattern `[A-Z]+-\d+` or a plain number. If the argument is not a known command and not a valid task ID, an error message and help are shown (exit code 1).
+
 ## Tasks
 
 - [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-040 @blocked_by:FLS-028
@@ -576,12 +593,17 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Priority replacement targets metadata only, not title text
   - 14 tests covering all token types, duplicates, errors, and edge cases
 
-- [ ] CLI-024 Default command shortcuts
+- [x] CLI-024 Default command shortcuts
   `mdtask` without arguments defaults to `list`.
   `mdtask EXMPL-023` without a command name defaults to `view`.
   Only when the sole argument matches a task ID (`[A-Z]+-\d+` or plain number).
   If the argument is not a known command and not a valid ID pattern,
   print an error message and show help.
+
+  **Implemented:**
+  - No args → runs `list` command
+  - Task ID as sole arg (`[A-Z]+-\d+` or plain number) → runs `view` for that ID
+  - Unknown non-command arg → prints error message with help output, exits 1
 
 - [ ] CLI-045 Tabular output for `mdtask list`
   Render list output as a compact table with aligned columns: ID, Title, Priority, Tags, Properties.

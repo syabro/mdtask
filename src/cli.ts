@@ -803,6 +803,19 @@ async function handleIds(options: { path?: string }): Promise<void> {
 	}
 }
 
+const TASK_ID_REGEX = /^(?:[A-Z]+-\d+|\d+)$/;
+const KNOWN_COMMANDS = new Set([
+	'list',
+	'view',
+	'done',
+	'open',
+	'move',
+	'validate',
+	'set',
+	'ids',
+	'help',
+]);
+
 export async function run(args: string[]): Promise<number> {
 	const cli = new CAC('mdtask');
 
@@ -857,6 +870,19 @@ export async function run(args: string[]): Promise<number> {
 		? JSON.parse(readFileSync(pkgPath, 'utf-8')).version
 		: 'unknown';
 	cli.version(pkgVersion);
+
+	// Default shortcuts: no args → list, task ID → view
+	if (args.length === 0) {
+		args = ['list'];
+	} else if (!args[0].startsWith('-') && !KNOWN_COMMANDS.has(args[0])) {
+		if (TASK_ID_REGEX.test(args[0])) {
+			args = ['view', ...args];
+		} else {
+			process.stderr.write(`mdtask: unknown command '${args[0]}'\n`);
+			cli.outputHelp();
+			return 1;
+		}
+	}
 
 	try {
 		cli.parse(['node', 'mdtask', ...args], { run: false });
