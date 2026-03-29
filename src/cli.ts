@@ -824,7 +824,12 @@ export function run(args: string[]): number {
 		});
 
 	cli.help();
-	cli.version('0.1.0');
+
+	const pkgPath = resolve(fileURLToPath(import.meta.url), '..', '..', 'package.json');
+	const pkgVersion = existsSync(pkgPath)
+		? JSON.parse(readFileSync(pkgPath, 'utf-8')).version
+		: 'unknown';
+	cli.version(pkgVersion);
 
 	try {
 		cli.parse(['node', 'mdtask', ...args]);
