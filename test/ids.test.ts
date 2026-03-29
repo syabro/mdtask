@@ -241,14 +241,14 @@ describe('mdtask ids', () => {
 		expect(stderr).toContain('001');
 	});
 
-	it('prints assigned IDs to stdout', async () => {
+	it('prints assigned IDs to stdout with checkbox prefix', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(file, '- [ ] CLI-001 Existing\n- [ ] New task\n');
 
 		await run(['ids']);
 
 		const stdout = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-		expect(stdout).toContain('CLI-002');
+		expect(stdout).toContain('- [ ] CLI-002 New task');
 	});
 
 	it('does nothing when no unidentified tasks exist', async () => {
@@ -281,6 +281,9 @@ describe('mdtask ids', () => {
 
 		const content = readFileSync(file, 'utf-8');
 		expect(content).toContain('- [x] CLI-002 Done task');
+
+		const stdout = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stdout).toContain('- [x] CLI-002 Done task');
 	});
 
 	it('seed prefix overrides file prefix for that task', async () => {

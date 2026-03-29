@@ -782,17 +782,18 @@ async function handleIds(options: { path?: string }): Promise<void> {
 			const id = `${activePrefix}-${String(nextNum).padStart(padWidth, '0')}`;
 			const checkbox = ut.status === 'done' ? '[x]' : '[ ]';
 
-			lines[ut.lineIndex] = `- ${checkbox} ${id} ${ut.title}`;
+			const formatted = `- ${checkbox} ${id} ${ut.title}`;
+			lines[ut.lineIndex] = formatted;
 
-			assigned.push(`${id} ${ut.title}`);
+			assigned.push(formatted);
 			nextNum++;
 		}
 
 		writeFileSync(filePath, lines.join('\n'));
 	}
 
-	for (const id of assigned) {
-		process.stdout.write(`${id}\n`);
+	for (const line of assigned) {
+		process.stdout.write(`${line}\n`);
 	}
 }
 

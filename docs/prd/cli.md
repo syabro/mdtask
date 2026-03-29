@@ -180,7 +180,7 @@ A seed prefix on a specific task overrides the file-level prefix for that task. 
 
 Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-005`) are reported as warnings to stderr.
 
-Assigned IDs are printed to stdout with their titles: `KTL-001 Basic boiling`.
+Assigned IDs are printed to stdout in task format: `- [ ] KTL-001 Basic boiling` (or `- [x]` for done tasks).
 
 If a file has unidentified tasks but no prefix source:
 - **Interactive (TTY):** prompts `Enter prefix for <filename>:` (relative path) — input is trimmed, uppercased, and validated (`A-Z0-9`, must start with a letter)
@@ -610,9 +610,13 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   ```
   Show file path (relative) and line number for each.
 
-- [ ] CLI-052 `mdtask ids` output should include `- [ ]` prefix
+- [x] CLI-052 `mdtask ids` output should include `- [ ]` prefix
   Currently prints `KTL-001 Title`, should print `- [ ] KTL-001 Title`
   (or `- [x]` for done tasks) to match task format.
+
+  **Implemented:**
+  - `mdtask ids` stdout now prints `- [ ] ID Title` for open tasks and `- [x] ID Title` for done tasks
+  - Reuses the same formatted string for both file mutation and stdout output
 
 - [ ] CLI-054 `mdtask view` body should be indented with 6 spaces
   Currently `collectTaskBody` fully dedents the body (0 indent).
