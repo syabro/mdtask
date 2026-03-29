@@ -1,5 +1,4 @@
 import {
-	mkdirSync,
 	mkdtempSync,
 	readdirSync,
 	readFileSync,
@@ -26,7 +25,6 @@ import { run } from '../src/cli.js';
 describe('mdtask set', () => {
 	let tempDir: string;
 	let stderrSpy: ReturnType<typeof vi.spyOn>;
-	let stdoutSpy: ReturnType<typeof vi.spyOn>;
 	let originalCwd: string;
 	let exitSpy: ReturnType<typeof vi.spyOn>;
 
@@ -34,9 +32,7 @@ describe('mdtask set', () => {
 		tempDir = mkdtempSync(join(tmpdir(), 'mdtask-test-'));
 		originalCwd = process.cwd();
 		process.chdir(tempDir);
-		stdoutSpy = vi
-			.spyOn(process.stdout, 'write')
-			.mockImplementation(() => true);
+		vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 		stderrSpy = vi
 			.spyOn(process.stderr, 'write')
 			.mockImplementation(() => true);

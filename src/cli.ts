@@ -722,7 +722,7 @@ async function handleIds(options: { path?: string }): Promise<void> {
 		if (!filePrefix) {
 			const seed = unidentified.find((ut) => ut.seedPrefix);
 			if (seed) {
-				filePrefix = seed.seedPrefix!;
+				filePrefix = seed.seedPrefix as string;
 			}
 		}
 

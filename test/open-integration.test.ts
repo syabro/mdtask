@@ -113,7 +113,7 @@ describe('mdtask open — integration with mock editor', () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(
 			file,
-			[
+			`${[
 				'# Header',
 				'',
 				'Some description.',
@@ -125,7 +125,7 @@ describe('mdtask open — integration with mock editor', () => {
 				'',
 				'- [ ] TSK-002 Second task',
 				'  Body of second.',
-			].join('\n') + '\n',
+			].join('\n')}\n`,
 		);
 
 		await run(['open', 'TSK-002']);

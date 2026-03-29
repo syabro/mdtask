@@ -1,5 +1,4 @@
 import {
-	mkdirSync,
 	mkdtempSync,
 	readdirSync,
 	readFileSync,
