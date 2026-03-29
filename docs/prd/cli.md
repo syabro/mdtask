@@ -180,8 +180,10 @@ A seed prefix on a specific task overrides the file-level prefix for that task. 
 
 Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-005`) are reported as warnings to stderr.
 
+Assigned IDs are printed to stdout with their titles: `KTL-001 Basic boiling`.
+
 If a file has unidentified tasks but no prefix source:
-- **Interactive (TTY):** prompts `Enter prefix for <filename>:` — input is trimmed, uppercased, and validated (`A-Z0-9`, must start with a letter)
+- **Interactive (TTY):** prompts `Enter prefix for <filename>:` (relative path) — input is trimmed, uppercased, and validated (`A-Z0-9`, must start with a letter)
 - **Pipe (non-TTY):** exits with an error without modifying any files
 
 ## Shell safety

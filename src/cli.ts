@@ -9,7 +9,7 @@ import {
 	statSync,
 	writeFileSync,
 } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
 import * as rl from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { CAC } from 'cac';
@@ -755,7 +755,8 @@ async function handleIds(options: { path?: string }): Promise<void> {
 			if (!iface) {
 				iface = rl.createInterface({ input: process.stdin, output: process.stderr });
 			}
-			const answer = (await iface.question(`Enter prefix for ${filePath}: `)).trim().toUpperCase();
+			const displayPath = relative(process.cwd(), filePath) || filePath;
+			const answer = (await iface.question(`Enter prefix for ${displayPath}: `)).trim().toUpperCase();
 			if (!answer || !/^[A-Z][A-Z0-9]*$/.test(answer)) {
 				iface.close();
 				process.stderr.write(
@@ -783,7 +784,7 @@ async function handleIds(options: { path?: string }): Promise<void> {
 
 			lines[ut.lineIndex] = `- ${checkbox} ${id} ${ut.title}`;
 
-			assigned.push(id);
+			assigned.push(`${id} ${ut.title}`);
 			nextNum++;
 		}
 
