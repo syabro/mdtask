@@ -188,28 +188,46 @@ import '../styles/global.css'
       </section>
 
       <!-- Commands Section -->
-      <section class="bg-on-background text-surface py-32 px-6 md:px-24" id="commands">
+      <section class="bg-on-background text-surface py-20 px-6 md:px-24" id="commands">
         <div class="max-w-4xl mx-auto">
-          <div class="mb-20">
+          <div class="mb-12">
             <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary-fixed-dim block mb-4">// 03. INTERFACE</span>
-            <h2 class="text-[2.5rem] font-bold tracking-tight mb-6">Everything you need, nothing you don't</h2>
+            <h2 class="text-[2rem] font-bold tracking-tight">Everything you need, nothing you don't</h2>
           </div>
-          <div class="grid grid-cols-1 gap-px bg-surface-variant/10">
-            {[
-              { cmd: 'mdtask list', desc: 'List all pending tasks across all files in the current directory.' },
-              { cmd: 'mdtask view [id]', desc: 'Show full context and file location for a specific task.' },
-              { cmd: 'mdtask done [id]', desc: 'Mark a task as complete and update the source file checkbox.' },
-              { cmd: 'mdtask open [id]', desc: 'Open the specific file and line in your default $EDITOR.' },
-              { cmd: 'mdtask move [id] [file]', desc: 'Relocate a task checkbox from one markdown file to another.' },
-              { cmd: 'mdtask set [id] [meta]', desc: 'Update tags, priority, or custom @properties.' },
-              { cmd: 'mdtask ids', desc: 'Generate new sequential IDs for any checkboxes missing them.' },
-              { cmd: 'mdtask validate', desc: 'Check for duplicate IDs or broken syntax formatting.' },
-            ].map(({ cmd, desc }) => (
-              <div class="grid grid-cols-1 md:grid-cols-3 p-6 bg-on-background hover:bg-white/5 transition-colors group border-b border-surface-variant/10">
-                <code class="text-tertiary-fixed-dim font-bold text-lg">{cmd}</code>
-                <div class="md:col-span-2 text-surface/60 group-hover:text-surface transition-colors">{desc}</div>
+          
+          <div class="border border-surface-variant/10 bg-surface/5 p-6 md:p-10 font-mono text-sm overflow-x-auto">
+            <div class="flex flex-col gap-4 min-w-max">
+              <div class="flex items-center gap-2">
+                <span class="text-surface/30 select-none">$</span>
+                <code class="text-tertiary-fixed-dim font-bold">mdtask --help</code>
               </div>
-            ))}
+              
+              <div class="text-surface/60 leading-relaxed">
+                <div class="mb-4">
+                  <span class="text-surface/90 font-bold">Usage:</span><br/>
+                  &nbsp;&nbsp;$ mdtask &lt;command&gt; [options]
+                </div>
+                
+                <div>
+                  <span class="text-surface/90 font-bold">Commands:</span>
+                  <div class="grid grid-cols-[auto_1fr] gap-x-8 gap-y-1 mt-1 pl-2">
+                    <code class="text-tertiary-fixed-dim">list [...filters]</code><span>List tasks</span>
+                    <code class="text-tertiary-fixed-dim">view &lt;id&gt;</code><span>View task details</span>
+                    <code class="text-tertiary-fixed-dim">done &lt;id&gt;</code><span>Toggle task done/open</span>
+                    <code class="text-tertiary-fixed-dim">open &lt;id&gt;</code><span>Open task in $EDITOR</span>
+                    <code class="text-tertiary-fixed-dim">move &lt;id&gt; &lt;file&gt;</code><span>Move task to another file</span>
+                    <code class="text-tertiary-fixed-dim">validate</code><span>Check task integrity</span>
+                    <code class="text-tertiary-fixed-dim">set &lt;...args&gt;</code><span>Add metadata to tasks</span>
+                    <code class="text-tertiary-fixed-dim">ids</code><span>Auto-assign IDs to unidentified tasks</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-2">
+                <span class="text-surface/30 select-none">$</span>
+                <span class="w-1.5 h-4 bg-tertiary-fixed-dim/40 animate-pulse"></span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
