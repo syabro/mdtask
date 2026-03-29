@@ -15,9 +15,9 @@ ALL steps are mandatory. Never skip any step, regardless of task size.
 After reading this file you must say "I'll do all the steps as it described" and provide all steps you understood,
    so user will understand you really get it
 
-> **`#noqa` tag:** If the picked task has `#noqa`, skip Steps 3, 5, and 8 (no Gemini reviews, no /check).
+> **`#noqa` tag:** If the picked task has `#noqa`, skip Steps 3, 5, and 8 (no Gemini reviews).
 
-> **Mode:** By default, work autonomously — pick the most logical task, approve your own plan, fix /check warnings and blockers, skip nits. If user passes `--interactive` (or `--i`), ask questions at decision points: task selection, plan approval, /check findings.
+> **Mode:** By default, work autonomously — pick the most logical task, approve your own plan. If user passes `--interactive` (or `--i`), ask questions at decision points: task selection, plan approval.
 
 ### Step 1 — Pick a task
 
@@ -94,4 +94,3 @@ After reading this file you must say "I'll do all the steps as it described" and
 ### Step 8 — Commit
 
 1. Commit with message describing what was built
-2. Run `/check` — pass only the files you changed in this task. Do NOT fix findings in files you didn't touch. Skip if task has `#noqa` tag.
