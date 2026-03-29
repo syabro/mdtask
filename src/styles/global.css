@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-on-background: #2a2827;
+  --color-secondary-container: #e8e3df;
+  --color-error: #a65d51;
+  --color-tertiary: #8c7e73;
+  --color-surface-dim: #e5e2e0;
+  --color-primary: #5d5753;
+  --color-background: #fdfcfb;
+  --color-primary-container: #f2efed;
+  --color-surface-container-high: #ebe8e6;
+  --color-on-primary-fixed-variant: #4d4845;
+  --color-on-secondary: #2a2827;
+  --color-on-primary: #fdfcfb;
+  --color-error-container: #f5e6e3;
+  --color-outline: #857f7a;
+  --color-on-tertiary-container: #2a2827;
+  --color-surface: #fdfcfb;
+  --color-on-primary-container: #2a2827;
+  --color-tertiary-container: #e8e3df;
+  --color-primary-dim: #8c847f;
+  --color-on-secondary-fixed-variant: #5d5753;
+  --color-tertiary-dim: #a3968d;
+  --color-tertiary-fixed-dim: #c4bbb4;
+  --color-primary-fixed: #f2efed;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f9f8f7;
+  --color-secondary-fixed: #8c7e73;
+  --color-on-secondary-fixed: #2a2827;
+  --color-on-tertiary-fixed: #2a2827;
+  --color-on-error-container: #512c26;
+  --color-on-tertiary: #fdfcfb;
+  --color-surface-variant: #eeeae7;
+  --color-on-primary-fixed: #2a2827;
+  --color-on-surface-variant: #6b645f;
+  --color-inverse-primary: #ffffff;
+  --color-on-secondary-container: #2a2827;
+  --color-outline-variant: #d1ccc8;
+  --color-secondary-dim: #8c7e73;
+  --color-tertiary-fixed: #8c7e73;
+  --color-inverse-on-surface: #fdfcfb;
+  --color-surface-tint: #5d5753;
+  --color-error-dim: #a65d51;
+  --color-surface-container: #f2efed;
+  --color-on-surface: #2a2827;
+  --color-inverse-surface: #2a2827;
+  --color-primary-fixed-dim: #e5e2e0;
+  --color-secondary: #8c7e73;
+  --color-surface-bright: #fdfcfb;
+  --color-on-error: #ffffff;
+  --color-on-tertiary-fixed-variant: #4d4845;
+  --color-secondary-fixed-dim: #c4bbb4;
+  --color-surface-container-highest: #e5e2e0;
+
+  --font-family-headline: "Space Grotesk", monospace;
+  --font-family-body: "Space Grotesk", monospace;
+  --font-family-label: "Space Grotesk", monospace;
+
+  --radius: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+}

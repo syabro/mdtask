@@ -1,0 +1,299 @@
+---
+import '../styles/global.css'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MDTASK | The Markdown-Native Task System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <style>
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      body { font-family: 'Space Grotesk', monospace; }
+      pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace; }
+    </style>
+  </head>
+  <body class="bg-background text-on-background selection:bg-secondary-container">
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 bg-background flex justify-between items-center px-6 py-4 max-w-full mx-auto border-b border-surface-container">
+      <div class="text-lg font-bold tracking-tighter text-on-background">MDTASK</div>
+      <div class="hidden md:flex gap-8 items-center">
+        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#format">Format</a>
+        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#why">Why</a>
+        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#commands">Commands</a>
+        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#faq">FAQ</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="bg-on-background text-surface px-4 py-2 text-[0.6875rem] uppercase tracking-widest active:translate-y-[1px] transition-all">
+          View on GitHub
+        </a>
+      </div>
+    </nav>
+
+    <main class="pt-24">
+      <!-- Hero -->
+      <section class="px-6 md:px-24 py-20 lg:py-32 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div class="space-y-8">
+          <h1 class="text-[3.5rem] leading-[1.1] font-bold tracking-tight text-on-background">
+            Your markdown files are already your task system
+          </h1>
+          <p class="text-on-surface-variant text-lg max-w-xl leading-relaxed">
+            CLI task manager where checkboxes are the database. Tasks live inside your PRDs, READMEs, and notes. No server, no GUI, no second system. Humans and AI agents read the same format.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <div class="bg-surface-container flex items-center px-4 py-3 group cursor-pointer border-b-2 border-on-background">
+              <code class="text-[0.875rem] text-on-surface font-medium">npm install -g mdtask</code>
+              <span class="material-symbols-outlined ml-4 text-sm opacity-50 group-hover:opacity-100">content_copy</span>
+            </div>
+            <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="flex items-center gap-2 bg-surface-container-low px-6 py-3 text-[0.6875rem] font-bold uppercase tracking-widest hover:bg-surface-container transition-colors border border-outline-variant">
+              View on GitHub
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4">
+          <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">README.md</span>
+              <div class="flex gap-1">
+                <div class="w-2 h-2 rounded-full bg-outline-variant opacity-40"></div>
+                <div class="w-2 h-2 rounded-full bg-outline-variant opacity-40"></div>
+                <div class="w-2 h-2 rounded-full bg-outline-variant opacity-40"></div>
+              </div>
+            </div>
+            <pre class="text-[0.875rem] text-on-surface-variant leading-loose"># Core Features
+- [x] MD-001 Basic CLI parser
+- [ ] MD-002 Add priority filtering <span class="text-error">!high</span>
+- [ ] MD-003 Git-hook integration <span class="text-secondary">@v1.2</span>
+- [ ] MD-004 Documentation sweep <span class="text-secondary">#docs</span></pre>
+          </div>
+          <div class="bg-on-background p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4 border-b border-surface-dim/10 pb-2">
+              <span class="text-[0.6875rem] uppercase tracking-widest text-surface/40">Terminal — mdtask list</span>
+            </div>
+            <pre class="text-[0.875rem] text-tertiary-fixed-dim leading-loose">$ mdtask list --pending
+<span class="text-surface">ID      TITLE                       PRIO   TAGS</span>
+<span class="text-secondary-fixed-dim">MD-002</span>  Add priority filtering      <span class="text-error">HIGH</span>   -
+<span class="text-secondary-fixed-dim">MD-003</span>  Git-hook integration        -      v1.2
+<span class="text-secondary-fixed-dim">MD-004</span>  Documentation sweep         -      #docs
+<span class="text-surface/60">3 tasks pending.</span></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Format Section -->
+      <section class="bg-surface-container-low py-32 px-6 md:px-24" id="format">
+        <div class="max-w-4xl mx-auto">
+          <div class="mb-16">
+            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 01. ARCHITECTURE</span>
+            <h2 class="text-[2.5rem] font-bold tracking-tight mb-6">The format is the product</h2>
+            <p class="text-lg text-on-surface-variant leading-relaxed">
+              Every task is a markdown checkbox with an ID and inline metadata. Standard syntax, no extensions. Write it by hand, parse it with grep, read it with any LLM.
+            </p>
+          </div>
+          <div class="relative bg-surface-container-lowest p-10 overflow-hidden group border border-outline-variant">
+            <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <span class="material-symbols-outlined text-[120px]">description</span>
+            </div>
+            <div class="relative z-10 space-y-12">
+              <div class="flex flex-wrap items-center gap-2 text-on-background text-base">
+                <span class="font-mono">- [ ]</span>
+                <span class="font-mono bg-tertiary-container text-on-tertiary-container px-1">CLI-042</span>
+                <span class="font-mono">Add export command</span>
+                <span class="font-mono text-secondary">#cli</span>
+                <span class="font-mono text-secondary">#export</span>
+                <span class="font-mono text-error">!high</span>
+                <span class="font-mono text-on-surface-variant">@status:in-progress</span>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 pt-10 border-t border-surface-container">
+                <div class="space-y-1">
+                  <p class="text-[0.6875rem] uppercase font-bold text-outline">Status</p>
+                  <p class="text-[0.875rem]">Checkbox</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[0.6875rem] uppercase font-bold text-outline">ID</p>
+                  <p class="text-[0.875rem]">Unique key</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[0.6875rem] uppercase font-bold text-outline">Title</p>
+                  <p class="text-[0.875rem]">Plain text</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[0.6875rem] uppercase font-bold text-outline">Tags</p>
+                  <p class="text-[0.875rem]">#prefixed</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[0.6875rem] uppercase font-bold text-outline">Priority</p>
+                  <p class="text-[0.875rem]">!bang</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[0.6875rem] uppercase font-bold text-outline">Property</p>
+                  <p class="text-[0.875rem]">@key:val</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why Section -->
+      <section class="py-32 px-6 md:px-24" id="why">
+        <div class="mb-20">
+          <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 02. RATIONALE</span>
+          <h2 class="text-[2.5rem] font-bold tracking-tight">The Three Pains</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="flex flex-col">
+            <div class="bg-surface-container-low p-8 flex-grow border border-transparent hover:border-outline-variant transition-colors">
+              <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">AI Visibility</h3>
+              <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
+                LLMs and AI agents can't "see" inside your Jira or Linear without complex API setups. If your tasks are in the file, the agent already knows what to do.
+              </p>
+              <div class="bg-on-background p-4 mt-auto">
+                <pre class="text-[0.75rem] text-surface/60"># Prompt
+"Read README.md and
+complete all tasks
+marked #urgent"</pre>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <div class="bg-surface-container-low p-8 flex-grow border border-transparent hover:border-outline-variant transition-colors">
+              <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">Zero Overhead</h3>
+              <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
+                No new accounts. No "Second Brain" apps. If you have a code editor, you have a task manager. Tasks are version controlled with your code.
+              </p>
+              <div class="bg-on-background p-4 mt-auto">
+                <pre class="text-[0.75rem] text-surface/60">$ git commit -m \
+"feat: finish
+[x] CORE-01"</pre>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <div class="bg-surface-container-low p-8 flex-grow border border-transparent hover:border-outline-variant transition-colors">
+              <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">Single Source</h3>
+              <p class="text-on-surface-variant text-sm leading-relaxed mb-8">
+                Specs and backlogs stay in sync because they are the same document. No more "the README says one thing, Jira says another."
+              </p>
+              <div class="bg-on-background p-4 mt-auto">
+                <pre class="text-[0.75rem] text-surface/60"># PRD - Search
+- [ ] API-10 Pagination
+- [x] API-11 Filters</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Commands Section -->
+      <section class="bg-on-background text-surface py-32 px-6 md:px-24" id="commands">
+        <div class="max-w-4xl mx-auto">
+          <div class="mb-20">
+            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary-fixed-dim block mb-4">// 03. INTERFACE</span>
+            <h2 class="text-[2.5rem] font-bold tracking-tight mb-6">Everything you need, nothing you don't</h2>
+          </div>
+          <div class="grid grid-cols-1 gap-px bg-surface-variant/10">
+            {[
+              { cmd: 'mdtask list', desc: 'List all pending tasks across all files in the current directory.' },
+              { cmd: 'mdtask view [id]', desc: 'Show full context and file location for a specific task.' },
+              { cmd: 'mdtask done [id]', desc: 'Mark a task as complete and update the source file checkbox.' },
+              { cmd: 'mdtask open [id]', desc: 'Open the specific file and line in your default $EDITOR.' },
+              { cmd: 'mdtask move [id] [file]', desc: 'Relocate a task checkbox from one markdown file to another.' },
+              { cmd: 'mdtask set [id] [meta]', desc: 'Update tags, priority, or custom @properties.' },
+              { cmd: 'mdtask ids', desc: 'Generate new sequential IDs for any checkboxes missing them.' },
+              { cmd: 'mdtask validate', desc: 'Check for duplicate IDs or broken syntax formatting.' },
+            ].map(({ cmd, desc }) => (
+              <div class="grid grid-cols-1 md:grid-cols-3 p-6 bg-on-background hover:bg-white/5 transition-colors group border-b border-surface-variant/10">
+                <code class="text-tertiary-fixed-dim font-bold text-lg">{cmd}</code>
+                <div class="md:col-span-2 text-surface/60 group-hover:text-surface transition-colors">{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="py-32 px-6 md:px-24" id="faq">
+        <div class="max-w-3xl mx-auto">
+          <div class="mb-20 text-center">
+            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 04. FREQUENTLY ASKED</span>
+            <h2 class="text-[2.5rem] font-bold tracking-tight">Got questions?</h2>
+          </div>
+          <div class="space-y-12">
+            <div class="space-y-4">
+              <p class="font-bold text-lg">Is this an Obsidian plugin?</p>
+              <p class="text-on-surface-variant leading-relaxed">No, it's a standalone CLI. However, because it uses standard markdown, it works perfectly inside Obsidian, Logseq, or VS Code. It just reads your files.</p>
+            </div>
+            <div class="space-y-4">
+              <p class="font-bold text-lg">Does it require a database?</p>
+              <p class="text-on-surface-variant leading-relaxed">The markdown files <em>are</em> the database. mdtask scans your folder, builds an in-memory index, and performs actions. No SQLite, no JSON stores.</p>
+            </div>
+            <div class="space-y-4">
+              <p class="font-bold text-lg">How do I handle multi-user conflicts?</p>
+              <p class="text-on-surface-variant leading-relaxed">Use Git. Since tasks are lines of text, Git's merge logic handles conflicts naturally. If two people mark a task as done, it's a simple line merge.</p>
+            </div>
+            <div class="space-y-4">
+              <p class="font-bold text-lg">What about performance with large repos?</p>
+              <p class="text-on-surface-variant leading-relaxed">mdtask uses multi-threaded regex scanning. It can parse 10,000 markdown files in under 200ms.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="bg-surface-container-high py-32 px-6 md:px-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-variant/30">
+          <div class="bg-surface-container-low p-12 space-y-8 border-r border-outline-variant/10">
+            <h2 class="text-3xl font-bold tracking-tight">Start with the files you already have</h2>
+            <p class="text-on-surface-variant leading-relaxed">
+              Navigate to any project with markdown files and run the indexer. It will find existing checkboxes and offer to ID them.
+            </p>
+            <div class="bg-on-background p-6">
+              <code class="text-tertiary-fixed-dim text-sm">cd my-project && mdtask ids</code>
+            </div>
+            <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="inline-block bg-on-background text-surface px-8 py-4 font-bold uppercase tracking-widest hover:bg-primary transition-colors">
+              Get started &rarr;
+            </a>
+          </div>
+          <div class="bg-surface-container-low p-12 space-y-8">
+            <h2 class="text-3xl font-bold tracking-tight">Contribute</h2>
+            <p class="text-on-surface-variant leading-relaxed">
+              MDTASK is open source. We're looking for contributors to help with improved AI agent prompt templates and editor plugins.
+            </p>
+            <div class="flex gap-4 p-6 border border-outline-variant border-dashed">
+              <span class="material-symbols-outlined text-4xl text-tertiary">terminal</span>
+              <div class="text-sm italic opacity-60">
+                "The best tool is the one you already have open."
+              </div>
+            </div>
+            <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="inline-block border-2 border-on-background text-on-background px-8 py-4 font-bold uppercase tracking-widest hover:bg-on-background hover:text-surface transition-all">
+              View on GitHub &rarr;
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-low flex flex-col md:flex-row justify-between items-center w-full px-8 py-12 gap-6 border-t border-surface-container">
+      <div class="flex flex-col gap-2">
+        <div class="text-sm font-bold text-on-background">MDTASK</div>
+        <div class="font-body text-[0.6875rem] uppercase tracking-widest text-on-surface-variant">
+          Checkboxes are the database.
+        </div>
+      </div>
+      <div class="flex gap-8">
+        <a class="font-body text-[0.6875rem] uppercase tracking-widest text-on-surface-variant hover:text-on-background transition-colors" href="https://github.com/syabro/mdtask" target="_blank" rel="noopener">GitHub</a>
+        <a class="font-body text-[0.6875rem] uppercase tracking-widest text-on-surface-variant hover:text-on-background transition-colors" href="https://www.npmjs.com/package/mdtask" target="_blank" rel="noopener">npm</a>
+      </div>
+      <div class="text-[0.6875rem] uppercase tracking-widest text-on-surface-variant opacity-40">
+        &copy; 2025 MDTASK
+      </div>
+    </footer>
+  </body>
+</html>
