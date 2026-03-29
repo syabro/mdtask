@@ -115,30 +115,30 @@ import '../styles/global.css'
                 <span class="font-mono text-error">!high</span>
                 <span class="font-mono text-on-surface-variant">@status:in-progress</span>
               </div>
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 pt-6 md:pt-10 border-t border-surface-container">
-                <div class="space-y-1">
+              <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-y-8 gap-x-6 pt-6 md:pt-10 border-t border-surface-container items-start">
+                <div class="flex flex-col gap-2">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Status</p>
-                  <p class="text-[0.875rem]">Checkbox</p>
+                  <div class="font-mono text-sm leading-none">[ ]</div>
                 </div>
-                <div class="space-y-1">
+                <div class="flex flex-col gap-2">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">ID</p>
-                  <p class="text-[0.875rem]">Unique key</p>
+                  <div><span class="font-mono text-sm leading-none bg-tertiary-container text-on-tertiary-container px-1 inline-block">CLI-042</span></div>
                 </div>
-                <div class="space-y-1">
+                <div class="flex flex-col gap-2">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Title</p>
-                  <p class="text-[0.875rem]">Plain text</p>
+                  <div class="font-mono text-sm leading-none">Add export command</div>
                 </div>
-                <div class="space-y-1">
+                <div class="flex flex-col gap-2">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Tags</p>
-                  <p class="text-[0.875rem]">#prefixed</p>
+                  <div class="font-mono text-sm leading-none text-secondary">#cli #export</div>
                 </div>
-                <div class="space-y-1">
+                <div class="flex flex-col gap-2">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Priority</p>
-                  <p class="text-[0.875rem]">!bang</p>
+                  <div class="font-mono text-sm leading-none text-error">!high</div>
                 </div>
-                <div class="space-y-1">
+                <div class="flex flex-col gap-2">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Property</p>
-                  <p class="text-[0.875rem]">@key:val</p>
+                  <div class="font-mono text-sm leading-none text-on-surface-variant">@status:in-progress</div>
                 </div>
               </div>
             </div>
