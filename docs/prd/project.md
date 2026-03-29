@@ -136,6 +136,12 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - Updated SKILL.md ID description to reflect PREFIX-NNN with auto-assignment
   - Removed mention of `.mdtaskrc` prefix mapping (not needed — prefix derived from files)
 
+- [ ] PRJ-047 Publish to npm so `npm install -g mdtask` works
+  Configure package.json for npm publishing.
+  Ensure the built CLI binary works as a global install.
+  Add bin entry, build step, and publish workflow.
+  Add `just release` command to bump version, build, and publish.
+
 - [ ] PRJ-034 Define layered architecture
   Analyze current code and define clear data flow layers.
   Create docs/architecture.md describing:
