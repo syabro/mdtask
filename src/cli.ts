@@ -78,6 +78,57 @@ function collectTasks(
 	return tasks;
 }
 
+type UnidentifiedTaskLocation = {
+	status: Task['status'];
+	title: string;
+	filePath: string;
+	lineNumber: number;
+};
+
+function collectUnidentifiedTasks(
+	basePath?: string,
+	filesConfig?: FilesConfig,
+	excludePrefixes?: string[],
+): UnidentifiedTaskLocation[] {
+	const files = findMarkdownFiles({
+		basePath,
+		includePatterns: filesConfig?.include,
+		excludePatterns: filesConfig?.exclude,
+	});
+	const result: UnidentifiedTaskLocation[] = [];
+
+	for (const filePath of files) {
+		try {
+			const content = readFileSync(filePath, 'utf-8');
+			const lines = content.split('\n');
+
+			for (let i = 0; i < lines.length; i++) {
+				const ut = parseUnidentifiedTaskLine(lines[i], i);
+				if (ut) {
+					if (
+						ut.seedPrefix &&
+						excludePrefixes?.some((prefix) => ut.seedPrefix?.startsWith(prefix))
+					) {
+						continue;
+					}
+					result.push({
+						status: ut.status,
+						title: ut.title,
+						filePath,
+						lineNumber: i + 1,
+					});
+				}
+			}
+		} catch (err) {
+			process.stderr.write(
+				`mdtask: warning: could not read ${filePath}: ${err}\n`,
+			);
+		}
+	}
+
+	return result;
+}
+
 function formatPriority(priority: Task['priority'], isTTY: boolean): string {
 	if (!priority) return '';
 
@@ -486,6 +537,33 @@ function handleList(
 	} else {
 		for (const task of filteredTasks) {
 			process.stdout.write(`${formatTaskLine(task, statusMap, isTTY)}\n`);
+		}
+	}
+
+	// Show unidentified tasks warning (not affected by tag/priority filters)
+	let unidentified = collectUnidentifiedTasks(
+		basePath,
+		config?.files,
+		config?.excludePrefixes,
+	);
+	if (!options.all) {
+		unidentified = unidentified.filter((t) => t.status === 'open');
+	}
+	if (unidentified.length > 0) {
+		const header = 'Warning: tasks without IDs (run `mdtask ids` to assign):';
+		process.stdout.write(`\n${isTTY ? p.yellow(header) : header}\n`);
+		// Compute max title width for alignment
+		const entries = unidentified.map((t) => {
+			const checkbox = t.status === 'done' ? '[x]' : '[ ]';
+			const left = `- ${checkbox} ${t.title}`;
+			const location = `${relative(process.cwd(), t.filePath) || t.filePath}:${t.lineNumber}`;
+			return { left, location };
+		});
+		const maxLeft = Math.max(...entries.map((e) => e.left.length));
+		for (const { left, location } of entries) {
+			const padding = ' '.repeat(maxLeft - left.length + 4);
+			const locationStr = isTTY ? p.gray(location) : location;
+			process.stdout.write(`${left}${padding}${locationStr}\n`);
 		}
 	}
 }

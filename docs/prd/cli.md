@@ -79,6 +79,20 @@ mdtask list !high !crit        # Show high OR crit tasks (OR logic)
 
 Multiple priorities use OR logic — tasks matching any of the specified priorities are shown. Priority filters combine with `--all`, `--sort`, and tag filters.
 
+### Unidentified task warnings
+
+After the main task list, `mdtask list` shows tasks without IDs with a warning:
+
+```
+Warning: tasks without IDs (run `mdtask ids` to assign):
+- [ ] Basic boiling                    README.md:5
+- [ ] Tea presets                      README.md:6
+```
+
+Each entry shows the task title, file path (relative to cwd), and line number. File locations are right-aligned for readability. In a terminal, the header is yellow and locations are gray.
+
+Done unidentified tasks are hidden by default; use `--all` to include them. The warning appears regardless of tag/priority filters (unidentified tasks have no metadata to filter by). Tasks with excluded seed prefixes (from `.mdtaskrc` `excludePrefixes`) are hidden.
+
 ## Viewing a task
 
 `mdtask view <ID>` prints the file location and the full task block — header line (raw from file) followed by the body indented with 6 spaces (aligned with the title after `- [ ] `):
@@ -650,7 +664,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Non-TTY mode preserves existing error behavior
   - Readline interface reused across multiple files, closed after loop
 
-- [ ] CLI-051 Show unidentified tasks in list output with warning
+- [x] CLI-051 Show unidentified tasks in list output with warning
   `mdtask list` should display tasks without IDs after the main list,
   separated by a warning header:
   ```
@@ -659,6 +673,13 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - [ ] Tea presets                      README.md:6
   ```
   Show file path (relative) and line number for each.
+
+  **Implemented:**
+  - Warning section appended after main task list when unidentified tasks exist
+  - Shows file path (relative to cwd) and line number, right-aligned
+  - Yellow header and gray locations in TTY mode; plain text when piped
+  - Respects `--all` flag (done unidentified tasks hidden by default)
+  - Excluded seed prefixes from `.mdtaskrc` are filtered out
 
 - [x] CLI-052 `mdtask ids` output should include `- [ ]` prefix
   Currently prints `KTL-001 Title`, should print `- [ ] KTL-001 Title`

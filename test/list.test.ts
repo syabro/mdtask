@@ -888,8 +888,11 @@ describe('mdtask list', () => {
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toContain('VALID-001');
-			expect(output).not.toContain('$(cmd)');
-			expect(output).not.toContain(';rm');
+			// Shell metacharacters should not appear as identified task IDs
+			// (they may appear in the unidentified tasks warning section)
+			const mainOutput = output.split('Warning:')[0];
+			expect(mainOutput).not.toContain('$(cmd)');
+			expect(mainOutput).not.toContain(';rm');
 		});
 	});
 
@@ -960,6 +963,158 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('EXMPL-001');
 			expect(output).not.toContain('EXMPL-002');
 			expect(output).not.toContain('TEST-001');
+		});
+	});
+
+	describe('unidentified tasks warning', () => {
+		it('shows warning for tasks without IDs after main list', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Identified task\n- [ ] Basic boiling\n- [ ] Tea presets\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain(
+				'Warning: tasks without IDs (run `mdtask ids` to assign):',
+			);
+			expect(output).toContain('Basic boiling');
+			expect(output).toContain('Tea presets');
+		});
+
+		it('shows file path and line number for unidentified tasks', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'# Header\n\n- [ ] No ID task\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('No ID task');
+			expect(output).toContain('tasks.md:3');
+		});
+
+		it('shows no warning when all tasks have IDs', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 First task\n- [ ] TSK-002 Second task\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).not.toContain('Warning');
+		});
+
+		it('shows no warning when there are no tasks at all', async () => {
+			writeFileSync(join(tempDir, 'notes.md'), '# Just notes\n');
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).not.toContain('Warning');
+		});
+
+		it('hides done unidentified tasks by default', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] Open unidentified\n- [x] Done unidentified\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('Open unidentified');
+			expect(output).not.toContain('Done unidentified');
+		});
+
+		it('shows done unidentified tasks with --all', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] Open unidentified\n- [x] Done unidentified\n',
+			);
+
+			const code = await run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('Open unidentified');
+			expect(output).toContain('Done unidentified');
+		});
+
+		it('shows warning regardless of tag/priority filters', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Tagged task #backend\n- [ ] Unidentified task\n',
+			);
+
+			const code = await run(['list', '#backend']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Warning');
+			expect(output).toContain('Unidentified task');
+		});
+
+		it('excludes unidentified tasks with excluded seed prefixes', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Real task\n- [ ] EXMPL- Example task\n- [ ] Real unidentified\n',
+			);
+			writeFileSync(
+				join(tempDir, '.mdtaskrc'),
+				JSON.stringify({ excludePrefixes: ['EXMPL'] }),
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('Real unidentified');
+			expect(output).not.toContain('Example task');
+		});
+
+		it('shows warning with yellow header in TTY mode', async () => {
+			Object.defineProperty(process.stdout, 'isTTY', {
+				value: true,
+				writable: true,
+				configurable: true,
+			});
+
+			writeFileSync(join(tempDir, 'tasks.md'), '- [ ] Unidentified task\n');
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// Warning header should be yellow
+			// biome-ignore lint/suspicious/noControlCharactersInRegex: Testing ANSI codes
+			expect(output).toMatch(/\u001b\[33m.*Warning/);
+		});
+
+		it('shows warning only for unidentified tasks, not after identified ones', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Identified\n- [ ] Unidentified\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// Warning should come after the identified task
+			const identifiedIdx = output.indexOf('TSK-001');
+			const warningIdx = output.indexOf('Warning');
+			expect(identifiedIdx).toBeLessThan(warningIdx);
 		});
 	});
 });
