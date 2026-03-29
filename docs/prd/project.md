@@ -10,6 +10,16 @@ Project structure and entry point.
 
 Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan validation (Step 3), Gemini code review (Step 5), and /check (Step 8) are skipped. Use for small, low-risk changes where full review is overkill.
 
+## Publishing to npm
+
+Install globally: `npm install -g mdtask`
+
+Package includes only `dist/cli.js`, `README.md`, and `LICENSE`.
+
+Release workflow: `just release` (default: patch) or `just release minor` / `just release major`. The recipe checks for clean git state, runs tests, builds, bumps version, publishes to npm, commits, tags, and pushes.
+
+License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0/) — free to use, modify, and distribute; competing products prohibited.
+
 ## Tasks
 
 - [x] PRJ-030 Add picocolors for CLI colors
@@ -136,11 +146,17 @@ Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan valid
   - Updated SKILL.md ID description to reflect PREFIX-NNN with auto-assignment
   - Removed mention of `.mdtaskrc` prefix mapping (not needed — prefix derived from files)
 
-- [ ] PRJ-047 Publish to npm so `npm install -g mdtask` works
+- [x] PRJ-047 Publish to npm so `npm install -g mdtask` works
   Configure package.json for npm publishing.
   Ensure the built CLI binary works as a global install.
   Add bin entry, build step, and publish workflow.
   Add `just release` command to bump version, build, and publish.
+
+  **Implemented:**
+  - `files` field limits tarball to `dist/`, `README.md`, `LICENSE` (11KB total)
+  - npm metadata: license, author, repository, keywords
+  - PolyForm Shield 1.0.0 license
+  - `just release [patch|minor|major]` — checks clean git, tests, builds, bumps, publishes, tags, pushes
 
 - [ ] PRJ-034 Define layered architecture
   Analyze current code and define clear data flow layers.

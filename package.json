@@ -3,6 +3,24 @@
 	"version": "0.1.0",
 	"description": "File-first markdown task system",
 	"type": "module",
+	"license": "PolyForm-Shield-1.0.0",
+	"author": "Max Syabro <maxim@syabro.com>",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/syabro/mdtask.git"
+	},
+	"keywords": [
+		"markdown",
+		"tasks",
+		"cli",
+		"todo",
+		"file-first"
+	],
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
 	"bin": {
 		"mdtask": "./dist/cli.js"
 	},
