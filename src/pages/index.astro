@@ -45,10 +45,10 @@ import '../styles/global.css'
             Your markdown files are already your task system
           </h1>
           <div class="space-y-4 mb-10">
-            <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+            <p class="text-on-background text-lg max-w-2xl leading-relaxed">
               CLI task manager where checkboxes in your .md files are the database.
             </p>
-            <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+            <p class="text-on-background text-lg max-w-2xl leading-relaxed">
               Tasks live inside your PRDs, READMEs, and notes. No server, no GUI, no second system. Humans and AI agents read the same format.
             </p>
           </div>
@@ -97,7 +97,7 @@ import '../styles/global.css'
           <div class="mb-12 md:mb-16">
             <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 01. ARCHITECTURE</span>
             <h2 class="text-[2.5rem] font-bold tracking-tight mb-6">The format is everything</h2>
-            <p class="text-lg text-on-surface-variant leading-relaxed">
+            <p class="text-lg text-on-background leading-relaxed">
               Every task is a markdown checkbox with an ID and inline metadata. Standard syntax, no extensions. Write it by hand, parse it with grep, read it with any LLM.
             </p>
           </div>
@@ -153,7 +153,7 @@ import '../styles/global.css'
             <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 02. RATIONALE</span>
             <h2 class="text-[2.5rem] font-bold tracking-tight">The Three Pains</h2>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-y-16 md:gap-y-8 gap-x-8 items-stretch">
             {[
               {
                 title: 'AI Visibility',
@@ -172,10 +172,12 @@ import '../styles/global.css'
               }
             ].map(({ title, desc, code }) => (
               <div class="flex flex-col">
-                <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-tertiary">{title}</h3>
-                <p class="text-on-surface-variant text-sm leading-relaxed mb-8 flex-grow">
-                  <Fragment set:html={desc} />
-                </p>
+                <div class="flex-grow">
+                  <h3 class="text-sm font-bold mb-3 uppercase tracking-widest text-tertiary">{title}</h3>
+                  <p class="text-on-background text-sm leading-relaxed mb-6">
+                    <Fragment set:html={desc} />
+                  </p>
+                </div>
                 <div class="bg-on-background p-5 font-mono text-[0.65rem] md:text-[0.7rem] border border-surface-variant/10 h-24 flex items-center overflow-hidden">
                   <pre class="text-surface/60 leading-tight"><Fragment set:html={code} /></pre>
                 </div>
@@ -240,19 +242,19 @@ import '../styles/global.css'
           <div class="space-y-12">
             <div class="space-y-4">
               <p class="font-bold text-lg">Is this an Obsidian plugin?</p>
-              <p class="text-on-surface-variant leading-relaxed">No, it's a standalone CLI. However, because it uses standard markdown, it works perfectly inside Obsidian, Logseq, or VS Code. It just reads your files.</p>
+              <p class="text-on-background leading-relaxed">No, it's a standalone CLI. However, because it uses standard markdown, it works perfectly inside Obsidian, Logseq, or VS Code. It just reads your files.</p>
             </div>
             <div class="space-y-4">
               <p class="font-bold text-lg">Does it require a database?</p>
-              <p class="text-on-surface-variant leading-relaxed">The markdown files <em>are</em> the database. mdtask scans your folder, builds an in-memory index, and performs actions. No SQLite, no JSON stores.</p>
+              <p class="text-on-background leading-relaxed">The markdown files <em>are</em> the database. mdtask scans your folder, builds an in-memory index, and performs actions. No SQLite, no JSON stores.</p>
             </div>
             <div class="space-y-4">
               <p class="font-bold text-lg">How do I handle multi-user conflicts?</p>
-              <p class="text-on-surface-variant leading-relaxed">Use Git. Since tasks are lines of text, Git's merge logic handles conflicts naturally. If two people mark a task as done, it's a simple line merge.</p>
+              <p class="text-on-background leading-relaxed">Use Git. Since tasks are lines of text, Git's merge logic handles conflicts naturally. If two people mark a task as done, it's a simple line merge.</p>
             </div>
             <div class="space-y-4">
               <p class="font-bold text-lg">What about performance with large repos?</p>
-              <p class="text-on-surface-variant leading-relaxed">mdtask uses multi-threaded regex scanning. It can parse 10,000 markdown files in under 200ms.</p>
+              <p class="text-on-background leading-relaxed">mdtask uses multi-threaded regex scanning. It can parse 10,000 markdown files in under 200ms.</p>
             </div>
           </div>
         </div>
@@ -262,7 +264,7 @@ import '../styles/global.css'
       <section class="bg-surface-container-high py-20 md:py-32 px-6 md:px-24">
         <div class="max-w-4xl mx-auto bg-surface-container-low p-12 md:p-20 space-y-10 border border-outline-variant/10">
           <h2 class="text-4xl font-bold tracking-tight">Start with the files you already have</h2>
-          <p class="text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+          <p class="text-xl text-on-background max-w-2xl leading-relaxed">
             Navigate to any project with markdown files and run the indexer. It will find existing checkboxes and offer to ID them.
           </p>
           <div class="bg-on-background p-6 md:p-8 w-full font-mono text-xs md:text-sm border border-surface-variant/10">
