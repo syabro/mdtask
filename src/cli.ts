@@ -167,6 +167,11 @@ function handleView(id: string, options: { path?: string }): void {
 		return;
 	}
 
+	const isTTY = process.stdout.isTTY ?? false;
+	const relPath = relative(process.cwd(), task.filePath) || task.filePath;
+	const location = `${relPath}:${task.lineNumber}`;
+	process.stdout.write(`${isTTY ? p.gray(location) : location}\n`);
+
 	const content = readFileSync(task.filePath, 'utf-8');
 	const lines = content.split('\n');
 	const headerLine = lines[task.lineNumber - 1];

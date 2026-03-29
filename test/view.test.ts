@@ -73,6 +73,44 @@ describe('mdtask view', () => {
 		}
 	});
 
+	it('shows file location as first line', async () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 Fix the bug\n  Body line.\n',
+		);
+
+		await run(['view', 'TSK-001']);
+
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toMatch(/^tasks\.md:1\n/);
+	});
+
+	it('shows correct line number for non-first task', async () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 First task\n  Body.\n\n- [ ] TSK-002 Second task\n  Body 2.\n',
+		);
+
+		await run(['view', 'TSK-002']);
+
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toMatch(/^tasks\.md:4\n/);
+	});
+
+	it('shows relative path for tasks in subdirectories', async () => {
+		const subDir = join(tempDir, 'docs', 'prd');
+		mkdirSync(subDir, { recursive: true });
+		writeFileSync(
+			join(subDir, 'cli.md'),
+			'- [ ] TSK-001 Nested task\n  Body.\n',
+		);
+
+		await run(['view', 'TSK-001']);
+
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toMatch(/^docs\/prd\/cli\.md:1\n/);
+	});
+
 	it('outputs full task block (header + body)', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
@@ -107,8 +145,8 @@ describe('mdtask view', () => {
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('- [ ] TSK-001 No body task');
-		// Should not have extra blank lines
-		expect(output.trim()).toBe('- [ ] TSK-001 No body task');
+		// Location line + header, no extra blank lines
+		expect(output.trim()).toBe('tasks.md:1\n- [ ] TSK-001 No body task');
 	});
 
 	it('preserves metadata in header line', async () => {

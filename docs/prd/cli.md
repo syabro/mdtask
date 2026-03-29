@@ -72,7 +72,7 @@ Multiple priorities use OR logic — tasks matching any of the specified priorit
 
 ## Viewing a task
 
-`mdtask view <ID>` prints the full task block — header line (raw from file) followed by the body indented with 6 spaces (aligned with the title after `- [ ] `):
+`mdtask view <ID>` prints the file location and the full task block — header line (raw from file) followed by the body indented with 6 spaces (aligned with the title after `- [ ] `):
 
 ```bash
 mdtask view EXMPL-001
@@ -80,10 +80,13 @@ mdtask view EXMPL-001
 
 Output:
 ```
+docs/prd/cli.md:42
 - [ ] EXMPL-001 Fix the bug		@blocked_by:EXMPL-002 !high
       Description line 1.
       Description line 2.
 ```
+
+The first line shows the file path (relative to cwd) and line number. In a terminal, this line is displayed in gray; when piped, it's plain text.
 
 If the task is not found, exits with error code 1.
 
@@ -587,10 +590,15 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   Columns auto-sized to content width.
   Keep flat format when piped (non-TTY) for parseability.
 
-- [ ] CLI-046 Show file location in `mdtask view` output
+- [x] CLI-046 Show file location in `mdtask view` output
   Display file path and line number in `mdtask view` output header.
   Example: `docs/prd/cli.md:191`
   Users can see where the task lives without running `mdtask open`.
+
+  **Implemented:**
+  - File path (relative to cwd) and line number shown as first line of view output
+  - Gray color in terminal, plain text when piped
+  - Format: `path/to/file.md:42`
 
 - [x] CLI-050 Interactive prefix prompt in `mdtask ids`
   When `mdtask ids` encounters a file with no prefix source (no existing IDs, no seed prefix):
