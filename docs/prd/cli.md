@@ -29,20 +29,29 @@ mdtask list              # Show only open tasks
 mdtask list --all        # Show all tasks including done
 ```
 
-Output format shows status, ID, title, priority (if any), blockers (if any), and all other `@key:value` properties:
+When output is to a terminal (TTY), tasks are displayed as a compact table with aligned columns:
+```
+ ID            │ TITLE                          │ PRI   │ TAGS     │ PROPS
+───────────────┼────────────────────────────────┼───────┼──────────┼──────────────────
+ [ ] EXMPL-001 │ Fix authentication bug         │ !high │          │
+ [ ] EXMPL-002 │ Update documentation           │       │          │ @blocked_by:EXMPL-001 @iter:mvp
+ [x] EXMPL-003 │ Refactor utils                 │ !low  │ #backend │ @status:done
+```
+
+Columns auto-sized to content width. Empty columns (Priority, Tags, Props) are hidden when no tasks have data for them.
+
+Priorities are color-coded:
+- `!crit` — red
+- `!high` — yellow
+- `!low` — green
+- Done tasks — gray
+
+When piped to another command, output uses flat format with no colors for clean parsing:
 ```
 [ ] EXMPL-001 Fix authentication bug !high
 [ ] EXMPL-002 Update documentation @blocked_by:EXMPL-001 @iter:mvp
 [x] EXMPL-003 Refactor utils !low @status:done
 ```
-
-When output is to a terminal (TTY), priorities are color-coded:
-- `!crit` — red
-- `!high` — yellow  
-- `!low` — green
-- Done tasks — gray
-
-When piped to another command, colors are disabled for clean parsing.
 
 ### Sorting
 
@@ -605,12 +614,19 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Task ID as sole arg (`[A-Z]+-\d+` or plain number) → runs `view` for that ID
   - Unknown non-command arg → prints error message with help output, exits 1
 
-- [ ] CLI-045 Tabular output for `mdtask list`
+- [x] CLI-045 Tabular output for `mdtask list`
   Render list output as a compact table with aligned columns: ID, Title, Priority, Tags, Properties.
   Current flat format: `[ ] CLI-001 Fix bug !high @iter:mvp`
   New table format with column headers and separators.
   Columns auto-sized to content width.
   Keep flat format when piped (non-TTY) for parseability.
+
+  **Implemented:**
+  - Table format with header, separator, and aligned data rows in TTY mode
+  - Columns: ID (with status checkbox), Title, Priority, Tags, Props (blockers + properties)
+  - Columns auto-sized to max content width, empty columns auto-hidden
+  - Color coding preserved: priority colors, red blockers, gray for done tasks
+  - Non-TTY output unchanged (flat format for parseability)
 
 - [x] CLI-046 Show file location in `mdtask view` output
   Display file path and line number in `mdtask view` output header.

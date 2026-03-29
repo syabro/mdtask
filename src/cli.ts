@@ -16,6 +16,7 @@ import { CAC } from 'cac';
 import p from 'picocolors';
 import { type FilesConfig, loadConfig, resolveBasePath } from './config.js';
 import { findMarkdownFiles } from './files.js';
+import { formatTable } from './table.js';
 import {
 	collectTaskBody,
 	extractNumericPart,
@@ -480,8 +481,12 @@ function handleList(
 		filteredTasks = sortByPriority(filteredTasks);
 	}
 
-	for (const task of filteredTasks) {
-		process.stdout.write(`${formatTaskLine(task, statusMap, isTTY)}\n`);
+	if (isTTY) {
+		process.stdout.write(formatTable(filteredTasks, statusMap, isTTY));
+	} else {
+		for (const task of filteredTasks) {
+			process.stdout.write(`${formatTaskLine(task, statusMap, isTTY)}\n`);
+		}
 	}
 }
 
