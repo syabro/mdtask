@@ -176,3 +176,7 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   Add `.github/workflows/publish.yml` that publishes to npm on tag push (`v*`).
   Use npm trusted publishing (OIDC, no token).
   Keep `just release` as manual fallback.
+
+- [ ] PRJ-053 Define commit message format
+  Discuss and agree on a commit message convention with the user.
+  Document the format in CLAUDE.md so it's followed in all future commits.
