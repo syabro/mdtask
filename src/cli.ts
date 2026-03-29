@@ -10,6 +10,7 @@ import {
 	writeFileSync,
 } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { CAC } from 'cac';
 import p from 'picocolors';
 import { type FilesConfig, loadConfig, resolveSearchPath } from './config.js';
@@ -835,7 +836,8 @@ export function run(args: string[]): number {
 }
 
 // Auto-run when executed directly (not imported)
-if (import.meta.url === `file://${process.argv[1]}`) {
+const __filename = fileURLToPath(import.meta.url);
+if (realpathSync(__filename) === realpathSync(process.argv[1])) {
 	const code = run(process.argv.slice(2));
 	process.exit(code);
 }
