@@ -22,9 +22,7 @@ import '../styles/global.css'
     <meta property="twitter:description" content="CLI task manager where checkboxes in your .md files are the database. No server, no GUI, no second system." />
 
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <style>
-      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
       body { font-family: 'Space Grotesk', monospace; }
       pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace; }
     </style>
@@ -63,11 +61,13 @@ import '../styles/global.css'
             </p>
           </div>
           <div class="flex flex-col sm:flex-row gap-4 items-stretch w-full lg:max-w-xl">
-            <div class="bg-surface-container flex-1 flex items-center justify-between px-4 py-3 group cursor-pointer border-b-2 border-on-background">
+            <div class="bg-surface-container flex-1 flex items-center justify-between px-4 py-3 group cursor-pointer">
               <code class="text-[0.875rem] text-on-surface font-medium whitespace-nowrap overflow-hidden text-ellipsis">npm install -g mdtask ; mdtask --help</code>
-              <span class="material-symbols-outlined ml-4 text-sm opacity-50 group-hover:opacity-100 transition-opacity shrink-0">content_copy</span>
+              <svg class="ml-4 w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity shrink-0 fill-current text-on-surface" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+              </svg>
             </div>
-            <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="shrink-0 flex items-center justify-center gap-2 bg-on-background text-surface px-6 py-3 text-[0.6875rem] font-bold uppercase tracking-widest hover:bg-primary active:translate-y-[1px] transition-all whitespace-nowrap border-b-2 border-transparent">
+            <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="shrink-0 flex items-center justify-center gap-2 bg-[#312e2c] text-surface px-6 py-3 text-[0.6875rem] font-bold uppercase tracking-widest hover:bg-primary active:translate-y-[1px] transition-all whitespace-nowrap border-b-2 border-transparent">
               <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
               </svg>
@@ -87,7 +87,7 @@ import '../styles/global.css'
 - [ ] SRCH-003 Git-hook integration <span class="text-secondary">@version:1.2</span>
 - [ ] SRCH-004 Documentation sweep <span class="text-secondary">#docs</span></pre>
           </div>
-          <div class="bg-on-background p-6 shadow-2xl border border-surface-variant/10 font-mono text-[0.6rem] sm:text-[0.65rem] md:text-[0.8125rem] overflow-hidden">
+          <div class="terminal p-6 text-[0.6rem] sm:text-[0.65rem] md:text-[0.8125rem] overflow-hidden">
             <div class="flex justify-between items-center mb-4 border-b border-surface-variant/10 pb-2">
               <span class="text-[0.6875rem] uppercase tracking-widest text-surface/40">Terminal</span>
             </div>
@@ -113,7 +113,9 @@ import '../styles/global.css'
           </div>
           <div class="relative bg-surface-container-lowest p-6 md:p-10 overflow-hidden group border border-outline-variant">
             <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <span class="material-symbols-outlined text-[120px]">description</span>
+              <svg class="w-[120px] h-[120px] fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+              </svg>
             </div>
             <div class="relative z-10 space-y-4 md:space-y-6">
               <div class="flex flex-wrap items-center gap-2 text-on-background text-[0.65rem] sm:text-xs md:text-base">
@@ -188,7 +190,7 @@ import '../styles/global.css'
                     <Fragment set:html={desc} />
                   </p>
                 </div>
-                <div class="bg-on-background p-5 font-mono text-[0.65rem] md:text-[0.7rem] border border-surface-variant/10 h-24 flex items-center overflow-hidden">
+                <div class="terminal p-5 text-[0.65rem] md:text-[0.7rem] h-24 flex items-center overflow-hidden">
                   <pre class="text-surface/60 leading-tight"><Fragment set:html={code} /></pre>
                 </div>
               </div>
@@ -205,7 +207,7 @@ import '../styles/global.css'
             <h2 class="text-[2rem] font-bold tracking-tight">Everything you need, nothing you don't</h2>
           </div>
           
-          <div class="border border-surface-variant/10 bg-surface/5 p-6 md:p-10 font-mono text-xs md:text-sm overflow-hidden">
+          <div class="terminal p-6 md:p-10 text-xs md:text-sm overflow-hidden">
             <div class="flex flex-col gap-4">
               <div class="flex items-center gap-2">
                 <span class="text-surface/30 select-none">$</span>
@@ -279,13 +281,13 @@ import '../styles/global.css'
               Navigate to any project with markdown files and run the indexer. It will find existing checkboxes and offer to ID them.
             </p>
             <div class="pt-4">
-              <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-on-background text-surface px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest hover:bg-primary active:translate-y-[1px] transition-all">
+              <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-[#312e2c] text-surface px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest hover:bg-primary active:translate-y-[1px] transition-all">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
                 View on GitHub
               </a>
             </div>
           </div>
-          <div class="w-full md:w-[480px] md:min-h-[160px] bg-on-background p-6 shadow-2xl border border-surface-variant/10 font-mono text-sm flex-shrink-0 flex flex-col">
+          <div class="terminal w-full md:w-[480px] md:min-h-[160px] p-6 text-sm flex-shrink-0 flex flex-col">
             <div class="flex justify-between items-center mb-4 border-b border-surface-variant/10 pb-2 shrink-0">
               <span class="text-[0.6875rem] uppercase tracking-widest text-surface/40">Terminal</span>
             </div>
