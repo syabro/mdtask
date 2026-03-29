@@ -29,5 +29,5 @@ release bump="patch":
     git add package.json
     git commit -m "v$(node -p "require('./package.json').version")"
     git tag "v$(node -p "require('./package.json').version")"
-    pnpm publish --no-git-checks
+    pnpm publish --no-git-checks --access public
     git push --follow-tags
