@@ -93,14 +93,14 @@ describe('mdtask open — integration with mock editor', () => {
 		}
 	});
 
-	it('mock editor receives +lineNumber and file path', () => {
+	it('mock editor receives +lineNumber and file path', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(
 			file,
 			'# Tasks\n\n- [ ] TSK-001 Fix the bug\n  Description.\n',
 		);
 
-		run(['open', 'TSK-001']);
+		await run(['open', 'TSK-001']);
 
 		expect(exitSpy).not.toHaveBeenCalled();
 		const args = readFileSync(argsFile, 'utf8').trim().split('\n');
@@ -109,7 +109,7 @@ describe('mdtask open — integration with mock editor', () => {
 		expect(args[1]).toBe(file);
 	});
 
-	it('passes correct line number for task deeper in file', () => {
+	it('passes correct line number for task deeper in file', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(
 			file,
@@ -128,7 +128,7 @@ describe('mdtask open — integration with mock editor', () => {
 			].join('\n') + '\n',
 		);
 
-		run(['open', 'TSK-002']);
+		await run(['open', 'TSK-002']);
 
 		expect(exitSpy).not.toHaveBeenCalled();
 		const args = readFileSync(argsFile, 'utf8').trim().split('\n');
@@ -136,13 +136,13 @@ describe('mdtask open — integration with mock editor', () => {
 		expect(args[1]).toBe(file);
 	});
 
-	it('handles file paths with spaces', () => {
+	it('handles file paths with spaces', async () => {
 		const dir = join(tempDir, 'my project');
 		mkdirSync(dir, { recursive: true });
 		const file = join(dir, 'task list.md');
 		writeFileSync(file, '- [ ] TSK-001 A task\n');
 
-		run(['open', 'TSK-001']);
+		await run(['open', 'TSK-001']);
 
 		expect(exitSpy).not.toHaveBeenCalled();
 		const args = readFileSync(argsFile, 'utf8').trim().split('\n');

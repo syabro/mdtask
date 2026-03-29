@@ -76,13 +76,13 @@ describe('mdtask list', () => {
 	});
 
 	describe('basic list output', () => {
-		it('lists open tasks from markdown files', () => {
+		it('lists open tasks from markdown files', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 First task\n- [ ] TSK-002 Second task\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -92,13 +92,13 @@ describe('mdtask list', () => {
 			expect(output).toContain('Second task');
 		});
 
-		it('shows only open tasks by default', () => {
+		it('shows only open tasks by default', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Open task\n- [x] TSK-002 Done task\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -108,13 +108,13 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('Done task');
 		});
 
-		it('shows done tasks with --all flag', () => {
+		it('shows done tasks with --all flag', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Open task\n- [x] TSK-002 Done task\n',
 			);
 
-			const code = run(['list', '--all']);
+			const code = await run(['list', '--all']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -122,13 +122,13 @@ describe('mdtask list', () => {
 			expect(output).toContain('TSK-002');
 		});
 
-		it('formats output as [status] ID Title priority', () => {
+		it('formats output as [status] ID Title priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Priority task !high\n- [x] TSK-002 Done no priority\n',
 			);
 
-			const code = run(['list', '--all']);
+			const code = await run(['list', '--all']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -139,7 +139,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('search in subdirectories', () => {
-		it('finds tasks in nested directories', () => {
+		it('finds tasks in nested directories', async () => {
 			const subDir = join(tempDir, 'docs', 'subdir');
 			mkdirSync(subDir, { recursive: true });
 			writeFileSync(
@@ -148,7 +148,7 @@ describe('mdtask list', () => {
 			);
 			writeFileSync(join(tempDir, 'root.md'), '- [ ] ROOT-001 Task in root\n');
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -158,7 +158,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('search in hidden directories', () => {
-		it('finds tasks in hidden directories', () => {
+		it('finds tasks in hidden directories', async () => {
 			const hiddenDir = join(tempDir, '.hidden');
 			mkdirSync(hiddenDir);
 			writeFileSync(
@@ -166,7 +166,7 @@ describe('mdtask list', () => {
 				'- [ ] HIDDEN-001 Secret task\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -175,38 +175,38 @@ describe('mdtask list', () => {
 	});
 
 	describe('edge cases', () => {
-		it('handles directory with no markdown files', () => {
+		it('handles directory with no markdown files', async () => {
 			writeFileSync(join(tempDir, 'readme.txt'), 'Not markdown');
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toBe('');
 		});
 
-		it('handles empty directory', () => {
-			const code = run(['list']);
+		it('handles empty directory', async () => {
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toBe('');
 		});
 
-		it('handles files with no tasks', () => {
+		it('handles files with no tasks', async () => {
 			writeFileSync(
 				join(tempDir, 'notes.md'),
 				'# Just a heading\nSome notes here\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).not.toContain('# Just a heading');
 		});
 
-		it('ignores node_modules by default', () => {
+		it('ignores node_modules by default', async () => {
 			const nodeModules = join(tempDir, 'node_modules');
 			mkdirSync(nodeModules);
 			writeFileSync(
@@ -215,7 +215,7 @@ describe('mdtask list', () => {
 			);
 			writeFileSync(join(tempDir, 'root.md'), '- [ ] ROOT-001 Should appear\n');
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -225,13 +225,13 @@ describe('mdtask list', () => {
 	});
 
 	describe('priority display', () => {
-		it('shows !crit priority', () => {
+		it('shows !crit priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Critical task !crit\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -239,36 +239,36 @@ describe('mdtask list', () => {
 			expect(output).toContain('Critical task');
 		});
 
-		it('shows !high priority', () => {
+		it('shows !high priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 High task !high\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toContain('!high');
 		});
 
-		it('shows !low priority', () => {
+		it('shows !low priority', async () => {
 			writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Low task !low\n');
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toContain('!low');
 		});
 
-		it('shows no priority tag for medium priority tasks', () => {
+		it('shows no priority tag for medium priority tasks', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Medium priority task\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -280,13 +280,13 @@ describe('mdtask list', () => {
 	});
 
 	describe('blocked_by display', () => {
-		it('shows single @blocked_by property', () => {
+		it('shows single @blocked_by property', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -295,13 +295,13 @@ describe('mdtask list', () => {
 			expect(output).toContain('@blocked_by:TSK-002');
 		});
 
-		it('hides resolved blockers from output', () => {
+		it('hides resolved blockers from output', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n- [x] TSK-002 Done blocker\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -310,13 +310,13 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('@blocked_by:TSK-002');
 		});
 
-		it('shows only open blockers when mixed with resolved ones', () => {
+		it('shows only open blockers when mixed with resolved ones', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Mixed blockers @blocked_by:TSK-002 @blocked_by:TSK-003\n- [x] TSK-002 Done blocker\n- [ ] TSK-003 Open blocker\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -324,7 +324,7 @@ describe('mdtask list', () => {
 			expect(output).toContain('@blocked_by:TSK-003');
 		});
 
-		it('shows open blocker in red', () => {
+		it('shows open blocker in red', async () => {
 			Object.defineProperty(process.stdout, 'isTTY', {
 				value: true,
 				writable: true,
@@ -336,7 +336,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n- [ ] TSK-002 Open blocker\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -344,7 +344,7 @@ describe('mdtask list', () => {
 			expect(output).toMatch(/\u001b\[31m.*@blocked_by:TSK-002/);
 		});
 
-		it('shows non-existent blocker in red', () => {
+		it('shows non-existent blocker in red', async () => {
 			Object.defineProperty(process.stdout, 'isTTY', {
 				value: true,
 				writable: true,
@@ -356,7 +356,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Blocked task @blocked_by:NONEXISTENT\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -364,13 +364,13 @@ describe('mdtask list', () => {
 			expect(output).toMatch(/\u001b\[31m.*@blocked_by:NONEXISTENT/);
 		});
 
-		it('shows multiple @blocked_by properties', () => {
+		it('shows multiple @blocked_by properties', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Multi-blocked @blocked_by:TSK-002 @blocked_by:FLS-001\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -378,13 +378,13 @@ describe('mdtask list', () => {
 			expect(output).toContain('@blocked_by:FLS-001');
 		});
 
-		it('shows @blocked_by with priority', () => {
+		it('shows @blocked_by with priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Urgent blocked !high @blocked_by:TSK-002\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -392,10 +392,10 @@ describe('mdtask list', () => {
 			expect(output).toContain('@blocked_by:TSK-002');
 		});
 
-		it('shows no @blocked_by for unblocked tasks', () => {
+		it('shows no @blocked_by for unblocked tasks', async () => {
 			writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Free task\n');
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -404,13 +404,13 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('@blocked_by');
 		});
 
-		it('shows @blocked_by for done tasks', () => {
+		it('shows @blocked_by for done tasks', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [x] TSK-001 Done blocked @blocked_by:TSK-002\n',
 			);
 
-			const code = run(['list', '--all']);
+			const code = await run(['list', '--all']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -420,7 +420,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('sorting', () => {
-		it('sorts by priority with --sort=priority (crit → high → medium → low)', () => {
+		it('sorts by priority with --sort=priority (crit → high → medium → low)', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -431,7 +431,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '--sort=priority']);
+			const code = await run(['list', '--sort=priority']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -443,7 +443,7 @@ describe('mdtask list', () => {
 			expect(lines[3]).toContain('TSK-001'); // low
 		});
 
-		it('preserves file order within same priority', () => {
+		it('preserves file order within same priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -453,7 +453,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '--sort=priority']);
+			const code = await run(['list', '--sort=priority']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -463,7 +463,7 @@ describe('mdtask list', () => {
 			expect(lines[2]).toContain('TSK-003');
 		});
 
-		it('default list (no --sort) preserves file order', () => {
+		it('default list (no --sort) preserves file order', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -473,7 +473,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -485,13 +485,13 @@ describe('mdtask list', () => {
 	});
 
 	describe('property display', () => {
-		it('shows @iter property in list output', () => {
+		it('shows @iter property in list output', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 MVP task @iter:mvp\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -500,13 +500,13 @@ describe('mdtask list', () => {
 			expect(output).toContain('@iter:mvp');
 		});
 
-		it('shows multiple different properties', () => {
+		it('shows multiple different properties', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Multi-prop task @iter:mvp @status:in-progress\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -514,13 +514,13 @@ describe('mdtask list', () => {
 			expect(output).toContain('@status:in-progress');
 		});
 
-		it('shows properties sorted alphabetically by key', () => {
+		it('shows properties sorted alphabetically by key', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Sorted props @status:wip @iter:mvp\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -530,13 +530,13 @@ describe('mdtask list', () => {
 			expect(iterIdx).toBeLessThan(statusIdx);
 		});
 
-		it('shows properties with priority and blockers', () => {
+		it('shows properties with priority and blockers', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Full metadata !high @blocked_by:TSK-002 @iter:mvp\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -549,13 +549,13 @@ describe('mdtask list', () => {
 			expect(blockerIdx).toBeLessThan(iterIdx);
 		});
 
-		it('shows multi-value properties as separate tokens', () => {
+		it('shows multi-value properties as separate tokens', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Multi-val @tag:cli @tag:parser\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -563,7 +563,7 @@ describe('mdtask list', () => {
 			expect(output).toContain('@tag:parser');
 		});
 
-		it('shows properties for done tasks in gray', () => {
+		it('shows properties for done tasks in gray', async () => {
 			Object.defineProperty(process.stdout, 'isTTY', {
 				value: true,
 				writable: true,
@@ -575,7 +575,7 @@ describe('mdtask list', () => {
 				'- [x] TSK-001 Done with prop @iter:mvp\n',
 			);
 
-			const code = run(['list', '--all']);
+			const code = await run(['list', '--all']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -584,13 +584,13 @@ describe('mdtask list', () => {
 			expect(output).toMatch(/\u001b\[90m.*@iter:mvp.*\u001b\[39m/);
 		});
 
-		it('shows properties after blockers for done tasks', () => {
+		it('shows properties after blockers for done tasks', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [x] TSK-001 Done blocked @blocked_by:TSK-002 @iter:mvp\n',
 			);
 
-			const code = run(['list', '--all']);
+			const code = await run(['list', '--all']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -602,10 +602,10 @@ describe('mdtask list', () => {
 			expect(blockerIdx).toBeLessThan(iterIdx);
 		});
 
-		it('shows no properties for task without any', () => {
+		it('shows no properties for task without any', async () => {
 			writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Plain task\n');
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -614,7 +614,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('tag filtering', () => {
-		it('filters by single tag', () => {
+		it('filters by single tag', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -624,7 +624,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '#backend']);
+			const code = await run(['list', '#backend']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -633,7 +633,7 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-002');
 		});
 
-		it('filters by multiple tags with AND logic', () => {
+		it('filters by multiple tags with AND logic', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -643,7 +643,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '#backend', '#urgent']);
+			const code = await run(['list', '#backend', '#urgent']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -652,20 +652,20 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-003');
 		});
 
-		it('returns empty output when no tasks match tag', () => {
+		it('returns empty output when no tasks match tag', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Backend task #backend\n',
 			);
 
-			const code = run(['list', '#nonexistent']);
+			const code = await run(['list', '#nonexistent']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toBe('');
 		});
 
-		it('combines tag filter with --all', () => {
+		it('combines tag filter with --all', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -675,7 +675,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '--all', '#backend']);
+			const code = await run(['list', '--all', '#backend']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -684,7 +684,7 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-003');
 		});
 
-		it('combines tag filter with --sort=priority', () => {
+		it('combines tag filter with --sort=priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -694,7 +694,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '#backend', '--sort=priority']);
+			const code = await run(['list', '#backend', '--sort=priority']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -707,7 +707,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('priority filtering', () => {
-		it('filters by single priority', () => {
+		it('filters by single priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -718,7 +718,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '!high']);
+			const code = await run(['list', '!high']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -728,7 +728,7 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-004');
 		});
 
-		it('filters by multiple priorities with OR logic', () => {
+		it('filters by multiple priorities with OR logic', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -739,7 +739,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '!high', '!crit']);
+			const code = await run(['list', '!high', '!crit']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -749,20 +749,20 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-004');
 		});
 
-		it('returns empty output when no tasks match priority', () => {
+		it('returns empty output when no tasks match priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Medium task\n- [ ] TSK-002 Low task !low\n',
 			);
 
-			const code = run(['list', '!crit']);
+			const code = await run(['list', '!crit']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toBe('');
 		});
 
-		it('combines priority filter with --all', () => {
+		it('combines priority filter with --all', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -772,7 +772,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '--all', '!high']);
+			const code = await run(['list', '--all', '!high']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -781,7 +781,7 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-003');
 		});
 
-		it('combines priority filter with --sort=priority', () => {
+		it('combines priority filter with --sort=priority', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -791,7 +791,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '!high', '!crit', '--sort=priority']);
+			const code = await run(['list', '!high', '!crit', '--sort=priority']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -802,7 +802,7 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('TSK-003');
 		});
 
-		it('combines priority filter with tag filter', () => {
+		it('combines priority filter with tag filter', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -812,7 +812,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '!high', '#backend']);
+			const code = await run(['list', '!high', '#backend']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -823,7 +823,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('shell injection protection', () => {
-		it('outputs shell metacharacters in titles verbatim', () => {
+		it('outputs shell metacharacters in titles verbatim', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -834,7 +834,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -844,20 +844,20 @@ describe('mdtask list', () => {
 			expect(output).toContain('Pipe |cat /etc/passwd');
 		});
 
-		it('outputs shell metacharacters in properties verbatim', () => {
+		it('outputs shell metacharacters in properties verbatim', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Task @status:$(whoami)\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toContain('@status:$(whoami)');
 		});
 
-		it('reads files from directories with shell metacharacters', () => {
+		it('reads files from directories with shell metacharacters', async () => {
 			const dangerDir = join(tempDir, 'docs $(rm)');
 			mkdirSync(dangerDir, { recursive: true });
 			writeFileSync(
@@ -865,7 +865,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Task in dangerous dir\n',
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -873,7 +873,7 @@ describe('mdtask list', () => {
 			expect(output).toContain('Task in dangerous dir');
 		});
 
-		it('task ID regex prevents shell metacharacters in IDs', () => {
+		it('task ID regex prevents shell metacharacters in IDs', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -883,7 +883,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list']);
+			const code = await run(['list']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -894,7 +894,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('pipe behavior', () => {
-		it('outputs no ANSI codes and correct plain text when stdout is not a TTY', () => {
+		it('outputs no ANSI codes and correct plain text when stdout is not a TTY', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -905,7 +905,7 @@ describe('mdtask list', () => {
 			);
 
 			// isTTY is already undefined (non-tty) by default in beforeEach
-			const code = run(['list', '--all']);
+			const code = await run(['list', '--all']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -917,7 +917,7 @@ describe('mdtask list', () => {
 			);
 		});
 
-		it('output lines are parseable when piped', () => {
+		it('output lines are parseable when piped', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				`${[
@@ -928,7 +928,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = run(['list', '--all']);
+			const code = await run(['list', '--all']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -943,7 +943,7 @@ describe('mdtask list', () => {
 	});
 
 	describe('excludePrefixes', () => {
-		it('hides tasks matching excluded prefixes', () => {
+		it('hides tasks matching excluded prefixes', async () => {
 			writeFileSync(
 				join(tempDir, 'tasks.md'),
 				'- [ ] TSK-001 Real task\n- [ ] EXMPL-001 Example task\n- [ ] EXMPL-002 Another example\n- [ ] TEST-001 Test example\n',
@@ -953,7 +953,7 @@ describe('mdtask list', () => {
 				JSON.stringify({ excludePrefixes: ['EXMPL', 'TEST'] }),
 			);
 
-			run(['list']);
+			await run(['list']);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 			expect(output).toContain('TSK-001');

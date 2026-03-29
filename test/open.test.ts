@@ -90,14 +90,14 @@ describe('mdtask open', () => {
 		}
 	});
 
-	it('opens $EDITOR with +lineNumber and file path', () => {
+	it('opens $EDITOR with +lineNumber and file path', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(
 			file,
 			'# Tasks\n\n- [ ] TSK-001 Fix the bug\n  Description.\n',
 		);
 
-		run(['open', 'TSK-001']);
+		await run(['open', 'TSK-001']);
 
 		expect(execFileSync).toHaveBeenCalledTimes(1);
 		const args = vi.mocked(execFileSync).mock.calls[0];
@@ -107,10 +107,10 @@ describe('mdtask open', () => {
 		expect(exitSpy).not.toHaveBeenCalled();
 	});
 
-	it('errors on non-existent ID', () => {
+	it('errors on non-existent ID', async () => {
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
 
-		run(['open', 'NONEXISTENT-999']);
+		await run(['open', 'NONEXISTENT-999']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('not found');
@@ -118,10 +118,10 @@ describe('mdtask open', () => {
 		expect(execFileSync).not.toHaveBeenCalled();
 	});
 
-	it('uses execFileSync not shell exec to prevent injection', () => {
+	it('uses execFileSync not shell exec to prevent injection', async () => {
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
 
-		run(['open', 'TSK-001']);
+		await run(['open', 'TSK-001']);
 
 		// execFileSync is called (not execSync which would use shell)
 		expect(execFileSync).toHaveBeenCalledTimes(1);
@@ -133,11 +133,11 @@ describe('mdtask open', () => {
 		expect(call[2]).not.toHaveProperty('shell');
 	});
 
-	it('passes $EDITOR with shell metacharacters as literal binary name', () => {
+	it('passes $EDITOR with shell metacharacters as literal binary name', async () => {
 		process.env.EDITOR = '/usr/bin/my;editor';
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
 
-		run(['open', 'TSK-001']);
+		await run(['open', 'TSK-001']);
 
 		// execFileSync should receive the literal editor path, not shell-interpreted
 		expect(execFileSync).toHaveBeenCalledTimes(1);
@@ -145,11 +145,11 @@ describe('mdtask open', () => {
 		expect(call[0]).toBe('/usr/bin/my;editor');
 	});
 
-	it('errors when $EDITOR is not set', () => {
+	it('errors when $EDITOR is not set', async () => {
 		delete process.env.EDITOR;
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
 
-		run(['open', 'TSK-001']);
+		await run(['open', 'TSK-001']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('EDITOR');

@@ -180,7 +180,9 @@ A seed prefix on a specific task overrides the file-level prefix for that task. 
 
 Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-005`) are reported as warnings to stderr.
 
-If a file has unidentified tasks but no prefix source, `mdtask ids` exits with an error without modifying any files.
+If a file has unidentified tasks but no prefix source:
+- **Interactive (TTY):** prompts `Enter prefix for <filename>:` — input is trimmed, uppercased, and validated (`A-Z0-9`, must start with a letter)
+- **Pipe (non-TTY):** exits with an error without modifying any files
 
 ## Shell safety
 
@@ -584,7 +586,14 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   Example: `docs/prd/cli.md:191`
   Users can see where the task lives without running `mdtask open`.
 
-- [ ] CLI-050 Interactive prefix prompt in `mdtask ids`
+- [x] CLI-050 Interactive prefix prompt in `mdtask ids`
   When `mdtask ids` encounters a file with no prefix source (no existing IDs, no seed prefix):
   - If TTY: prompt user "Enter prefix for <filename>:" and use the input
   - If not TTY (pipe): error as today
+
+  **Implemented:**
+  - TTY prompt via `node:readline/promises` — asks "Enter prefix for \<file\>:"
+  - Input trimmed, uppercased, validated against `^[A-Z][A-Z0-9]*$`
+  - Invalid/empty input exits with error and descriptive message
+  - Non-TTY mode preserves existing error behavior
+  - Readline interface reused across multiple files, closed after loop

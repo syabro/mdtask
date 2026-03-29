@@ -10,6 +10,7 @@ import {
 	writeFileSync,
 } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import * as rl from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { CAC } from 'cac';
 import p from 'picocolors';
@@ -633,7 +634,7 @@ function handleSet(args: string[], options: { path?: string }): void {
 	}
 }
 
-function handleIds(options: { path?: string }): void {
+async function handleIds(options: { path?: string }): Promise<void> {
 	const config = loadConfig();
 	const searchPath = resolveSearchPath(options.path, config);
 	const existingTasks = collectTasks(
@@ -692,6 +693,7 @@ function handleIds(options: { path?: string }): void {
 		filePrefix: string;
 	};
 	const workItems: FileWork[] = [];
+	let iface: rl.Interface | undefined;
 
 	for (const filePath of files) {
 		let content: string;
@@ -742,15 +744,32 @@ function handleIds(options: { path?: string }): void {
 		}
 
 		if (!filePrefix) {
-			process.stderr.write(
-				`mdtask: no prefix found for ${filePath} — add a task with an ID or a seed line like '- [ ] PRJ- Task title'\n`,
-			);
-			process.exit(1);
-			return;
+			if (!process.stdin.isTTY) {
+				process.stderr.write(
+					`mdtask: no prefix found for ${filePath} — add a task with an ID or a seed line like '- [ ] PRJ- Task title'\n`,
+				);
+				process.exit(1);
+				return;
+			}
+
+			if (!iface) {
+				iface = rl.createInterface({ input: process.stdin, output: process.stderr });
+			}
+			const answer = (await iface.question(`Enter prefix for ${filePath}: `)).trim().toUpperCase();
+			if (!answer || !/^[A-Z][A-Z0-9]*$/.test(answer)) {
+				iface.close();
+				process.stderr.write(
+					`mdtask: invalid prefix "${answer}" — must be uppercase alphanumeric starting with a letter\n`,
+				);
+				process.exit(1);
+				return;
+			}
+			filePrefix = answer;
 		}
 
 		workItems.push({ filePath, lines, unidentified, filePrefix });
 	}
+	iface?.close();
 
 	// Pass 2: assign IDs and write files (all prefixes validated)
 	let nextNum = globalMax + 1;
@@ -776,7 +795,7 @@ function handleIds(options: { path?: string }): void {
 	}
 }
 
-export function run(args: string[]): number {
+export async function run(args: string[]): Promise<number> {
 	const cli = new CAC('mdtask');
 
 	cli.option('--path <path>', 'Search path for tasks (default: .)');
@@ -820,7 +839,7 @@ export function run(args: string[]): number {
 	cli
 		.command('ids', 'Auto-assign IDs to unidentified tasks')
 		.action((options) => {
-			handleIds(options);
+			return handleIds(options);
 		});
 
 	cli.help();
@@ -832,7 +851,8 @@ export function run(args: string[]): number {
 	cli.version(pkgVersion);
 
 	try {
-		cli.parse(['node', 'mdtask', ...args]);
+		cli.parse(['node', 'mdtask', ...args], { run: false });
+		await cli.runMatchedCommand();
 		return 0;
 	} catch (err) {
 		process.stderr.write(`mdtask: ${err}\n`);
@@ -843,6 +863,5 @@ export function run(args: string[]): number {
 // Auto-run when executed directly (not imported)
 const __filename = fileURLToPath(import.meta.url);
 if (realpathSync(__filename) === realpathSync(process.argv[1])) {
-	const code = run(process.argv.slice(2));
-	process.exit(code);
+	run(process.argv.slice(2)).then((code) => process.exit(code));
 }

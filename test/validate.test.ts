@@ -73,26 +73,26 @@ describe('mdtask validate', () => {
 		}
 	});
 
-	it('valid file — no errors, no warnings', () => {
+	it('valid file — no errors, no warnings', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Fix bug\n- [ ] TSK-002 Add feature\n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toBe('');
 		expect(exitSpy).not.toHaveBeenCalled();
 	});
 
-	it('duplicate ID in same file — error, exit 1', () => {
+	it('duplicate ID in same file — error, exit 1', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 First task\n- [ ] TSK-001 Duplicate task\n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('error');
@@ -101,11 +101,11 @@ describe('mdtask validate', () => {
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('duplicate ID across files — error, exit 1', () => {
+	it('duplicate ID across files — error, exit 1', async () => {
 		writeFileSync(join(tempDir, 'a.md'), '- [ ] TSK-001 Task in file a\n');
 		writeFileSync(join(tempDir, 'b.md'), '- [ ] TSK-001 Task in file b\n');
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('error');
@@ -114,13 +114,13 @@ describe('mdtask validate', () => {
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('empty tag — warning on stderr, no exit 1', () => {
+	it('empty tag — warning on stderr, no exit 1', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Task with empty tag\t\t# #valid\n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('warning');
@@ -128,13 +128,13 @@ describe('mdtask validate', () => {
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('malformed property @key without :value — warning', () => {
+	it('malformed property @key without :value — warning', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Task with bad prop\t\t@broken\n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('warning');
@@ -142,13 +142,13 @@ describe('mdtask validate', () => {
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('multiple issues — all reported, exit 1 if error present', () => {
+	it('multiple issues — all reported, exit 1 if error present', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 First\n- [ ] TSK-001 Duplicate\n- [ ] TSK-002 Empty tag\t\t# \n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('duplicate');
@@ -156,22 +156,22 @@ describe('mdtask validate', () => {
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('no markdown files — clean exit', () => {
+	it('no markdown files — clean exit', async () => {
 		// Empty directory, no .md files
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toBe('');
 		expect(exitSpy).not.toHaveBeenCalled();
 	});
 
-	it('unknown priority — warning on stderr, no exit 1', () => {
+	it('unknown priority — warning on stderr, no exit 1', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Task with unknown priority\t\t!urgent\n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('warning');
@@ -180,26 +180,26 @@ describe('mdtask validate', () => {
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('known priority — no warning', () => {
+	it('known priority — no warning', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 High priority task\t\t!high\n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toBe('');
 		expect(exitSpy).not.toHaveBeenCalled();
 	});
 
-	it('multiple priorities with unknown — warns for each unknown', () => {
+	it('multiple priorities with unknown — warns for each unknown', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Task\t\t!high !urgent\n',
 		);
 
-		run(['validate']);
+		await run(['validate']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('warning');
@@ -208,7 +208,7 @@ describe('mdtask validate', () => {
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('respects --path option', () => {
+	it('respects --path option', async () => {
 		const subDir = join(tempDir, 'sub');
 		mkdirSync(subDir);
 		writeFileSync(
@@ -216,7 +216,7 @@ describe('mdtask validate', () => {
 			'- [ ] TSK-001 Task\n- [ ] TSK-001 Duplicate\n',
 		);
 
-		run(['validate', '--path', subDir]);
+		await run(['validate', '--path', subDir]);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('duplicate');

@@ -74,36 +74,36 @@ describe('mdtask done', () => {
 		}
 	});
 
-	it('toggles open task to done', () => {
+	it('toggles open task to done', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(file, '- [ ] TSK-001 Fix the bug\n');
 
-		run(['done', 'TSK-001']);
+		await run(['done', 'TSK-001']);
 
 		const content = readFileSync(file, 'utf-8');
 		expect(content).toBe('- [x] TSK-001 Fix the bug\n');
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('toggles done task back to open', () => {
+	it('toggles done task back to open', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(file, '- [x] TSK-001 Fix the bug\n');
 
-		run(['done', 'TSK-001']);
+		await run(['done', 'TSK-001']);
 
 		const content = readFileSync(file, 'utf-8');
 		expect(content).toBe('- [ ] TSK-001 Fix the bug\n');
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('does not corrupt other lines', () => {
+	it('does not corrupt other lines', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(
 			file,
 			'# Tasks\n\n- [ ] TSK-001 Fix the bug\n  Description body.\n\n- [ ] TSK-002 Another task\n',
 		);
 
-		run(['done', 'TSK-001']);
+		await run(['done', 'TSK-001']);
 
 		const content = readFileSync(file, 'utf-8');
 		expect(content).toBe(
@@ -111,7 +111,7 @@ describe('mdtask done', () => {
 		);
 	});
 
-	it('errors on duplicate ID', () => {
+	it('errors on duplicate ID', async () => {
 		writeFileSync(
 			join(tempDir, 'file1.md'),
 			'- [ ] TSK-001 First occurrence\n',
@@ -121,54 +121,54 @@ describe('mdtask done', () => {
 			'- [ ] TSK-001 Second occurrence\n',
 		);
 
-		run(['done', 'TSK-001']);
+		await run(['done', 'TSK-001']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('duplicate');
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('errors on non-existent ID', () => {
+	it('errors on non-existent ID', async () => {
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
 
-		run(['done', 'NONEXISTENT-999']);
+		await run(['done', 'NONEXISTENT-999']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('not found');
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('toggles task in file with shell metacharacters in path', () => {
+	it('toggles task in file with shell metacharacters in path', async () => {
 		const dangerDir = join(tempDir, 'docs $(rm)');
 		mkdirSync(dangerDir, { recursive: true });
 		const file = join(dangerDir, 'tasks.md');
 		writeFileSync(file, '- [ ] TSK-001 Fix the bug\n');
 
-		run(['done', 'TSK-001']);
+		await run(['done', 'TSK-001']);
 
 		const content = readFileSync(file, 'utf-8');
 		expect(content).toBe('- [x] TSK-001 Fix the bug\n');
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('preserves shell metacharacters in task title after toggle', () => {
+	it('preserves shell metacharacters in task title after toggle', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(file, '- [ ] TSK-001 Fix bug; rm -rf /\n');
 
-		run(['done', 'TSK-001']);
+		await run(['done', 'TSK-001']);
 
 		const content = readFileSync(file, 'utf-8');
 		expect(content).toBe('- [x] TSK-001 Fix bug; rm -rf /\n');
 	});
 
-	it('preserves metadata after toggle', () => {
+	it('preserves metadata after toggle', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(
 			file,
 			'- [ ] TSK-001 Fix the bug\t\t@iter:mvp !high @blocked_by:TSK-002\n',
 		);
 
-		run(['done', 'TSK-001']);
+		await run(['done', 'TSK-001']);
 
 		const content = readFileSync(file, 'utf-8');
 		expect(content).toBe(

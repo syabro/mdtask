@@ -73,13 +73,13 @@ describe('mdtask view', () => {
 		}
 	});
 
-	it('outputs full task block (header + body)', () => {
+	it('outputs full task block (header + body)', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Fix the bug\n  Description line 1.\n  Description line 2.\n',
 		);
 
-		run(['view', 'TSK-001']);
+		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('- [ ] TSK-001 Fix the bug');
@@ -87,23 +87,23 @@ describe('mdtask view', () => {
 		expect(output).toContain('Description line 2.');
 	});
 
-	it('errors on non-existent ID', () => {
+	it('errors on non-existent ID', async () => {
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
 
-		run(['view', 'NONEXISTENT-999']);
+		await run(['view', 'NONEXISTENT-999']);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('not found');
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('outputs header only when task has no body', () => {
+	it('outputs header only when task has no body', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 No body task\n- [ ] TSK-002 Next task\n',
 		);
 
-		run(['view', 'TSK-001']);
+		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('- [ ] TSK-001 No body task');
@@ -111,13 +111,13 @@ describe('mdtask view', () => {
 		expect(output.trim()).toBe('- [ ] TSK-001 No body task');
 	});
 
-	it('preserves metadata in header line', () => {
+	it('preserves metadata in header line', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Task with meta\t\t@iter:mvp @blocked_by:TSK-002 !high\n  Body here.\n',
 		);
 
-		run(['view', 'TSK-001']);
+		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('@iter:mvp');
@@ -125,13 +125,13 @@ describe('mdtask view', () => {
 		expect(output).toContain('!high');
 	});
 
-	it('dedents body content', () => {
+	it('dedents body content', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Task\n  Line 1\n    Nested line\n  Line 2\n',
 		);
 
-		run(['view', 'TSK-001']);
+		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('Line 1');
@@ -139,32 +139,32 @@ describe('mdtask view', () => {
 		expect(output).toContain('Line 2');
 	});
 
-	it('outputs shell metacharacters in body verbatim', () => {
+	it('outputs shell metacharacters in body verbatim', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Fix the bug\n  Run `rm -rf /` to test.\n  Check $(whoami) and |pipe.\n',
 		);
 
-		run(['view', 'TSK-001']);
+		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('Run `rm -rf /` to test.');
 		expect(output).toContain('Check $(whoami) and |pipe.');
 	});
 
-	it('outputs shell metacharacters in title verbatim', () => {
+	it('outputs shell metacharacters in title verbatim', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Fix bug; rm -rf /\n  Body content.\n',
 		);
 
-		run(['view', 'TSK-001']);
+		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('Fix bug; rm -rf /');
 	});
 
-	it('finds task in subdirectory', () => {
+	it('finds task in subdirectory', async () => {
 		const subDir = join(tempDir, 'docs', 'prd');
 		mkdirSync(subDir, { recursive: true });
 		writeFileSync(
@@ -172,7 +172,7 @@ describe('mdtask view', () => {
 			'- [ ] TSK-001 Nested task\n  Found in subdir.\n',
 		);
 
-		run(['view', 'TSK-001']);
+		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(output).toContain('TSK-001');

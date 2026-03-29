@@ -76,7 +76,7 @@ describe('mdtask move', () => {
 		}
 	});
 
-	it('removes task from source file', () => {
+	it('removes task from source file', async () => {
 		const source = join(tempDir, 'source.md');
 		const target = join(tempDir, 'target.md');
 		writeFileSync(
@@ -85,7 +85,7 @@ describe('mdtask move', () => {
 		);
 		writeFileSync(target, '# Target\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const content = readFileSync(source, 'utf-8');
 		expect(content).not.toContain('TSK-001');
@@ -93,20 +93,20 @@ describe('mdtask move', () => {
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('adds task to target file', () => {
+	it('adds task to target file', async () => {
 		const source = join(tempDir, 'source.md');
 		const target = join(tempDir, 'target.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 		writeFileSync(target, '# Target\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const content = readFileSync(target, 'utf-8');
 		expect(content).toContain('- [ ] TSK-001 Fix the bug');
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('moves entire block (header + body)', () => {
+	it('moves entire block (header + body)', async () => {
 		const source = join(tempDir, 'source.md');
 		const target = join(tempDir, 'target.md');
 		writeFileSync(
@@ -115,7 +115,7 @@ describe('mdtask move', () => {
 		);
 		writeFileSync(target, '# Target\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const sourceContent = readFileSync(source, 'utf-8');
 		expect(sourceContent).not.toContain('TSK-001');
@@ -127,14 +127,14 @@ describe('mdtask move', () => {
 		expect(targetContent).toContain('  Description line 2.');
 	});
 
-	it('creates target file if it does not exist', () => {
+	it('creates target file if it does not exist', async () => {
 		const source = join(tempDir, 'source.md');
 		const target = join(tempDir, 'new-target.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 
 		expect(existsSync(target)).toBe(false);
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		expect(existsSync(target)).toBe(true);
 		const content = readFileSync(target, 'utf-8');
@@ -142,30 +142,30 @@ describe('mdtask move', () => {
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('is a no-op when moving to same file', () => {
+	it('is a no-op when moving to same file', async () => {
 		const source = join(tempDir, 'source.md');
 		const originalContent = '- [ ] TSK-001 Fix the bug\n  Description.\n';
 		writeFileSync(source, originalContent);
 
-		run(['move', 'TSK-001', source]);
+		await run(['move', 'TSK-001', source]);
 
 		const content = readFileSync(source, 'utf-8');
 		expect(content).toBe(originalContent);
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('errors on non-existent ID', () => {
+	it('errors on non-existent ID', async () => {
 		writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Some task\n');
 		const target = join(tempDir, 'target.md');
 
-		run(['move', 'NONEXISTENT-999', target]);
+		await run(['move', 'NONEXISTENT-999', target]);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('not found');
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('errors on duplicate ID', () => {
+	it('errors on duplicate ID', async () => {
 		writeFileSync(
 			join(tempDir, 'file1.md'),
 			'- [ ] TSK-001 First occurrence\n',
@@ -176,46 +176,46 @@ describe('mdtask move', () => {
 		);
 		const target = join(tempDir, 'target.md');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('duplicate');
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
-	it('keeps source file when it becomes empty after move', () => {
+	it('keeps source file when it becomes empty after move', async () => {
 		const source = join(tempDir, 'source.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 		const target = join(tempDir, 'target.md');
 		writeFileSync(target, '# Target\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		expect(existsSync(source)).toBe(true);
 	});
 
-	it('moves task to target file with shell metacharacters in path', () => {
+	it('moves task to target file with shell metacharacters in path', async () => {
 		const source = join(tempDir, 'source.md');
 		const dangerDir = join(tempDir, 'target $(rm)');
 		mkdirSync(dangerDir, { recursive: true });
 		const target = join(dangerDir, 'target.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const content = readFileSync(target, 'utf-8');
 		expect(content).toContain('- [ ] TSK-001 Fix the bug');
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('gracefully errors when target file is read-only', () => {
+	it('gracefully errors when target file is read-only', async () => {
 		const source = join(tempDir, 'source.md');
 		const target = join(tempDir, 'readonly-target.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 		writeFileSync(target, '# Target\n');
 		chmodSync(target, 0o444);
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('permission denied');
@@ -227,14 +227,14 @@ describe('mdtask move', () => {
 		chmodSync(target, 0o644);
 	});
 
-	it('gracefully errors when source file is read-only', () => {
+	it('gracefully errors when source file is read-only', async () => {
 		const source = join(tempDir, 'readonly-source.md');
 		const target = join(tempDir, 'target.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n- [ ] TSK-002 Other\n');
 		writeFileSync(target, '# Target\n');
 		chmodSync(source, 0o444);
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('permission denied');
@@ -246,13 +246,13 @@ describe('mdtask move', () => {
 		chmodSync(source, 0o644);
 	});
 
-	it('gracefully errors when target path is a directory', () => {
+	it('gracefully errors when target path is a directory', async () => {
 		const source = join(tempDir, 'source.md');
 		const targetDir = join(tempDir, 'target-dir');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 		mkdirSync(targetDir);
 
-		run(['move', 'TSK-001', targetDir]);
+		await run(['move', 'TSK-001', targetDir]);
 
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('is a directory');
@@ -262,12 +262,12 @@ describe('mdtask move', () => {
 		expect(sourceContent).toContain('TSK-001');
 	});
 
-	it('creates parent directories for target if they do not exist', () => {
+	it('creates parent directories for target if they do not exist', async () => {
 		const source = join(tempDir, 'source.md');
 		const target = join(tempDir, 'nested', 'deep', 'target.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		expect(existsSync(target)).toBe(true);
 		const content = readFileSync(target, 'utf-8');
@@ -275,20 +275,20 @@ describe('mdtask move', () => {
 		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
-	it('source file content is empty after moving only task', () => {
+	it('source file content is empty after moving only task', async () => {
 		const source = join(tempDir, 'source.md');
 		writeFileSync(source, '- [ ] TSK-001 Fix the bug\n');
 		const target = join(tempDir, 'target.md');
 		writeFileSync(target, '# Target\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		expect(existsSync(source)).toBe(true);
 		const sourceContent = readFileSync(source, 'utf-8');
 		expect(sourceContent.trim()).toBe('');
 	});
 
-	it('preserves task metadata after move', () => {
+	it('preserves task metadata after move', async () => {
 		const source = join(tempDir, 'source.md');
 		const target = join(tempDir, 'target.md');
 		writeFileSync(
@@ -297,7 +297,7 @@ describe('mdtask move', () => {
 		);
 		writeFileSync(target, '# Target\n');
 
-		run(['move', 'TSK-001', target]);
+		await run(['move', 'TSK-001', target]);
 
 		const content = readFileSync(target, 'utf-8');
 		expect(content).toContain(
