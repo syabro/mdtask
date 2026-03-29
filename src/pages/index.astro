@@ -101,12 +101,12 @@ import '../styles/global.css'
               Every task is a markdown checkbox with an ID and inline metadata. Standard syntax, no extensions. Write it by hand, parse it with grep, read it with any LLM.
             </p>
           </div>
-          <div class="relative bg-surface-container-lowest p-10 overflow-hidden group border border-outline-variant">
+          <div class="relative bg-surface-container-lowest p-6 md:p-10 overflow-hidden group border border-outline-variant">
             <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
               <span class="material-symbols-outlined text-[120px]">description</span>
             </div>
-            <div class="relative z-10 space-y-12">
-              <div class="flex flex-wrap items-center gap-2 text-on-background text-base">
+            <div class="relative z-10 space-y-6 md:space-y-10">
+              <div class="flex flex-wrap items-center gap-2 text-on-background text-[0.65rem] sm:text-xs md:text-base">
                 <span class="font-mono">- [ ]</span>
                 <span class="font-mono bg-tertiary-container text-on-tertiary-container px-1">CLI-042</span>
                 <span class="font-mono">Add export command</span>
@@ -115,7 +115,7 @@ import '../styles/global.css'
                 <span class="font-mono text-error">!high</span>
                 <span class="font-mono text-on-surface-variant">@status:in-progress</span>
               </div>
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 pt-10 border-t border-surface-container">
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 pt-6 md:pt-10 border-t border-surface-container">
                 <div class="space-y-1">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Status</p>
                   <p class="text-[0.875rem]">Checkbox</p>
