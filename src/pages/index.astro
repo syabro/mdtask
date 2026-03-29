@@ -67,26 +67,26 @@ import '../styles/global.css'
         </div>
 
         <div class="grid grid-cols-1 gap-4">
-          <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary shadow-2xl">
+          <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary shadow-2xl overflow-x-auto text-[0.7rem] sm:text-[0.75rem] md:text-[0.875rem]">
             <div class="flex justify-between items-center mb-4">
               <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">docs/features/search.md</span>
             </div>
-            <pre class="text-[0.875rem] text-on-surface-variant leading-loose"># Core Features
+            <pre class="text-on-surface-variant leading-loose min-w-max"># Core Features
 - [x] SRCH-001 Basic CLI parser
 - [ ] SRCH-002 Add priority filtering <span class="text-error">!high</span>
 - [ ] SRCH-003 Git-hook integration <span class="text-secondary">@version:1.2</span>
 - [ ] SRCH-004 Documentation sweep <span class="text-secondary">#docs</span></pre>
           </div>
-          <div class="bg-on-background p-6 shadow-2xl border border-surface-variant/10 font-mono text-sm">
+          <div class="bg-on-background p-6 shadow-2xl border border-surface-variant/10 font-mono text-[0.65rem] sm:text-[0.7rem] md:text-sm overflow-x-auto">
             <div class="flex justify-between items-center mb-4 border-b border-surface-variant/10 pb-2">
               <span class="text-[0.6875rem] uppercase tracking-widest text-surface/40">Terminal</span>
             </div>
-            <pre class="leading-loose"><span class="text-surface/30 select-none mr-2">$</span><span class="text-tertiary-fixed-dim font-bold">mdtask list</span>
-<span class="text-surface">ID      TITLE                       PRIO   TAGS</span>
-<span class="text-secondary-fixed-dim">SRCH-002</span>  Add priority filtering      <span class="text-error">HIGH</span>   -
-<span class="text-secondary-fixed-dim">SRCH-003</span>  Git-hook integration        -      @version:1.2
-<span class="text-secondary-fixed-dim">SRCH-004</span>  Documentation sweep         -      #docs
-<span class="text-surface/60">3 tasks pending.</span></pre>
+            <pre class="leading-loose min-w-max"><span class="text-surface/30 select-none mr-2">$</span><span class="text-tertiary-fixed-dim font-bold">mdtask list</span>
+<span class="text-surface/40">ID          TITLE                       PRIO   TAGS</span>
+<span class="text-tertiary-fixed-dim">SRCH-002</span>    <span class="text-surface/80">Add priority filtering</span>      <span class="text-error">HIGH</span>   <span class="text-surface/80">-</span>
+<span class="text-tertiary-fixed-dim">SRCH-003</span>    <span class="text-surface/80">Git-hook integration</span>        <span class="text-surface/80">-</span>      <span class="text-secondary-fixed-dim">@version:1.2</span>
+<span class="text-tertiary-fixed-dim">SRCH-004</span>    <span class="text-surface/80">Documentation sweep</span>         <span class="text-surface/80">-</span>      <span class="text-secondary-fixed-dim">#docs</span>
+<span class="text-surface/40">3 tasks pending.</span></pre>
           </div>
         </div>
       </section>
@@ -176,7 +176,7 @@ import '../styles/global.css'
                 <p class="text-on-surface-variant text-sm leading-relaxed mb-8 flex-grow">
                   <Fragment set:html={desc} />
                 </p>
-                <div class="bg-on-background p-5 font-mono text-[0.7rem] border border-surface-variant/10 h-24 flex items-center overflow-hidden">
+                <div class="bg-on-background p-5 font-mono text-[0.65rem] md:text-[0.7rem] border border-surface-variant/10 h-24 flex items-center overflow-hidden">
                   <pre class="text-surface/60 leading-tight"><Fragment set:html={code} /></pre>
                 </div>
               </div>
@@ -193,7 +193,7 @@ import '../styles/global.css'
             <h2 class="text-[2rem] font-bold tracking-tight">Everything you need, nothing you don't</h2>
           </div>
           
-          <div class="border border-surface-variant/10 bg-surface/5 p-6 md:p-10 font-mono text-sm overflow-x-auto">
+          <div class="border border-surface-variant/10 bg-surface/5 p-6 md:p-10 font-mono text-xs md:text-sm overflow-x-auto">
             <div class="flex flex-col gap-4 min-w-max">
               <div class="flex items-center gap-2">
                 <span class="text-surface/30 select-none">$</span>
@@ -265,7 +265,7 @@ import '../styles/global.css'
           <p class="text-xl text-on-surface-variant max-w-2xl leading-relaxed">
             Navigate to any project with markdown files and run the indexer. It will find existing checkboxes and offer to ID them.
           </p>
-          <div class="bg-on-background p-6 md:p-8 w-full font-mono text-sm border border-surface-variant/10">
+          <div class="bg-on-background p-6 md:p-8 w-full font-mono text-xs md:text-sm border border-surface-variant/10">
             <span class="text-surface/30 select-none mr-2">$</span>
             <code class="text-tertiary-fixed-dim font-bold">cd my-project && mdtask ids</code>
           </div>
