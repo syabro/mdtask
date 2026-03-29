@@ -168,3 +168,11 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
 
   Use Gemini, Codex, and general agent to research and propose architecture.
   Documentation only. Code refactoring is separate tasks.
+
+- [ ] PRJ-048 GitHub Actions: run tests on push
+  Add `.github/workflows/ci.yml` that runs `pnpm test` and `pnpm lint` on every push.
+
+- [ ] PRJ-049 GitHub Actions: npm publish on tag push
+  Add `.github/workflows/publish.yml` that publishes to npm on tag push (`v*`).
+  Use npm trusted publishing (OIDC, no token).
+  Keep `just release` as manual fallback.
