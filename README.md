@@ -2,6 +2,20 @@
 
 CLI task manager where Markdown is the single source of truth. No database, no server, no GUI.
 
+## Install
+
+```bash
+npm install -g mdtask
+```
+
+Or run without installing:
+
+```bash
+npx mdtask list
+```
+
+> **Note:** `npx mdtask` won't work from inside the mdtask source directory — npx conflicts with the local package. Use `pnpm mdtask` for development.
+
 ## Language
 
 English is the project language — docs, commit messages, code comments, and communication.
@@ -52,7 +66,11 @@ mdtask validate              # check task integrity
 
 ## Stack
 
-Node.js + TypeScript + ripgrep. Minimal dependencies.
+Node.js + TypeScript. Minimal dependencies.
+
+## License
+
+[PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0/) — free to use, modify, and distribute; competing products prohibited.
 
 ## Sources of Truth
 
