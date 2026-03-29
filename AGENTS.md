@@ -14,10 +14,11 @@ read @docs/spec-driven-development.md — spec-driven development, PRD structure
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project, test)
-- `.claude/skills/` — dev skills for working in the project (check, check-website, create-task, next-task)
+- `.claude/skills/` — dev skills for working in the project (check, create-task, next-task)
 - `docs/skills/mdtask/` — mdtask skill (symlinked to `.claude/skills/mdtask`)
 - `docs/mdtask.md` — goals, architecture
 - `docs/spec-driven-development.md` — development workflow
+- `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `just deploy` (wrangler → Cloudflare Pages)
 
 ## Example IDs in docs
 
