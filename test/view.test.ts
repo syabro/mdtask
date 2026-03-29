@@ -125,7 +125,7 @@ describe('mdtask view', () => {
 		expect(output).toContain('!high');
 	});
 
-	it('dedents body content', async () => {
+	it('indents body with 6 spaces', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
 			'- [ ] TSK-001 Task\n  Line 1\n    Nested line\n  Line 2\n',
@@ -134,9 +134,21 @@ describe('mdtask view', () => {
 		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-		expect(output).toContain('Line 1');
-		expect(output).toContain('  Nested line');
-		expect(output).toContain('Line 2');
+		expect(output).toContain('      Line 1');
+		expect(output).toContain('        Nested line');
+		expect(output).toContain('      Line 2');
+	});
+
+	it('does not indent empty lines in body', async () => {
+		writeFileSync(
+			join(tempDir, 'tasks.md'),
+			'- [ ] TSK-001 Task\n  Line 1\n\n  Line 2\n',
+		);
+
+		await run(['view', 'TSK-001']);
+
+		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(output).toContain('      Line 1\n\n      Line 2');
 	});
 
 	it('outputs shell metacharacters in body verbatim', async () => {

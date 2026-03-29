@@ -72,7 +72,7 @@ Multiple priorities use OR logic — tasks matching any of the specified priorit
 
 ## Viewing a task
 
-`mdtask view <ID>` prints the full task block — header line (raw from file) followed by the dedented body:
+`mdtask view <ID>` prints the full task block — header line (raw from file) followed by the body indented with 6 spaces (aligned with the title after `- [ ] `):
 
 ```bash
 mdtask view EXMPL-001
@@ -81,8 +81,8 @@ mdtask view EXMPL-001
 Output:
 ```
 - [ ] EXMPL-001 Fix the bug		@blocked_by:EXMPL-002 !high
-Description line 1.
-Description line 2.
+      Description line 1.
+      Description line 2.
 ```
 
 If the task is not found, exits with error code 1.
@@ -622,9 +622,14 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - `mdtask ids` stdout now prints `- [ ] ID Title` for open tasks and `- [x] ID Title` for done tasks
   - Reuses the same formatted string for both file mutation and stdout output
 
-- [ ] CLI-054 `mdtask view` body should be indented with 6 spaces
+- [x] CLI-054 `mdtask view` body should be indented with 6 spaces
   Currently `collectTaskBody` fully dedents the body (0 indent).
   Add 6-space indent prefix to every non-empty body line in view output.
+
+  **Implemented:**
+  - Body lines indented with 6 spaces in view output, aligned with title after `- [ ] `
+  - Empty lines in body remain unindented
+  - `collectTaskBody` unchanged — indent applied in `handleView` presentation layer
 
 - [ ] CLI-055 Rename `searchPath` to `basePath` across codebase
   Internal variable/parameter name `searchPath` should be `basePath` to match

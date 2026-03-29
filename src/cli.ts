@@ -174,7 +174,8 @@ function handleView(id: string, options: { path?: string }): void {
 
 	process.stdout.write(`${headerLine}\n`);
 	if (body) {
-		process.stdout.write(`${body}\n`);
+		const indented = body.replace(/^(?!$)/gm, '      ');
+		process.stdout.write(`${indented}\n`);
 	}
 }
 
