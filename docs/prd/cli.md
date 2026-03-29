@@ -2,6 +2,8 @@
 
 User-facing commands, security, edge cases, and testing infrastructure.
 
+All commands accept `--path <dir>` to override the base directory (default: `.`).
+
 ## Short numeric lookup
 
 All commands that accept a task ID also accept a plain number. The number is matched against the numeric part (NNN) of task IDs:
@@ -198,10 +200,10 @@ All external process invocations use `execFileSync` or `spawnSync` without `shel
   By default show only open `[ ]` tasks.
   Flag `--all` to show all including `[x]`.
   Colored output when tty (priority, status).
-  Output format: `[status] ID priority Title`
+  Output format: `[status] ID Title !priority`
   ```
-  [ ] TSK-123 !high Task name
-  [x] TSK-124      Another task
+  [ ] TSK-123 Task name !high
+  [x] TSK-124 Another task
   ```
 
   Tests:

@@ -38,7 +38,7 @@ Every feature must reduce user effort, not add configuration burden. Derive what
 ## Task Format
 
 ```markdown
-- [ ] EXMPL-123 Short task title		#feature !high @status:doing
+- [ ] EXMPL-123 Short task title #feature !high @status:doing
   Description body goes here.
   Can be multi-line.
 ```
@@ -50,7 +50,7 @@ Every feature must reduce user effort, not add configuration burden. Derive what
   - `@key:value` — properties
 - **Body**: indented lines after header
 
-## Commands
+## Brief commands intro:
 
 ```bash
 mdtask list                  # list open tasks
