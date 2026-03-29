@@ -14,8 +14,8 @@ read @docs/spec-driven-development.md — spec-driven development, PRD structure
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project, test)
-- `docs/skills/` — canonical skill files (mdtask, check, create-task, next-task)
-- `.claude/skills/` — symlinks to `docs/skills/`; edit `docs/skills/` only
+- `.claude/skills/` — dev skills for working in the project (check, check-website, create-task, next-task)
+- `docs/skills/mdtask/` — mdtask skill (symlinked to `.claude/skills/mdtask`)
 - `docs/mdtask.md` — goals, architecture
 - `docs/spec-driven-development.md` — development workflow
 
@@ -45,7 +45,6 @@ Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Cla
 
 `CLAUDE.md` is `ln -s AGENTS.md` — Claude Code only reads `CLAUDE.md`, not `AGENTS.md`.
 
-All Claude skill files under `.claude/skills/*/SKILL.md` are `ln -s` to `docs/skills/*/SKILL.md`.
-Update the files in `docs/skills/`, not the symlink paths.
+`.claude/skills/mdtask` is a symlink to `docs/skills/mdtask` — edit the source in `docs/skills/mdtask/`.
 
 read @docs/skills/next-task/SKILL.md to understand task loop
