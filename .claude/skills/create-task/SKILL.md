@@ -1,6 +1,6 @@
 ---
 name: create-task
-description: Load this skill when user wants to create a new task. Collects requirements, determines PRD location, formulates task text, and proposes for approval before saving.
+description: ALWAYS invoke this skill when user asks to create, add, or track a task — including indirect requests like "make a task for X", "add a task for this", "we need a task to...". Never create tasks manually by editing PRD files. Handles full workflow — collect requirements, determine PRD, propose text, get approval, save, assign ID, commit.
 disable-model-invocation: false
 ---
 
