@@ -613,3 +613,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
 - [ ] CLI-052 `mdtask ids` output should include `- [ ]` prefix
   Currently prints `KTL-001 Title`, should print `- [ ] KTL-001 Title`
   (or `- [x]` for done tasks) to match task format.
+
+- [ ] CLI-054 `mdtask view` body should be indented with 6 spaces
+  Currently `collectTaskBody` fully dedents the body (0 indent).
+  Add 6-space indent prefix to every non-empty body line in view output.
