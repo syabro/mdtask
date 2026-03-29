@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@layer components {
+  .terminal {
+    @apply bg-[#1a1918] border border-surface-variant/10 font-mono shadow-2xl;
+  }
+}
+
 @theme {
   --color-on-background: #2a2827;
   --color-secondary-container: #e8e3df;
