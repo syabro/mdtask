@@ -583,3 +583,8 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   Display file path and line number in `mdtask view` output header.
   Example: `docs/prd/cli.md:191`
   Users can see where the task lives without running `mdtask open`.
+
+- [ ] CLI-050 Interactive prefix prompt in `mdtask ids`
+  When `mdtask ids` encounters a file with no prefix source (no existing IDs, no seed prefix):
+  - If TTY: prompt user "Enter prefix for <filename>:" and use the input
+  - If not TTY (pipe): error as today
