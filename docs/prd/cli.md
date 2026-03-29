@@ -573,10 +573,12 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Priority replacement targets metadata only, not title text
   - 14 tests covering all token types, duplicates, errors, and edge cases
 
-- [ ] CLI-024 Default command — view task by ID
+- [ ] CLI-024 Default command shortcuts
+  `mdtask` without arguments defaults to `list`.
   `mdtask EXMPL-023` without a command name defaults to `view`.
-  Only when the first positional arg looks like a task ID (matches [A-Z]+-\d+ or plain number).
-  Otherwise fall through to help/error as usual.
+  Only when the sole argument matches a task ID (`[A-Z]+-\d+` or plain number).
+  If the argument is not a known command and not a valid ID pattern,
+  print an error message and show help.
 
 - [ ] CLI-045 Tabular output for `mdtask list`
   Render list output as a compact table with aligned columns: ID, Title, Priority, Tags, Properties.
