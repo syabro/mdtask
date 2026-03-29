@@ -41,8 +41,11 @@ import '../styles/global.css'
           <h1 class="text-[3.5rem] leading-[1.1] font-bold tracking-tight text-on-background">
             Your markdown files are already your task system
           </h1>
-          <p class="text-on-surface-variant text-lg max-w-xl leading-relaxed">
-            CLI task manager where checkboxes are the database. Tasks live inside your PRDs, READMEs, and notes. No server, no GUI, no second system. Humans and AI agents read the same format.
+          <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+            CLI task manager where checkboxes in your .md files are the database.
+          </p>
+          <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+            Tasks live inside your PRDs, READMEs, and notes. No server, no GUI, no second system. Humans and AI agents read the same format.
           </p>
           <div class="flex flex-col sm:flex-row gap-4">
             <div class="bg-surface-container flex items-center px-4 py-3 group cursor-pointer border-b-2 border-on-background">
@@ -56,7 +59,7 @@ import '../styles/global.css'
         </div>
 
         <div class="grid grid-cols-1 gap-4">
-          <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary">
+          <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary shadow-2xl">
             <div class="flex justify-between items-center mb-4">
               <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">docs/features/search.md</span>
               <div class="flex gap-1">
@@ -66,10 +69,10 @@ import '../styles/global.css'
               </div>
             </div>
             <pre class="text-[0.875rem] text-on-surface-variant leading-loose"># Core Features
-- [x] MD-001 Basic CLI parser
-- [ ] MD-002 Add priority filtering <span class="text-error">!high</span>
-- [ ] MD-003 Git-hook integration <span class="text-secondary">@version:1.2</span>
-- [ ] MD-004 Documentation sweep <span class="text-secondary">#docs</span></pre>
+- [x] SRCH-001 Basic CLI parser
+- [ ] SRCH-002 Add priority filtering <span class="text-error">!high</span>
+- [ ] SRCH-003 Git-hook integration <span class="text-secondary">@version:1.2</span>
+- [ ] SRCH-004 Documentation sweep <span class="text-secondary">#docs</span></pre>
           </div>
           <div class="bg-on-background p-6 shadow-2xl">
             <div class="flex justify-between items-center mb-4 border-b border-surface-dim/10 pb-2">
@@ -77,9 +80,9 @@ import '../styles/global.css'
             </div>
             <pre class="text-[0.875rem] text-tertiary-fixed-dim leading-loose">$ mdtask list --pending
 <span class="text-surface">ID      TITLE                       PRIO   TAGS</span>
-<span class="text-secondary-fixed-dim">MD-002</span>  Add priority filtering      <span class="text-error">HIGH</span>   -
-<span class="text-secondary-fixed-dim">MD-003</span>  Git-hook integration        -      v1.2
-<span class="text-secondary-fixed-dim">MD-004</span>  Documentation sweep         -      #docs
+<span class="text-secondary-fixed-dim">SRCH-002</span>  Add priority filtering      <span class="text-error">HIGH</span>   -
+<span class="text-secondary-fixed-dim">SRCH-003</span>  Git-hook integration        -      @version:1.2
+<span class="text-secondary-fixed-dim">SRCH-004</span>  Documentation sweep         -      #docs
 <span class="text-surface/60">3 tasks pending.</span></pre>
           </div>
         </div>
