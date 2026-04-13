@@ -20,6 +20,13 @@ lint-fix:
 dev:
     pnpm dev
 
+# Install mdtask skill to ~/.claude/skills
+install-skill:
+    rm -rf ~/.claude/skills/mdtask
+    mkdir -p ~/.claude/skills/mdtask
+    cp docs/skills/mdtask/* ~/.claude/skills/mdtask/
+    @echo "Installed mdtask skill to ~/.claude/skills/mdtask"
+
 # Release to npm (just release patch/minor/major)
 release bump="patch":
     @git diff-index --quiet HEAD || (echo "Error: uncommitted changes" && exit 1)
