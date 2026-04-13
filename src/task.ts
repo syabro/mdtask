@@ -19,7 +19,11 @@ export type Task = TaskHeader &
 		lineNumber: number;
 	};
 
-const TASK_HEADER_REGEX = /^- \[([ x])\] ([A-Z]+-\d+) (.*)$/;
+const ID_PREFIX = '[A-Z][A-Z0-9]*';
+const TASK_ID = `${ID_PREFIX}-\\d+`;
+
+const TASK_HEADER_REGEX = new RegExp(`^- \\[([ x])\\] (${TASK_ID}) (.*)$`);
+export const TASK_ID_REGEX = new RegExp(`^(?:${TASK_ID}|\\d+)$`);
 
 // Detects metadata start: beginning of string OR whitespace before #tag, !priority, or @key:value
 // Property keys allow hyphens and underscores: @build-status:value
@@ -109,11 +113,8 @@ export function collectTaskBody(lines: string[], headerIndex: number): string {
 	return dedented.join('\n');
 }
 
-// Matches unidentified task lines: `- [ ] Title` or `- [x] Title` without [A-Z]+-\d+ ID
 const UNIDENTIFIED_TASK_REGEX = /^- \[([ x])\] (.+)$/;
-
-// Matches seed prefix lines: `- [ ] CLI- Title` (prefix without number)
-const SEED_PREFIX_REGEX = /^- \[([ x])\] ([A-Z]+)- (.+)$/;
+const SEED_PREFIX_REGEX = new RegExp(`^- \\[([ x])\\] (${ID_PREFIX})- (.+)$`);
 
 export type UnidentifiedTask = {
 	status: TaskStatus;
@@ -165,7 +166,7 @@ export function extractNumericPart(id: string): number {
 	return match ? Number.parseInt(match[0], 10) : 0;
 }
 
-const EXACT_ID_REGEX = /^[A-Z]+-\d+$/;
+const EXACT_ID_REGEX = new RegExp(`^${TASK_ID}$`);
 const NUMERIC_REGEX = /^\d+$/;
 
 export function resolveTaskId(input: string, tasks: Task[]): Task {

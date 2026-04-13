@@ -21,6 +21,7 @@ import {
 	collectTaskBody,
 	extractNumericPart,
 	PRIORITY_REGEX,
+	TASK_ID_REGEX,
 	parseMetadata,
 	parseTaskHeader,
 	parseUnidentifiedTaskLine,
@@ -863,7 +864,6 @@ async function handleIds(options: { path?: string }): Promise<void> {
 	}
 }
 
-const TASK_ID_REGEX = /^(?:[A-Z]+-\d+|\d+)$/;
 const KNOWN_COMMANDS = new Set([
 	'list',
 	'view',
