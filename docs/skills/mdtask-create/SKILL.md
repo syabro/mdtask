@@ -1,10 +1,10 @@
 ---
-name: create-task
+name: mdtask-create
 description: ALWAYS invoke this skill when user asks to create, add, or track a task — including indirect requests like "make a task for X", "add a task for this", "we need a task to...". Never create tasks manually by editing PRD files. Handles full workflow — collect requirements, determine PRD, propose text, get approval, save, assign ID, commit.
 disable-model-invocation: false
 ---
 
-# /create-task — Task creation workflow
+# /mdtask-create — Task creation workflow
 
 ## When to use
 
@@ -99,14 +99,14 @@ If user confirms:
 
 **For existing PRD:**
 1. Append task to end of file (after existing tasks)
-2. Run `pnpm mdtask ids` — this auto-assigns a globally unique ID
+2. Run `pnpx mdtask ids` — this auto-assigns a globally unique ID
 3. Show the assigned ID and line where it was added
 4. Ask: **"Commit?"**
 
 **For new PRD:** (read @docs/spec-driven-development.md for PRD structure)
 1. Create file with header: `# <NAME> — mdtask` + blank line + `## Tasks` + blank line
 2. Append task after `## Tasks`
-3. Run `pnpm mdtask ids` — auto-assigns ID using seed prefix or existing tasks
+3. Run `pnpx mdtask ids` — auto-assigns ID using seed prefix or existing tasks
 4. Show file path, assigned ID, and line
 5. Ask: **"Commit?"**
 

@@ -1,12 +1,12 @@
 ---
-name: next-task
+name: mdtask-next
 description: Work on the next task from the project — pick, plan, review, execute, review code, commit
 disable-model-invocation: false
 ---
 
-# /next-task — Task workflow
+# /mdtask-next — Task workflow
 
-> **CRITICAL: ALWAYS use `pnpm mdtask <command>` CLI to work with tasks. NEVER read or parse markdown task files manually.**
+> **CRITICAL: ALWAYS use `pnpx mdtask <command>` CLI to work with tasks. NEVER read or parse markdown task files manually.**
 
 ## Flow
 
@@ -21,9 +21,9 @@ After reading this file you must say "I'll do all the steps as it described" and
 
 ### Step 1 — Pick a task
 
-**ALWAYS use `pnpm mdtask` CLI — NEVER parse markdown files manually.**
+**ALWAYS use `pnpx mdtask` CLI — NEVER parse markdown files manually.**
 
-1. Run `pnpm mdtask list` to get all open tasks
+1. Run `pnpx mdtask list` to get all open tasks
    - Tasks with unresolved `@blocked_by:ID` are still listed — skip them when picking
 2. If user provided scope (tag, area, specific task) — filter by it. Otherwise pick the most logical next task.
 3. In `--interactive` mode: present matching tasks and ask user to choose.
@@ -65,7 +65,7 @@ After reading this file you must say "I'll do all the steps as it described" and
 2. Ask: correctness, edge cases, style, security (blocker/warning/nitpick)
 3. Review code yourself
 4. Fix issues found
-5. You can create the tasks to fix later if business logic is unclear to you with #needhuman tag using /create-task skill
+5. You can create the tasks to fix later if business logic is unclear to you with #needhuman tag using /mdtask-create skill
 
 ### Step 6 — Final validation
 

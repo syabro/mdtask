@@ -20,12 +20,37 @@ lint-fix:
 dev:
     pnpm dev
 
+# Install all project skills to ~/.claude/skills
+install-skills: install-skill-mdtask install-skill-mdtask-create install-skill-mdtask-next install-skill-check
+    @echo "All skills installed"
+
 # Install mdtask skill to ~/.claude/skills
-install-skill:
+install-skill-mdtask:
     rm -rf ~/.claude/skills/mdtask
     mkdir -p ~/.claude/skills/mdtask
     cp docs/skills/mdtask/* ~/.claude/skills/mdtask/
-    @echo "Installed mdtask skill to ~/.claude/skills/mdtask"
+    @echo "Installed mdtask skill"
+
+# Install mdtask-create skill to ~/.claude/skills
+install-skill-mdtask-create:
+    rm -rf ~/.claude/skills/mdtask-create
+    mkdir -p ~/.claude/skills/mdtask-create
+    cp docs/skills/mdtask-create/* ~/.claude/skills/mdtask-create/
+    @echo "Installed mdtask-create skill"
+
+# Install mdtask-next skill to ~/.claude/skills
+install-skill-mdtask-next:
+    rm -rf ~/.claude/skills/mdtask-next
+    mkdir -p ~/.claude/skills/mdtask-next
+    cp docs/skills/mdtask-next/* ~/.claude/skills/mdtask-next/
+    @echo "Installed mdtask-next skill"
+
+# Install check skill to ~/.claude/skills
+install-skill-check:
+    rm -rf ~/.claude/skills/check
+    mkdir -p ~/.claude/skills/check
+    cp docs/skills/check/* ~/.claude/skills/check/
+    @echo "Installed check skill"
 
 # Release to npm (just release patch/minor/major)
 release bump="patch":

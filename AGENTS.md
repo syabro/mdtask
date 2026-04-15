@@ -16,8 +16,7 @@ read @docs/spec-driven-development.md — spec-driven development, PRD structure
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project, test)
-- `.claude/skills/` — dev skills for working in the project (check, create-task, next-task)
-- `docs/skills/mdtask/` — mdtask skill (symlinked to `.claude/skills/mdtask`)
+- `docs/skills/` — dev skills for working in the project (check, mdtask-create, mdtask-next, mdtask); `.claude/skills/` contains symlinks
 - `docs/mdtask.md` — goals, architecture
 - `docs/spec-driven-development.md` — development workflow
 - `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `just deploy` (wrangler → Cloudflare Pages)
@@ -48,6 +47,6 @@ Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Cla
 
 `CLAUDE.md` is `ln -s AGENTS.md` — Claude Code only reads `CLAUDE.md`, not `AGENTS.md`.
 
-`.claude/skills/mdtask` is a symlink to `docs/skills/mdtask` — edit the source in `docs/skills/mdtask/`.
+All skills live in `docs/skills/` — `.claude/skills/` contains only symlinks.
 
-read @docs/skills/next-task/SKILL.md to understand task loop
+read @docs/skills/mdtask-next/SKILL.md to understand task loop
