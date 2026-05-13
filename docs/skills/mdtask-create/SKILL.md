@@ -66,7 +66,7 @@ Include metadata (`#tag`, `!priority`, `@blocked_by`) only if relevant or reques
 Three ways to write a task header:
 
 ```
-- [ ] Short title                     # no ID — mdtask ids derives prefix from file
+- [ ] Short title                     # no ID — mdtask ids derives prefix from file or --prefix
 - [ ] EXMPL- Short title             # seed prefix — for new files with no existing tasks
 - [ ] EXMPL-025 Short title          # full ID — manual assignment
 ```
@@ -99,14 +99,14 @@ If user confirms:
 
 **For existing PRD:**
 1. Append task to end of file (after existing tasks)
-2. Run `pnpx mdtask ids` — this auto-assigns a globally unique ID
+2. Run `pnpm mdtask ids --path <file>`; add `--prefix <PREFIX>` if the file has no prefix source
 3. Show the assigned ID and line where it was added
 4. Ask: **"Commit?"**
 
 **For new PRD:** (read @docs/spec-driven-development.md for PRD structure)
 1. Create file with header: `# <NAME> — mdtask` + blank line + `## Tasks` + blank line
 2. Append task after `## Tasks`
-3. Run `pnpx mdtask ids` — auto-assigns ID using seed prefix or existing tasks
+3. Run `pnpm mdtask ids --path <file> --prefix <PREFIX>`
 4. Show file path, assigned ID, and line
 5. Ask: **"Commit?"**
 
@@ -188,8 +188,7 @@ Agent: Got it. This doesn't quite fit existing PRDs:
 - task.md — parsing, not output format
 
 Suggesting new PRD: docs/prd/export.md with prefix EXP.
-The first task needs a seed prefix: `- [ ] EXP- JSON export`
-After that, `mdtask ids` will auto-assign the ID.
+The first task can use a seed prefix: `- [ ] EXP- JSON export`, or `mdtask ids --path <file> --prefix EXP` can supply it.
 
 Does this work or do you want something else?
 
@@ -208,6 +207,6 @@ Does this work?
 
 User: Yes
 
-Agent: Creating file, saving task, running `mdtask ids`. Assigned ID: OUT-045.
+Agent: Creating file, saving task, running `mdtask ids --path docs/prd/out.md --prefix OUT`. Assigned ID: OUT-045.
 Commit?
 ```

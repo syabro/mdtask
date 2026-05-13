@@ -21,54 +21,63 @@ import {
 	collectTaskBody,
 	extractNumericPart,
 	PRIORITY_REGEX,
-	TASK_ID_REGEX,
 	parseMetadata,
 	parseTaskHeader,
 	parseUnidentifiedTaskLine,
 	resolveTaskId,
+	TASK_ID_REGEX,
 	type Task,
 	type UnidentifiedTask,
 	VALID_PRIORITIES,
 } from './task.js';
+
+function readFileTasks(file: string, excluded?: string[]): Task[] {
+	const content = readFileSync(file, 'utf-8');
+	const lines = content.split('\n');
+	const tasks: Task[] = [];
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+		const header = parseTaskHeader(line);
+		if (header) {
+			if (excluded?.some((prefix) => header.id.startsWith(prefix))) {
+				continue;
+			}
+			const metadata = parseMetadata(header.rawMetadata);
+			tasks.push({
+				status: header.status,
+				id: header.id,
+				title: header.title,
+				rawMetadata: header.rawMetadata,
+				tags: metadata.tags,
+				priority: metadata.priority,
+				properties: metadata.properties,
+				filePath: file,
+				lineNumber: i + 1,
+			});
+		}
+	}
+
+	return tasks;
+}
+
+function taskFiles(basePath?: string, filesConfig?: FilesConfig): string[] {
+	const includePatterns = filesConfig?.include;
+	const excludePatterns = filesConfig?.exclude;
+	return findMarkdownFiles({ basePath, includePatterns, excludePatterns });
+}
 
 function collectTasks(
 	basePath?: string,
 	filesConfig?: FilesConfig,
 	excludePrefixes?: string[],
 ): Task[] {
-	const files = findMarkdownFiles({
-		basePath,
-		includePatterns: filesConfig?.include,
-		excludePatterns: filesConfig?.exclude,
-	});
+	const files = taskFiles(basePath, filesConfig);
 	const tasks: Task[] = [];
 
 	for (const filePath of files) {
 		try {
-			const content = readFileSync(filePath, 'utf-8');
-			const lines = content.split('\n');
-
-			for (let i = 0; i < lines.length; i++) {
-				const line = lines[i];
-				const header = parseTaskHeader(line);
-				if (header) {
-					if (excludePrefixes?.some((prefix) => header.id.startsWith(prefix))) {
-						continue;
-					}
-					const metadata = parseMetadata(header.rawMetadata);
-					tasks.push({
-						status: header.status,
-						id: header.id,
-						title: header.title,
-						rawMetadata: header.rawMetadata,
-						tags: metadata.tags,
-						priority: metadata.priority,
-						properties: metadata.properties,
-						filePath,
-						lineNumber: i + 1,
-					});
-				}
-			}
+			tasks.push(...readFileTasks(filePath, excludePrefixes));
 		} catch (err) {
 			process.stderr.write(
 				`mdtask: warning: could not read ${filePath}: ${err}\n`,
@@ -696,14 +705,77 @@ function handleSet(args: string[], options: { path?: string }): void {
 	}
 }
 
-async function handleIds(options: { path?: string }): Promise<void> {
+function normalizeIdsPrefix(input: string | undefined): string | null {
+	if (input === undefined) return null;
+
+	const prefix = input.trim().toUpperCase();
+	return /^[A-Z][A-Z0-9]*$/.test(prefix) ? prefix : null;
+}
+
+type IdsPath = { base?: string; file?: string; error?: string };
+
+function resolveIdsPath(input: string | undefined): IdsPath {
+	if (input === undefined || input === '') return {};
+
+	const resolved = resolve(input);
+	try {
+		const stats = statSync(resolved);
+		if (stats.isFile()) return { file: resolved };
+		if (stats.isDirectory()) return { base: input };
+		return { error: input };
+	} catch {
+		return { error: input };
+	}
+}
+
+function sameFile(a: string, b: string): boolean {
+	try {
+		return realpathSync(a) === realpathSync(b);
+	} catch {
+		return resolve(a) === resolve(b);
+	}
+}
+
+function hasTaskFromFile(tasks: Task[], filePath: string): boolean {
+	return tasks.some((task) => sameFile(task.filePath, filePath));
+}
+
+type IdsOptions = { path?: string; prefix?: string };
+
+async function handleIds(options: IdsOptions): Promise<void> {
 	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
-	const existingTasks = collectTasks(
-		basePath,
-		config?.files,
-		config?.excludePrefixes,
-	);
+	const explicitPrefix = normalizeIdsPrefix(options.prefix);
+	if (options.prefix !== undefined && !explicitPrefix) {
+		process.stderr.write(
+			`mdtask: invalid prefix "${options.prefix}" — must be uppercase alphanumeric starting with a letter\n`,
+		);
+		process.exit(1);
+		return;
+	}
+
+	const filesConfig = config?.files;
+	const excludePrefixes = config?.excludePrefixes;
+	const idsPath = resolveIdsPath(options.path);
+	if (idsPath.error) {
+		process.stderr.write(
+			`mdtask: --path ${idsPath.error} does not exist or is not a file/directory\n`,
+		);
+		process.exit(1);
+		return;
+	}
+
+	const targetFile = idsPath.file;
+	const basePath = resolveBasePath(idsPath.base, config);
+	const existingTasks = collectTasks(basePath, filesConfig, excludePrefixes);
+	if (targetFile && !hasTaskFromFile(existingTasks, targetFile)) {
+		try {
+			existingTasks.push(...readFileTasks(targetFile, excludePrefixes));
+		} catch (err) {
+			process.stderr.write(
+				`mdtask: warning: could not read ${targetFile}: ${err}\n`,
+			);
+		}
+	}
 
 	// Find global max NNN across all existing IDs
 	let globalMax = 0;
@@ -731,12 +803,8 @@ async function handleIds(options: { path?: string }): Promise<void> {
 		}
 	}
 
-	// Scan all files for unidentified tasks
-	const files = findMarkdownFiles({
-		basePath,
-		includePatterns: config?.files?.include,
-		excludePatterns: config?.files?.exclude,
-	});
+	// Scan target files for unidentified tasks.
+	const files = targetFile ? [targetFile] : taskFiles(basePath, filesConfig);
 
 	// Determine minimum padding width from existing IDs (at least 3)
 	let padWidth = 3;
@@ -779,7 +847,8 @@ async function handleIds(options: { path?: string }): Promise<void> {
 
 		// Determine prefix for this file
 		// 1. From existing IDed tasks in this file
-		const fileExisting = existingTasks.filter((t) => t.filePath === filePath);
+		const sameTargetFile = (task: Task) => sameFile(task.filePath, filePath);
+		const fileExisting = existingTasks.filter(sameTargetFile);
 		let filePrefix: string | null = null;
 
 		if (fileExisting.length > 0) {
@@ -805,10 +874,16 @@ async function handleIds(options: { path?: string }): Promise<void> {
 			}
 		}
 
+		if (!filePrefix && explicitPrefix) {
+			filePrefix = explicitPrefix;
+		}
+
 		if (!filePrefix) {
 			if (!process.stdin.isTTY) {
+				const missing = unidentified[0];
+				const displayPath = relative(process.cwd(), filePath) || filePath;
 				process.stderr.write(
-					`mdtask: no prefix found for ${filePath} — add a task with an ID or a seed line like '- [ ] PRJ- Task title'\n`,
+					`mdtask: ${displayPath}:${missing.lineIndex + 1}: no prefix found for task "${missing.rawLine}" — add a task with an ID, use a seed line like '- [ ] PRJ- Task title', or pass --prefix PRJ\n`,
 				);
 				process.exit(1);
 				return;
@@ -821,18 +896,17 @@ async function handleIds(options: { path?: string }): Promise<void> {
 				});
 			}
 			const displayPath = relative(process.cwd(), filePath) || filePath;
-			const answer = (await iface.question(`Enter prefix for ${displayPath}: `))
-				.trim()
-				.toUpperCase();
-			if (!answer || !/^[A-Z][A-Z0-9]*$/.test(answer)) {
+			const answer = await iface.question(`Enter prefix for ${displayPath}: `);
+			const normalizedAnswer = normalizeIdsPrefix(answer);
+			if (!normalizedAnswer) {
 				iface.close();
 				process.stderr.write(
-					`mdtask: invalid prefix "${answer}" — must be uppercase alphanumeric starting with a letter\n`,
+					`mdtask: invalid prefix "${answer.trim().toUpperCase()}" — must be uppercase alphanumeric starting with a letter\n`,
 				);
 				process.exit(1);
 				return;
 			}
-			filePrefix = answer;
+			filePrefix = normalizedAnswer;
 		}
 
 		workItems.push({ filePath, lines, unidentified, filePrefix });
@@ -919,6 +993,7 @@ export async function run(args: string[]): Promise<number> {
 
 	cli
 		.command('ids', 'Auto-assign IDs to unidentified tasks')
+		.option('--prefix <prefix>', 'Fallback prefix for ID assignment')
 		.action((options) => {
 			return handleIds(options);
 		});

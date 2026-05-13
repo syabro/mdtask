@@ -61,6 +61,7 @@ mdtask open <ID>             # open task in $EDITOR at line
 mdtask move <ID> <file>      # move task to another file
 mdtask set <ID...> <tokens>  # add metadata to tasks
 mdtask ids                   # auto-assign IDs to unidentified tasks
+mdtask ids --path <file> --prefix PRJ
 mdtask validate              # check task integrity
 ```
 

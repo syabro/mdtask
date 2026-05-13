@@ -315,6 +315,86 @@ describe('mdtask ids', () => {
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
+	it('limits --path file assignment to that file', async () => {
+		const target = join(tempDir, 'target.md');
+		const unrelated = join(tempDir, 'unrelated.md');
+		writeFileSync(target, '- [ ] CLI-001 Existing\n- [ ] New task\n');
+		writeFileSync(unrelated, '- [ ] Task with no prefix source\n');
+
+		await run(['ids', '--path', target]);
+
+		const targetContent = readFileSync(target, 'utf-8');
+		const unrelatedContent = readFileSync(unrelated, 'utf-8');
+		expect(targetContent).toContain('- [ ] CLI-002 New task');
+		expect(unrelatedContent).toBe('- [ ] Task with no prefix source\n');
+		expect(exitSpy).not.toHaveBeenCalled();
+	});
+
+	it('uses --prefix when a targeted file has no prefix source', async () => {
+		const target = join(tempDir, 'target.md');
+		const existing = join(tempDir, 'existing.md');
+		writeFileSync(target, '- [ ] Needs explicit prefix\n');
+		writeFileSync(existing, '- [ ] CLI-010 Existing task\n');
+
+		await run(['ids', '--path', target, '--prefix', 'DLY']);
+
+		const content = readFileSync(target, 'utf-8');
+		expect(content).toContain('- [ ] DLY-011 Needs explicit prefix');
+		expect(exitSpy).not.toHaveBeenCalled();
+	});
+
+	it('does not let --prefix override a file prefix', async () => {
+		const target = join(tempDir, 'target.md');
+		writeFileSync(target, '- [ ] CLI-001 Existing\n- [ ] New task\n');
+
+		await run(['ids', '--path', target, '--prefix', 'DLY']);
+
+		const content = readFileSync(target, 'utf-8');
+		expect(content).toContain('- [ ] CLI-002 New task');
+		expect(content).not.toContain('DLY-002');
+	});
+
+	it('accepts lowercase --prefix input and uppercases it', async () => {
+		const target = join(tempDir, 'target.md');
+		writeFileSync(target, '- [ ] Needs explicit prefix\n');
+
+		await run(['ids', '--path', target, '--prefix', 'dly']);
+
+		const content = readFileSync(target, 'utf-8');
+		expect(content).toContain('- [ ] DLY-001 Needs explicit prefix');
+	});
+
+	it('errors on invalid --prefix input', async () => {
+		const target = join(tempDir, 'target.md');
+		writeFileSync(target, '- [ ] Needs explicit prefix\n');
+
+		await run(['ids', '--path', target, '--prefix', 'AB-CD']);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('invalid prefix');
+		expect(exitSpy).toHaveBeenCalledWith(1);
+	});
+
+	it('errors when --path points to a missing file', async () => {
+		await run(['ids', '--path', join(tempDir, 'missing.md')]);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('does not exist');
+		expect(exitSpy).toHaveBeenCalledWith(1);
+	});
+
+	it('reports the exact task location when no prefix can be found', async () => {
+		const target = join(tempDir, 'target.md');
+		writeFileSync(target, '# Tasks\n\n- [ ] Needs prefix\n');
+
+		await run(['ids', '--path', target]);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('target.md:3');
+		expect(stderr).toContain('- [ ] Needs prefix');
+		expect(exitSpy).toHaveBeenCalledWith(1);
+	});
+
 	it('does not touch indented checkbox lines', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(file, '- [ ] CLI-001 Parent task\n  - [ ] Not a real task\n');

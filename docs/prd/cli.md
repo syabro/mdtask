@@ -195,12 +195,17 @@ Metadata is appended after `\t\t` separator. If no metadata exists, `\t\t` is ad
 `mdtask ids` scans all files for tasks without IDs and assigns globally unique `PREFIX-NNN`:
 
 ```bash
-mdtask ids                   # assign IDs to all unidentified tasks
+mdtask ids                                  # assign IDs to all unidentified tasks
+mdtask ids --path docs/prd/cli.md           # assign IDs only in one file
+mdtask ids --path docs/prd/notes.md --prefix NTS
 ```
 
-Prefix is derived automatically — no configuration needed:
+When `--path` points to a file, only that file is changed. Existing IDs from the normal base are still read so NNN stays globally unique.
+
+Prefix is derived automatically:
 1. From existing IDed tasks in the same file (most frequent prefix wins)
 2. From a seed line like `- [ ] CLI- Task title` (prefix without number)
+3. From `--prefix PREFIX` when no file or seed prefix exists
 
 NNN is globally unique across all prefixes. If the highest existing number is 023 (from any prefix), the next assigned ID will be 024.
 
@@ -210,9 +215,9 @@ Duplicate numeric parts across prefixes (e.g. `CLI-005` and `TSK-005`) are repor
 
 Assigned IDs are printed to stdout in task format: `- [ ] KTL-001 Basic boiling` (or `- [x]` for done tasks).
 
-If a file has unidentified tasks but no prefix source:
+If a file has unidentified tasks but no prefix source and `--prefix` is not set:
 - **Interactive (TTY):** prompts `Enter prefix for <filename>:` (relative path) — input is trimmed, uppercased, and validated (`A-Z0-9`, must start with a letter)
-- **Pipe (non-TTY):** exits with an error without modifying any files
+- **Pipe (non-TTY):** exits with an error that includes the file, line, and task text, without modifying any files
 
 ## Shell safety
 
@@ -710,3 +715,14 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Renamed all `searchPath` variables/params in src/cli.ts (collectTasks + 8 handlers)
   - Updated `--path` help text to "Base directory for tasks"
   - Updated all test references in test/files.test.ts and test/config.test.ts
+
+- [x] CLI-056 Scope `mdtask ids --path <file>` and add `--prefix`
+  `mdtask ids --path <file>` should assign IDs only in that file.
+  `--prefix PREFIX` should supply a fallback when no prefix can be derived.
+  Missing-prefix errors should name the exact task location.
+
+  **Implemented:**
+  - `--path` pointing at a file now limits mutations to that file while preserving global numeric IDs
+  - Added `--prefix` fallback for files with no existing ID or seed prefix
+  - Missing-prefix errors include file, line, and task text
+  - Covered targeted file, explicit prefix, invalid prefix, and unrelated-file cases in tests

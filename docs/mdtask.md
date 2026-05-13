@@ -76,9 +76,9 @@ Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown;
 ### 7.2 Auto-assigning IDs
 
 `mdtask ids` scans files for tasks without IDs and assigns `PREFIX-NNN`:
-- Prefix derived from existing tasks in the file, or from a seed line (`- [ ] CLI- Title`)
+- Prefix derived from existing tasks in the file, from a seed line (`- [ ] CLI- Title`), or from `--prefix PREFIX`
+- `mdtask ids --path <file>` changes only that file
 - NNN continues from the global maximum across all prefixes
-- No configuration needed — prefix lives in the files themselves
 
 ### 7.3 Forbidden
 

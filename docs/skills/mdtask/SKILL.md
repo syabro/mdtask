@@ -27,7 +27,7 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 ```
 
 - Checkbox: `[ ]` (open) or `[x]` (done)
-- ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `CLI-022`, `TSK-038`). Auto-assigned by `mdtask ids`. Short numeric lookup: `mdtask view 22`.
+- ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `CLI-022`, `TSK-038`). Auto-assigned by `mdtask ids`; use `mdtask ids --path <file> --prefix PREFIX` when a file has no prefix source. Short numeric lookup: `mdtask view 22`.
 - Title: free text until first metadata token or end of line
 - ` ` (space) or `\t\t` (double tab): optional separator before metadata
 
