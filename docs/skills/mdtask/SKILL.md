@@ -54,6 +54,27 @@ Appear on the header line. First `#`, `!`, or `@` marks the start of metadata.
 - Tasks can be grouped under markdown headings for organization
 - No indexes, no database — files are the source of truth
 
+## .mdtaskrc
+
+`.mdtaskrc` is a JSON file. `mdtask` looks for it from the current directory upward.
+Add it when you need to set the default task directory, filter scanned files, or hide example prefixes.
+
+```json
+{
+  "path": "docs/prd",
+  "files": {
+    "include": ["docs/prd/**"],
+    "exclude": ["docs/skills/**"]
+  },
+  "excludePrefixes": ["EXMPL", "KTL"]
+}
+```
+
+- `path`: base directory for task files
+- `files.include`: glob patterns to scan
+- `files.exclude`: glob patterns to skip
+- `excludePrefixes`: ID prefixes hidden from all commands
+
 ## Examples
 
 Minimal task:

@@ -35,17 +35,6 @@ Never proceed with assumptions. Ask until 100% clear.
 
 First, decide if the task fits existing PRDs or needs a new one.
 
-**Existing PRDs:**
-
-| Prefix | PRD file | Scope |
-|--------|----------|-------|
-| CLI | `docs/prd/cli.md` | Commands, output, flags, help |
-| TSK | `docs/prd/task.md` | Parsing, task format, body collection |
-| FLS | `docs/prd/files.md` | File discovery, search scope |
-| CFG | `docs/prd/config.md` | Configuration, env vars, rc files |
-| PRJ | `docs/prd/project.md` | Project structure, dependencies |
-| TST | `docs/prd/test.md` | Testing infrastructure |
-
 **When to create new PRD:**
 - Feature that doesn't fit existing categories (e.g., "export", "sync", "web UI")
 - New major subsystem
