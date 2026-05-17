@@ -21,7 +21,7 @@ dev:
     pnpm dev
 
 # Install all project skills to ~/.agents/skills
-install-skills: install-skill-mdtask install-skill-mdtask-create install-skill-mdtask-next install-skill-check
+install-skills: install-skill-mdtask install-skill-mdtask-create install-skill-mdtask-next
     @echo "All skills installed"
 
 # Install mdtask skill to ~/.agents/skills
@@ -46,11 +46,11 @@ install-skill-mdtask-next:
     @echo "Installed mdtask-next skill"
 
 # Install check skill to ~/.agents/skills
-install-skill-check:
-    rm -rf ~/.agents/skills/check
-    mkdir -p ~/.agents/skills/check
-    cp docs/skills/check/* ~/.agents/skills/check/
-    @echo "Installed check skill"
+# install-skill-check:
+#    rm -rf ~/.agents/skills/check
+#    mkdir -p ~/.agents/skills/check
+#    cp docs/skills/check/* ~/.agents/skills/check/
+#    @echo "Installed check skill"
 
 # Release to npm (just release patch/minor/major)
 release bump="patch":
