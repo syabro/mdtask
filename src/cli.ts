@@ -941,6 +941,7 @@ async function handleIds(options: IdsOptions): Promise<void> {
 const KNOWN_COMMANDS = new Set([
 	'list',
 	'view',
+	'show',
 	'done',
 	'open',
 	'move',
@@ -963,9 +964,12 @@ export async function run(args: string[]): Promise<number> {
 			handleList(filters, options);
 		});
 
-	cli.command('view <id>', 'View task details').action((id, options) => {
-		handleView(id, options);
-	});
+	cli
+		.command('view <id>', 'View task details')
+		.alias('show')
+		.action((id, options) => {
+			handleView(id, options);
+		});
 
 	cli.command('done <id>', 'Toggle task done/open').action((id, options) => {
 		handleDone(id, options);

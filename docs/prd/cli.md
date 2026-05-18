@@ -95,10 +95,11 @@ Done unidentified tasks are hidden by default; use `--all` to include them. The 
 
 ## Viewing a task
 
-`mdtask view <ID>` prints the file location and the full task block — header line (raw from file) followed by the body indented with 6 spaces (aligned with the title after `- [ ] `):
+`mdtask view <ID>` (alias: `mdtask show <ID>`) prints the file location and the full task block — header line (raw from file) followed by the body indented with 6 spaces (aligned with the title after `- [ ] `):
 
 ```bash
 mdtask view EXMPL-001
+mdtask show EXMPL-001    # same thing
 ```
 
 Output:
