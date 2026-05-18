@@ -63,17 +63,19 @@ Add it when you need to set the default task directory, filter scanned files, or
 {
   "path": "docs/prd",
   "files": {
-    "include": ["docs/prd/**"],
-    "exclude": ["docs/skills/**"]
+    "include": ["**/*.md"],
+    "exclude": ["archive/**"]
   },
   "excludePrefixes": ["EXMPL", "KTL"]
 }
 ```
 
 - `path`: base directory for task files
-- `files.include`: glob patterns to scan
-- `files.exclude`: glob patterns to skip
+- `files.include`: glob patterns to scan, relative to `path`
+- `files.exclude`: glob patterns to skip, relative to `path`
 - `excludePrefixes`: ID prefixes hidden from all commands
+
+If `path` is `docs/prd`, use `files.include: ["**/*.md"]`, not `["docs/prd/**"]`.
 
 ## Examples
 
