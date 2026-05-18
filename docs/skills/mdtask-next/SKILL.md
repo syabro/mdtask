@@ -94,7 +94,7 @@ Normal mode:
 
 ### Step 7 — Update PRD (TWO places - BOTH required)
 
-> read @docs/spec-driven-development.md for the full workflow with examples.
+> read @./spec-driven-development.md for the full workflow with examples.
 
 **Place 1 — Feature description (before ## Tasks):**
 - Find the markdown file where the task lives (e.g., `docs/prd/config.md`)

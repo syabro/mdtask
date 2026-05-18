@@ -92,7 +92,7 @@ If user confirms:
 3. Show the assigned ID and line where it was added
 4. Ask: **"Commit?"**
 
-**For new PRD:** (read @docs/spec-driven-development.md for PRD structure)
+**For new PRD:**
 1. Create file with header: `# <NAME> — mdtask` + blank line + `## Tasks` + blank line
 2. Append task after `## Tasks`
 3. Run `pnpm mdtask ids --path <file> --prefix <PREFIX>`
