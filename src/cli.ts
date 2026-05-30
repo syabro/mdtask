@@ -960,7 +960,10 @@ export async function run(args: string[]): Promise<number> {
 	);
 
 	cli
-		.command('list [...filters]', 'List tasks')
+		.command(
+			'list [...filters]',
+			'List tasks. Filter by #tag and/or !priority — quote them: mdtask list "#backend" "!high"',
+		)
 		.option('--all', 'Show all tasks including done')
 		.option('--sort <field>', 'Sort tasks (e.g. --sort=priority)')
 		.action((filters: string[], options) => {
@@ -993,13 +996,19 @@ export async function run(args: string[]): Promise<number> {
 	});
 
 	cli
-		.command('set <...args>', 'Add metadata to tasks')
+		.command(
+			'set <...args>',
+			'Add metadata to tasks: #tag, !priority, @key:value',
+		)
 		.action((args: string[], options) => {
 			handleSet(args, options);
 		});
 
 	cli
-		.command('ids', 'Auto-assign IDs to unidentified tasks')
+		.command(
+			'ids',
+			'Auto-assign IDs to unidentified tasks (--path <file> limits assignment to one file)',
+		)
 		.option('--prefix <prefix>', 'Fallback prefix for ID assignment')
 		.action((options) => {
 			return handleIds(options);

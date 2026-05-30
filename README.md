@@ -55,6 +55,8 @@ Every feature must reduce user effort, not add configuration burden. Derive what
 ```bash
 mdtask list                  # list open tasks
 mdtask list --all            # all tasks including done
+mdtask list '#backend'       # filter by tag (quote: # is a shell comment)
+mdtask list '!high'          # filter by priority
 mdtask view <ID>             # print full task block by ID
 mdtask done <ID>             # toggle task [ ] ↔ [x]
 mdtask open <ID>             # open task in $EDITOR at line
@@ -64,6 +66,14 @@ mdtask ids                   # auto-assign IDs to unidentified tasks
 mdtask ids --path <file> --prefix PRJ
 mdtask validate              # check task integrity
 ```
+
+## How it fits together
+
+mdtask is three layers, kept deliberately separate:
+
+1. **The CLI (`mdtask`)** — the task *format*. It reads and edits Markdown checkbox tasks and knows nothing about methodology: a small, fast interpreter over your files.
+2. **The skills** (`docs/skills/`) — the *method*. `sdd` is the spec-driven workflow; `mdtask-create` writes new tasks; `mdtask-next` takes one task end to end (pick → plan → build → document → commit).
+3. **The loop** — driving a whole *scope* of tasks. That's your coding agent's job, not mdtask's: point the agent at `mdtask-next` and have it repeat until the backlog is empty. mdtask ships no loop or orchestrator.
 
 ## Stack
 

@@ -64,8 +64,8 @@ Tasks with the same priority retain their original file order (stable sort).
 ### Filtering by tag
 
 ```bash
-mdtask list #backend           # Show only tasks tagged #backend
-mdtask list #backend #urgent   # Show tasks with BOTH tags (AND logic)
+mdtask list '#backend'           # Show only tasks tagged #backend
+mdtask list '#backend' '#urgent' # Show tasks with BOTH tags (AND logic)
 ```
 
 Multiple tags use AND logic — only tasks that have all specified tags are shown. Tag filters combine with `--all` and `--sort`.
@@ -73,8 +73,8 @@ Multiple tags use AND logic — only tasks that have all specified tags are show
 ### Filtering by priority
 
 ```bash
-mdtask list !high              # Show only high-priority tasks
-mdtask list !high !crit        # Show high OR crit tasks (OR logic)
+mdtask list '!high'              # Show only high-priority tasks
+mdtask list '!high' '!crit'      # Show high OR crit tasks (OR logic)
 ```
 
 Multiple priorities use OR logic — tasks matching any of the specified priorities are shown. Priority filters combine with `--all`, `--sort`, and tag filters.
@@ -178,9 +178,9 @@ When a symlink and its target both appear in the search tree, only one entry is 
 `mdtask set <ID...> <tokens...>` adds metadata tokens to task header lines:
 
 ```bash
-mdtask set TSK-038 @iter:new-ids           # add property
-mdtask set TSK-038 TSK-039 #backend        # multiple IDs
-mdtask set TSK-038,TSK-039 !high #feature  # comma-separated IDs
+mdtask set TSK-038 @iter:new-ids               # add property
+mdtask set TSK-038 TSK-039 '#backend'          # multiple IDs
+mdtask set TSK-038,TSK-039 '!high' '#feature'  # comma-separated IDs
 ```
 
 Args are parsed by first character: `#` = tag, `!` = priority, `@` = property. Everything else is a task ID.

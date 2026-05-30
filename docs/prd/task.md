@@ -116,7 +116,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   - Unknown priorities sort as medium and display without color
   - Multiple priority tokens on one line: each unknown is warned individually
 
-- [ ] TSK-042 Document @blocked_by as well-known property		#noqa
+- [x] TSK-042 Document @blocked_by as well-known property		#noqa
   Add a section in docs/skills/mdtask/SKILL.md describing `@blocked_by:ID` as
   the only property with special behavior:
   - Unresolved blockers shown in red in `mdtask list`
@@ -125,6 +125,11 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 
   All other properties (@status, @iter, etc.) are per-project conventions
   with no built-in behavior.
+
+  **Implemented:**
+  - Added a `@blocked_by — the one built-in property` section to `docs/skills/mdtask/SKILL.md`
+  - Documents the three special behaviors (red unresolved, hidden resolved, full info via `view`)
+  - Notes all other `@key:value` properties are project conventions with no built-in behavior
 
 - [ ] TSK-043 Support @bb as shorthand for @blocked_by
   `@bb:ID` should be parsed as equivalent to `@blocked_by:ID`.

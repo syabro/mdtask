@@ -20,7 +20,7 @@ Build a task management system where:
 - **Node.js + TypeScript** — CLI implementation
 - **ripgrep (rg)** — fast file search (`rg --files -g '*.md' --hidden`)
 - **Vitest** — testing framework
-- **$EDITOR** — for edit command
+- **$EDITOR** — for the `open` command
 
 Minimal dependencies: Node.js (required), rg (recommended, falls back to `find`).
 

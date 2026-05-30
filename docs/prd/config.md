@@ -4,7 +4,7 @@ Search scope and file filtering configuration.
 
 ## Base Directory
 
-The base directory for task files can be configured via three methods (in priority order):
+The base directory for task files is resolved in this order (first match wins):
 
 1. **CLI Flag**: `mdtask list --path ./docs`
 2. **Environment Variable**: `MDTASK_PATH=./docs mdtask list`  
@@ -19,17 +19,26 @@ Control which files are scanned for tasks using `files.include` and `files.exclu
 
 ```json
 {
+  "path": "docs/prd",
   "files": {
-    "include": ["docs/prd/**"],
-    "exclude": ["docs/skills/**"]
+    "include": ["**/*.md"],
+    "exclude": ["archive/**"]
   }
 }
 ```
 
 - **include** — only scan files matching these glob patterns (default: all `.md` files)
 - **exclude** — skip files matching these patterns (overrides include)
-- Patterns are relative to the base directory
+- Patterns are relative to the base directory (`path`), not the project root. If `path` is `docs/prd`, use `["**/*.md"]`, not `["docs/prd/**"]`.
 - Uses ripgrep's native `-g` flag for matching
+
+## Excluded Directories
+
+`node_modules` and `.git` are skipped by default. Add more via the `MDTASK_EXCLUDE_DIRS` environment variable (comma-separated directory names):
+
+```bash
+MDTASK_EXCLUDE_DIRS=dist,build mdtask list
+```
 
 ## Exclude Prefixes
 

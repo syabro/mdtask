@@ -84,12 +84,12 @@ Commit with a message describing what was built.
 
 At any step, if you hit a decision that genuinely needs a human — ambiguous business logic, a product call you can't make, a spec gap — don't guess, and don't open a separate task. Park the current task so the loop moves on:
 
-1. Tag it: `mdtask set <ID> #user-required`.
+1. Tag it: `mdtask set <ID> '#user-required'` (quote the `#` — unquoted it's a shell comment).
 2. Append a short note to the task body: the exact open question and what you already found (options weighed, where in the code the problem sits). This is what keeps the context from being lost — the tag only marks the task, the note explains it.
 3. Commit the parked state, then stop. The loop picks the next task; parked tasks are skipped (Step 1).
 
-A human later reviews everything parked with `mdtask list #user-required`, makes the call, removes the `#user-required` tag, and the task is back in play.
+A human later reviews everything parked with `mdtask list '#user-required'`, makes the call, and removes the `#user-required` tag to put the task back in play. (`mdtask set` only *adds* metadata — to remove the tag, open the task with `mdtask open <ID>` and delete the `#user-required` token from the header line.)
 
 ## Working a list of tasks
 
-This skill does one task and stops cleanly when none are left. To work through a backlog, run it repeatedly with your agent's loop mechanism (e.g. `/goal`, `/loop`) — no separate skill needed.
+This skill does one task and stops cleanly when none are left. To work through a backlog, run it repeatedly from your coding agent's own loop — driving a whole scope of tasks is the agent's job, not part of mdtask, so use whatever loop mechanism your harness provides.

@@ -41,6 +41,15 @@ Appear on the header line. First `#`, `!`, or `@` marks the start of metadata.
 | Priority | `!crit` `!high` `!low` | `!high`            | Sorting (no tag = medium) |
 | Property | `@key:value`           | `@status:blocked`  | Extended key:value        |
 
+### `@blocked_by` — the one built-in property
+
+`@blocked_by:ID` is the only property mdtask treats specially:
+- Unresolved blockers are shown in red in `mdtask list`.
+- Resolved (done) blockers are hidden from list output.
+- Full blocker info stays in the file and is visible via `mdtask view`.
+
+All other properties (`@status`, `@iter`, …) are per-project conventions with no built-in behavior.
+
 ## Task Body
 
 - All lines indented by ≥1 space after header
