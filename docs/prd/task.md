@@ -129,3 +129,32 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 - [ ] TSK-043 Support @bb as shorthand for @blocked_by
   `@bb:ID` should be parsed as equivalent to `@blocked_by:ID`.
   Same behavior: filtering in list, red coloring, resolved hiding.
+
+- [ ] TSK-061 Ignore checkbox lines inside fenced code blocks
+  Task detection scans every `- [ ]` / `- [x]` line in a `.md` file, including lines inside
+  fenced code blocks (triple-backtick or tilde fences). Documentation that shows example
+  tasks — like the unidentified-task warning example in `cli.md` — is parsed as real tasks:
+  the examples pollute `mdtask list`, and `mdtask ids` rewrites them in place, assigning IDs
+  to purely illustrative lines. `excludePrefixes` can't prevent this, because examples shown
+  without an ID have no prefix to exclude.
+
+  When scanning a file, skip any line inside a fenced code block — it is never a task. This
+  applies to every command that collects tasks (`list`, `validate`, `ids`, `view`, ...).
+
+- [ ] TSK-062 Parse header metadata from the end of the line
+  A `#`, `!`, or `@` in the middle of a title is currently misread as the start of metadata,
+  so the title is truncated and phantom tags appear. Real cases in this repo: `PRJ-033`
+  parses as just "Tag", `CLI-004` is cut mid-title, and `PRJ-033` then wrongly matches a
+  `#noqa` tag filter. This affects `list` display and tag/priority filtering. (Read-only —
+  the file text is intact, no data loss.)
+
+  Recognize metadata as the trailing run of tokens at the END of the header line. Scan
+  whitespace-delimited tokens from the right: while each is a metadata token (`#tag`,
+  `!crit`/`!high`/`!low`, `@key:value`), peel it into metadata; stop at the first word that
+  is not a token. Everything before that point is the title — a `#`/`!`/`@` that is not part
+  of the trailing run stays in the title.
+
+  Also require tags to start with a letter (`#[A-Za-z]…`), so issue references like `#123`
+  are never tags and survive anywhere in the line.
+
+  The explicit `\t\t` separator keeps working unchanged and still takes priority when present.

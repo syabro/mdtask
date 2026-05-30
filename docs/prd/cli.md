@@ -727,3 +727,23 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Added `--prefix` fallback for files with no existing ID or seed prefix
   - Missing-prefix errors include file, line, and task text
   - Covered targeted file, explicit prefix, invalid prefix, and unrelated-file cases in tests
+
+- [ ] CLI-059 Add `--tag` and `--priority` filter flags to `mdtask list`
+  `mdtask list #backend` and `mdtask list !high` depend on raw `#`/`!` arguments.
+  The shell eats them — `#` starts a comment, `!` triggers history expansion — so the
+  filter is silently dropped: the user gets the full list with no error and no way to
+  tell the filter was ignored.
+
+  Add explicit `--tag <name>` and `--priority <crit|high|low>` options that need no shell
+  quoting. The positional `#tag` / `!priority` filters keep working unchanged. Multiple
+  values follow the same semantics as the existing positional filters.
+
+- [ ] CLI-060 Warn on duplicate numeric ID parts in `mdtask validate`
+  IDs are documented as globally unique by their numeric part, and short numeric lookup
+  (`mdtask view 22`) depends on it. But `validate` doesn't check for duplicate numbers, so
+  `CLI-001` and `PRJ-001` pass validation and only surface later as an "ambiguous ID" error
+  when someone uses numeric lookup. `mdtask ids` already detects duplicate numbers.
+
+  `mdtask validate` should report duplicate numeric parts across prefixes, naming the
+  conflicting IDs and their files, so the conflict is caught at validation time instead of
+  at lookup time.
