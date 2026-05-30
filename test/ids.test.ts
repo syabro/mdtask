@@ -92,6 +92,31 @@ describe('mdtask ids', () => {
 		expect(content).toContain('- [ ] CLI-002 New task');
 	});
 
+	it('does not assign IDs to checkbox lines inside fenced code blocks', async () => {
+		const file = join(tempDir, 'tasks.md');
+		writeFileSync(
+			file,
+			[
+				'- [ ] CLI-001 Existing task',
+				'- [ ] Real new task',
+				'',
+				'```markdown',
+				'- [ ] Example task in a fence',
+				'```',
+				'',
+			].join('\n'),
+		);
+
+		await run(['ids']);
+
+		const content = readFileSync(file, 'utf-8');
+		// Real unidentified task outside the fence gets an ID.
+		expect(content).toContain('- [ ] CLI-002 Real new task');
+		// Fenced example is left untouched — no ID injected.
+		expect(content).toContain('- [ ] Example task in a fence');
+		expect(content).not.toContain('CLI-003');
+	});
+
 	it('assigns sequential IDs to multiple unidentified tasks', async () => {
 		const file = join(tempDir, 'tasks.md');
 		writeFileSync(

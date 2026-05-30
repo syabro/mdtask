@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
 	collectTaskBody,
+	computeFenceMask,
 	parseMetadata,
 	parseTaskHeader,
 } from '../src/task.js';
@@ -385,5 +386,111 @@ describe('collectTaskBody', () => {
 		const lines = ['- [ ] TSK-001 Title', '\tTab indented line'];
 		const result = collectTaskBody(lines, 0);
 		expect(result).toBe('');
+	});
+});
+
+describe('computeFenceMask', () => {
+	it('masks lines inside a backtick fence', () => {
+		const lines = [
+			'- [ ] TSK-1 Real',
+			'```',
+			'- [ ] EX-1 Example',
+			'```',
+			'- [ ] TSK-2 Real',
+		];
+		expect(computeFenceMask(lines)).toEqual([false, true, true, true, false]);
+	});
+
+	it('masks lines inside a tilde fence', () => {
+		const lines = ['~~~', '- [ ] EX-1 Example', '~~~'];
+		expect(computeFenceMask(lines)).toEqual([true, true, true]);
+	});
+
+	it('handles a fence with an info string', () => {
+		const lines = ['```markdown', '- [ ] EX-1 Example', '```'];
+		expect(computeFenceMask(lines)).toEqual([true, true, true]);
+	});
+
+	it('runs an unclosed fence to the end of the file', () => {
+		const lines = ['- [ ] TSK-1 Real', '```', '- [ ] EX-1 Example', 'more'];
+		expect(computeFenceMask(lines)).toEqual([false, true, true, true]);
+	});
+
+	it('does not close a 4-backtick fence with a 3-backtick line', () => {
+		const lines = ['````', '```', '- [ ] EX-1 inside', '````'];
+		expect(computeFenceMask(lines)).toEqual([true, true, true, true]);
+	});
+
+	it('does not cross-close fences of different characters', () => {
+		const lines = ['```', '~~~', '- [ ] EX-1 inside', '```'];
+		expect(computeFenceMask(lines)).toEqual([true, true, true, true]);
+	});
+
+	it('leaves the gap between two separate fences unmasked', () => {
+		const lines = ['```', 'a', '```', '- [ ] TSK-1 Real', '```', 'b', '```'];
+		expect(computeFenceMask(lines)).toEqual([
+			true,
+			true,
+			true,
+			false,
+			true,
+			true,
+			true,
+		]);
+	});
+
+	it('opens a fence indented up to 3 spaces', () => {
+		const lines = ['   ```', '- [ ] EX-1 Example', '   ```'];
+		expect(computeFenceMask(lines)).toEqual([true, true, true]);
+	});
+
+	it('does not open a fence indented 4 spaces', () => {
+		const lines = ['    ```', '- [ ] TSK-1 Real', '    ```'];
+		expect(computeFenceMask(lines)).toEqual([false, false, false]);
+	});
+
+	it('does not treat a tab-indented fence as a fence', () => {
+		const lines = ['\t```', '- [ ] TSK-1 Real', '\t```'];
+		expect(computeFenceMask(lines)).toEqual([false, false, false]);
+	});
+
+	it('closes a fence with trailing whitespace after the marker', () => {
+		const lines = ['```', '- [ ] EX-1 Example', '```   ', '- [ ] TSK-1 Real'];
+		expect(computeFenceMask(lines)).toEqual([true, true, true, false]);
+	});
+
+	it('does not close on a fence line with a non-whitespace tail', () => {
+		const lines = [
+			'```',
+			'- [ ] EX-1 Example',
+			'``` not a close',
+			'- [ ] EX-2 inside',
+		];
+		expect(computeFenceMask(lines)).toEqual([true, true, true, true]);
+	});
+
+	it('does not close when the closing fence is indented 4 spaces', () => {
+		const lines = ['```', '- [ ] EX-1 Example', '    ```', '- [ ] EX-2 inside'];
+		expect(computeFenceMask(lines)).toEqual([true, true, true, true]);
+	});
+
+	it('does not open a backtick fence whose info string contains a backtick', () => {
+		const lines = ['``` foo`bar', '- [ ] TSK-1 Real'];
+		expect(computeFenceMask(lines)).toEqual([false, false]);
+	});
+
+	it('handles CRLF line endings', () => {
+		const lines = [
+			'```\r',
+			'- [ ] EX-1 Example\r',
+			'```\r',
+			'- [ ] TSK-1 Real\r',
+		];
+		expect(computeFenceMask(lines)).toEqual([true, true, true, false]);
+	});
+
+	it('returns all false when there are no fences', () => {
+		const lines = ['- [ ] TSK-1 Real', 'text', '- [ ] TSK-2 Real'];
+		expect(computeFenceMask(lines)).toEqual([false, false, false]);
 	});
 });

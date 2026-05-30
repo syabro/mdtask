@@ -73,6 +73,52 @@ export function parseTaskHeader(line: string): TaskHeader | null {
 	};
 }
 
+// A fenced code block opens with >=3 backticks or >=3 tildes, indented 0-3
+// spaces (CommonMark; a tab does NOT count as fence indentation). It closes on a
+// line with the same fence character, at least as long, indented 0-3 spaces, and
+// only whitespace after the marker. An unclosed fence runs to the end of the file.
+const FENCE_REGEX = /^( {0,3})(`{3,}|~{3,})(.*)$/;
+
+// Returns a boolean per line: true when the line is inside (or is the marker of)
+// a fenced code block. Checkbox lines inside fences are documentation examples,
+// never real tasks, so every command that scans for tasks skips masked lines.
+export function computeFenceMask(lines: string[]): boolean[] {
+	const mask = new Array<boolean>(lines.length).fill(false);
+	let open: { char: string; len: number } | null = null;
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i].replace(/\r$/, '');
+		const match = FENCE_REGEX.exec(line);
+
+		if (open === null) {
+			if (match) {
+				const marker = match[2];
+				const info = match[3];
+				// A backtick opener's info string may not contain a backtick.
+				if (marker[0] === '`' && info.includes('`')) {
+					continue;
+				}
+				open = { char: marker[0], len: marker.length };
+				mask[i] = true;
+			}
+			continue;
+		}
+
+		// Inside a fence: this line is masked regardless.
+		mask[i] = true;
+		if (
+			match &&
+			match[2][0] === open.char &&
+			match[2].length >= open.len &&
+			match[3].trim() === ''
+		) {
+			open = null;
+		}
+	}
+
+	return mask;
+}
+
 export function collectTaskBody(lines: string[], headerIndex: number): string {
 	const raw: string[] = [];
 

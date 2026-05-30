@@ -138,6 +138,34 @@ describe('mdtask list', () => {
 		});
 	});
 
+	describe('fenced code blocks', () => {
+		it('ignores checkbox lines inside fenced code blocks', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Real task',
+					'',
+					'```markdown',
+					'- [ ] TSK-999 Identified example inside a fence',
+					'- [ ] Unidentified example inside a fence',
+					'```',
+					'',
+				].join('\n'),
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// Real task outside the fence is listed.
+			expect(output).toContain('TSK-001');
+			// Identified example inside the fence is not a task (readFileTasks path).
+			expect(output).not.toContain('TSK-999');
+			// Unidentified example inside the fence is not flagged in the warning.
+			expect(output).not.toContain('Unidentified example inside a fence');
+		});
+	});
+
 	describe('search in subdirectories', () => {
 		it('finds tasks in nested directories', async () => {
 			const subDir = join(tempDir, 'docs', 'subdir');

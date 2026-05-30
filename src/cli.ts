@@ -19,6 +19,7 @@ import { findMarkdownFiles } from './files.js';
 import { formatTable } from './table.js';
 import {
 	collectTaskBody,
+	computeFenceMask,
 	extractNumericPart,
 	PRIORITY_REGEX,
 	parseMetadata,
@@ -34,9 +35,11 @@ import {
 function readFileTasks(file: string, excluded?: string[]): Task[] {
 	const content = readFileSync(file, 'utf-8');
 	const lines = content.split('\n');
+	const mask = computeFenceMask(lines);
 	const tasks: Task[] = [];
 
 	for (let i = 0; i < lines.length; i++) {
+		if (mask[i]) continue;
 		const line = lines[i];
 		const header = parseTaskHeader(line);
 		if (header) {
@@ -111,8 +114,10 @@ function collectUnidentifiedTasks(
 		try {
 			const content = readFileSync(filePath, 'utf-8');
 			const lines = content.split('\n');
+			const mask = computeFenceMask(lines);
 
 			for (let i = 0; i < lines.length; i++) {
+				if (mask[i]) continue;
 				const ut = parseUnidentifiedTaskLine(lines[i], i);
 				if (ut) {
 					if (
@@ -834,9 +839,11 @@ async function handleIds(options: IdsOptions): Promise<void> {
 		}
 
 		const lines = content.split('\n');
+		const mask = computeFenceMask(lines);
 		const unidentified: UnidentifiedTask[] = [];
 
 		for (let i = 0; i < lines.length; i++) {
+			if (mask[i]) continue;
 			const ut = parseUnidentifiedTaskLine(lines[i], i);
 			if (ut) {
 				unidentified.push(ut);

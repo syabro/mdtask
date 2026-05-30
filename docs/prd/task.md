@@ -12,6 +12,8 @@ The parser recognizes task headers in format `- [ ] ID-123 Title` and extracts:
 
 Metadata can be separated by double tab (`\t\t`) or space before first `#`, `!`, or `@`. The parser returns null for non-task lines.
 
+Checkbox lines inside fenced code blocks (` ``` ` or `~~~`, indented 0–3 spaces) are documentation examples, never tasks — every command that scans files (`list`, `view`, `validate`, `ids`, …) skips them. So a PRD can show example tasks in a code block without them leaking into the task list or getting IDs assigned by `mdtask ids`.
+
 ## Metadata format
 
 After the task title, metadata tokens provide additional categorization:
@@ -135,7 +137,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   `@bb:ID` should be parsed as equivalent to `@blocked_by:ID`.
   Same behavior: filtering in list, red coloring, resolved hiding.
 
-- [ ] TSK-061 Ignore checkbox lines inside fenced code blocks
+- [x] TSK-061 Ignore checkbox lines inside fenced code blocks
   Task detection scans every `- [ ]` / `- [x]` line in a `.md` file, including lines inside
   fenced code blocks (triple-backtick or tilde fences). Documentation that shows example
   tasks — like the unidentified-task warning example in `cli.md` — is parsed as real tasks:
@@ -145,6 +147,16 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 
   When scanning a file, skip any line inside a fenced code block — it is never a task. This
   applies to every command that collects tasks (`list`, `validate`, `ids`, `view`, ...).
+
+  **Implemented:**
+  - `computeFenceMask(lines)` flags every line inside a ` ``` ` or `~~~` fence; all three
+    file-scan loops (identified tasks, unidentified-task warnings, `ids` rewrite) skip them.
+  - Follows CommonMark fence rules that matter here: 0–3 space indent (tabs don't count),
+    same-character close at least as long as the opener with a blank tail, unclosed fence
+    runs to end of file. Backtick opener with a backtick in its info string is not a fence.
+  - Example tasks in PRD code blocks no longer appear in `list`/`view`/`validate` and are
+    never assigned IDs by `mdtask ids` — the `EXMPL-` + `excludePrefixes` workaround is no
+    longer needed to keep doc examples out of the task list.
 
 - [ ] TSK-062 Parse header metadata from the end of the line
   A `#`, `!`, or `@` in the middle of a title is currently misread as the start of metadata,
