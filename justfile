@@ -52,12 +52,8 @@ install-skill-mdtask-next:
     cp docs/skills/mdtask-next/* ~/.agents/skills/mdtask-next/
     @echo "Installed mdtask-next skill"
 
-# Install check skill to ~/.agents/skills
-# install-skill-check:
-#    rm -rf ~/.agents/skills/check
-#    mkdir -p ~/.agents/skills/check
-#    cp docs/skills/check/* ~/.agents/skills/check/
-#    @echo "Installed check skill"
+# Note: `check` is a project-local dev skill — available via the committed
+# `.claude/skills/check` symlink, not shipped to ~/.agents/skills.
 
 # Release to npm (just release patch/minor/major)
 release bump="patch":
