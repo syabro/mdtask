@@ -1,3 +1,9 @@
+---
+name: sdd
+description: Spec-driven development workflow for projects that use PRD files as both product spec and manual. Use when writing PRDs, implementing tasks from PRDs, or updating docs after code changes.
+disable-model-invocation: false
+---
+
 # Spec-Driven Development
 
 No code without a spec. PRD is both the spec and the manual.
@@ -17,7 +23,7 @@ Each PRD file has two parts:
 1. **Feature description** (top) — what the product does, how to use it
 2. **Tasks** (bottom) — backlog and implementation history
 
-The feature description is the manual. 
+The feature description is the manual.
 A reader should understand what's available and how to use it without reading the tasks.
 
 ## Example

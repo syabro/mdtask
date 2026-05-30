@@ -6,111 +6,80 @@ disable-model-invocation: false
 
 # /mdtask-next — Task workflow
 
-> **CRITICAL: ALWAYS use `pnpx mdtask <command>` CLI to work with tasks. NEVER read or parse markdown task files manually.**
+> **Always use the `mdtask` CLI to work with tasks — never read or parse the markdown task files by hand.** In this repo that's `pnpm mdtask <command>`; with a global install it's `mdtask <command>`.
 
 ## Flow
 
-Immediately create a todo checklist. In Claude environment, use the `todowrite` tool. In PI agent, emulate this with a temporary markdown checklist file under `./tmp` and keep it in memory while working.
-ALL steps are mandatory unless an explicit skip rule applies (`#noqa` or fast mode). Never skip any other step, regardless of task size.
-After reading this file, first say "I'll do all the steps as it described" and provide the steps you understood.
-This acknowledgement is not a stopping point.
-Continue immediately with Step 1 in the same turn.
-If the user pasted or invoked this skill, treat it as a request to run `/mdtask-next` unless they explicitly ask only to inspect or edit the skill.
-Never stop after the acknowledgement.
+Start by creating a todo checklist (the `todowrite` tool in Claude; a `./tmp` markdown checklist in Pi). Then run the steps below in order, continuing straight into Step 1 — don't stop to announce the steps first.
 
-> **`#noqa` tag:** If the picked task has `#noqa`, skip Steps 3, 5, and 8 (no configured review-tool reviews).
+**Modes**
+- **normal** (default) — full cycle, autonomous: pick the most logical task and approve your own plan.
+- **fast** (`fast`, `--fast`, `-f`) — skip planning, both review steps, test-first work, and final validation. Still pick the task with the CLI, make the change, update the task/PRD, and commit unless told not to.
 
-> **Mode:** By default, work autonomously — pick the most logical task, approve your own plan. If user passes `--interactive` (or `--i`), ask questions at decision points: task selection, plan approval.
->
-> **Fast mode:** If user passes `fast`, `--fast`, or `-f`, skip plan creation, plan validation, TDD/test-first work, and result validation. In fast mode, still pick the task with `pnpx mdtask`, make the requested change directly, update the task/PRD, and commit unless the user says not to commit.
+**`#noqa` tag** — if the picked task carries `#noqa`, skip the two review steps (Step 3 and Step 5). Everything else, including the commit, still runs.
 
 ### Step 1 — Pick a task
 
-**ALWAYS use `pnpx mdtask` CLI — NEVER parse markdown files manually.**
-
-1. Run `pnpx mdtask list` to get all open tasks
-   - Tasks with unresolved `@blocked_by:ID` are still listed — skip them when picking
-2. If user provided scope (tag, area, specific task) — filter by it. Otherwise pick the most logical next task.
-3. In `--interactive` mode: present matching tasks and ask user to choose.
-4. If no tasks remain: tell user, stop
+1. `mdtask list` for all open tasks. Tasks with an unresolved `@blocked_by:ID` are listed — skip them when picking.
+2. If the user gave scope (tag, area, specific task), filter by it. Otherwise pick the most logical next task.
+3. No open tasks left → tell the user and stop. (This is what makes the skill safe to run in a loop — see "Working a list of tasks" below.)
 
 ### Step 2 — Plan
 
-> Skip entirely in fast mode.
+> Skip in fast mode.
 
-1. Read the task file to get the full task details (use Read tool)
-2. Understand what needs to be built (don't invent extra scope)
-3. Write a concrete implementation plan:
-   - What files to create/modify
-   - What functions/modules
-   - How to structure code
+1. Read the task file for full details.
+2. Understand what to build — don't invent extra scope.
+3. Write a concrete plan: files to create/modify, functions/modules, how to structure the code.
 
-### Step 3 — Validate plan with configured review tool
+### Step 3 — Review the plan
 
-> Skip if task has `#noqa` tag.
-> Skip entirely in fast mode.
+> Skip if the task has `#noqa`, or in fast mode.
 
-1. Use the project's configured review tool from AGENTS.md or the active project instructions.
-2. Send plan + task spec + relevant project files for review.
-3. Ask: is the plan correct? Any missing pieces? Better approach?
-4. Combine feedback into a refined plan.
-5. In `--interactive` mode: present the refined plan to user for approval. Otherwise proceed.
+A different model catches more than self-review, so send the plan to an external reviewer:
+
+1. Check `AGENTS.md` / `CLAUDE.md` for a configured review tool and when to use it.
+   - **Named** → use it. Send plan + task spec + relevant files; ask: is it correct? missing pieces? better approach?
+   - **Not configured** → ⚠️ warn the user ("no review tool configured in AGENTS.md/CLAUDE.md — falling back to a subagent, which is weaker because it's the same model checking itself"), then launch a subagent for the review.
+   - **No subagent tool available either** → ⚠️ warn and review the plan yourself. Don't skip silently.
+2. Fold the feedback into a refined plan.
 
 ### Step 4 — Execute with risk-based validation
 
-Fast mode:
-1. Implement the change directly.
-2. Do not write failing tests first.
-3. Do not run result validation unless the user explicitly asks for it.
+> Fast mode: implement directly — no test-first, no validation unless the user asks.
 
-Normal mode:
-1. Classify the change before coding:
-   - Business logic, parsers, data transforms, config, CLI behavior, and bug fixes: write a failing test first when practical.
-   - Data contracts, imports/exports, schemas, generated data, and migrations: validate real structure and invariants with fixtures, schema checks, parsed values, or representative input/output checks.
-   - UI microcomponents, copy, styling, and layout-only changes: do not create new tests unless there is branching logic, state, accessibility behavior, or a known regression.
-2. Prefer the smallest useful validation level. Do not add shallow snapshot tests, tests that only duplicate static data, or tests that only assert trivial rendered text.
-3. Implement the change.
-4. Run existing relevant tests.
-5. Run lint/typecheck if configured.
-6. If no new test was added, briefly state why the existing validation is enough.
+Pick the smallest useful validation for the change:
 
-### Step 5 — Code review with configured review tool
+- **Logic, parsers, data transforms, CLI behavior, bug fixes** → write a failing test first when practical.
+- **Data contracts, schemas, imports/exports, migrations** → validate real structure with fixtures or representative input/output.
+- **UI, copy, styling, layout-only** → no new test unless there's branching logic, state, accessibility behavior, or a known regression.
 
-> Skip if task has `#noqa` tag.
+Then implement, run the relevant existing tests, and run lint/typecheck if configured. If you added no test, say in one line why existing validation is enough. Skip shallow snapshot tests and tests that only restate static data.
 
-1. Use the project's configured review tool from AGENTS.md or the active project instructions.
-2. Send the current diff and task context for review.
-3. Ask: correctness, edge cases, style, security (blocker/warning/nitpick).
-4. Review code yourself.
-5. Fix issues found.
-6. You can create the tasks to fix later if business logic is unclear to you with #needhuman tag using /mdtask-create skill.
+### Step 5 — Review the code
+
+> Skip if the task has `#noqa`, or in fast mode.
+
+Resolve the reviewer the same way as Step 3 (named tool → subagent fallback with a warning → self-review with a warning). Send the current diff + task context; ask about correctness, edge cases, style, security. Review it yourself too, then fix what's found. If business logic is genuinely unclear, create a follow-up task tagged `#needhuman` via the mdtask-create skill instead of guessing.
 
 ### Step 6 — Final validation
 
-> Skip entirely in fast mode unless the user explicitly asks for validation.
+> Skip in fast mode unless the user asks for it.
 
-1. Run all tests again to confirm nothing broke after review fixes
-2. Run lint/typecheck if configured
+Run all tests again to confirm nothing broke after review fixes, and lint/typecheck if configured.
 
-### Step 7 — Update PRD (TWO places - BOTH required)
+### Step 7 — Update the PRD (TWO places — both required)
 
-> read @./spec-driven-development.md for the full workflow with examples.
+> Full workflow with examples: the `sdd` skill.
 
-**Place 1 — Feature description (before ## Tasks):**
-- Find the markdown file where the task lives (e.g., `docs/prd/config.md`)
-- If the task adds a **new feature** — create a new `## Section` above `## Tasks`
-- If the task **extends an existing feature** — update the existing section
-- Match the section to the feature, not to the task
-- Describe from user perspective: what commands to run, what config to use
-- Keep it concise — focus on HOW TO USE, not implementation details
+**Place 1 — feature description (above `## Tasks`):** in the PRD file where the task lives, add a new `## Section` for a new feature, or update the existing section if the task extends one. Match the section to the feature, not to the task. Describe it from the user's side — what to run, what config to use — concise, how-to-use, not implementation detail.
 
-**Place 2 — In the TASK body itself:**
-- Find the completed task (the `- [ ] TSK-XXX ...` line you just worked on)
-- Mark it done: `[ ]` → `[x]`
-- Add an `**Implemented:**` block inside THAT TASK BODY ONLY with 2-5 bullets
-- Describe what is now working (outcomes only — no code, no internal implementation details)
-- **CRITICAL: Only touch the task you worked on. NEVER modify other tasks or their Implemented sections.**
+**Place 2 — the task body:** mark it `[x]` and add an `**Implemented:**` block (2–5 bullets, outcomes only — no code, no internals). **Only touch the task you worked on — never modify other tasks or their Implemented blocks.**
 
 ### Step 8 — Commit
 
-1. Commit with message describing what was built
+Commit with a message describing what was built.
+
+## Working a list of tasks
+
+This skill does one task and stops cleanly when none are left. To work through a backlog, run it repeatedly with your agent's loop mechanism (e.g. `/goal`, `/loop`) — no separate skill needed.

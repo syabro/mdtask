@@ -8,7 +8,7 @@ Project structure and entry point.
 
 ## Task tag: #noqa
 
-Tasks tagged `#noqa` get a lightweight /next-task workflow — Gemini plan validation (Step 3), Gemini code review (Step 5), and /check (Step 8) are skipped. Use for small, low-risk changes where full review is overkill.
+Tasks tagged `#noqa` get a lighter `/mdtask-next` run — the two review steps (plan review at Step 3, code review at Step 5) are skipped. The change is still implemented, validated, documented, and committed. Use for small, low-risk changes where external review is overkill.
 
 ## Publishing to npm
 

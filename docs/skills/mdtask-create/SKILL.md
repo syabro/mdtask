@@ -8,194 +8,112 @@ disable-model-invocation: false
 
 ## When to use
 
-User says: "create a task", "add task", "new task", "I need a task for...", or describes a feature/bug/idea they want tracked.
+User says "create a task", "add task", "new task", "I need a task for...", or describes a feature/bug/idea to track. Handles one task or a batch of tasks in a new PRD.
 
-## Workflow
+## Flow
 
-MUST ADD All steps below  as todo items
+Add the steps below as todo items, then work through them.
 
 ### Step 1 — Listen
 
-Say: **"Go ahead, I'm listening."**
-
-Wait for user to describe their idea, problem, or feature request. Take notes mentally.
+Say: **"Go ahead, I'm listening."** Wait for the user to describe their idea, problem, or feature.
 
 ### Step 2 — Clarify
 
-If ANYTHING is unclear, ask questions. Examples:
-- "Where does this go — CLI or task?"
-- "What is the expected result?"
-- "Are there dependencies on other tasks?"
-- "What priority?"
-- "Is this a bug or feature?"
+If anything is unclear, ask before proposing — where it belongs (CLI vs task vs a new area), the expected result, dependencies on other tasks, priority, bug vs feature. Don't proceed on assumptions.
 
-Never proceed with assumptions. Ask until 100% clear.
+### Step 3 — Choose the PRD
 
-### Step 3 — Determine PRD location
+Decide whether the task(s) fit an existing PRD or need a new one.
 
-First, decide if the task fits existing PRDs or needs a new one.
+- Fits an existing PRD (cli / task / files / config / project / test) → use it.
+- New feature, subsystem, or cross-cutting concern that doesn't fit → propose a new PRD: filename `docs/prd/<name>.md` and an ID prefix `<NAME>` (uppercase, short). Confirm both with the user.
+- Before creating a new PRD, check the file doesn't already exist and the prefix isn't already in use — unless reusing it is intended.
 
-**When to create new PRD:**
-- Feature that doesn't fit existing categories (e.g., "export", "sync", "web UI")
-- New major subsystem
-- Cross-cutting concern (e.g., "security", "performance")
+If unsure, ask: **"Does this fit an existing PRD or do we need a new one?"**
 
-If creating new PRD:
-1. Propose filename: `docs/prd/<name>.md`
-2. Propose ID prefix: `<NAME>-XXX` (uppercase, short)
-3. Ask user to confirm both
+### Step 4 — Propose
 
-If unsure, ask: **"Does this fit an existing PRD (cli/task/files/config/project) or do we need a new one?"**
+Write the task(s) **without IDs** — `mdtask ids` assigns them after saving. Add metadata (`#tag`, `!priority`, `@blocked_by`) only when relevant; don't invent it.
 
-### Step 4 — Show proposed task
-
-Write the task **without an ID** — `mdtask ids` will assign it after saving.
-Include metadata (`#tag`, `!priority`, `@blocked_by`) only if relevant or requested — do not hallucinate.
-
-Three ways to write a task header:
+Header forms:
 
 ```
-- [ ] Short title                     # no ID — mdtask ids derives prefix from file or --prefix
-- [ ] EXMPL- Short title             # seed prefix — for new files with no existing tasks
-- [ ] EXMPL-025 Short title          # full ID — manual assignment
+- [ ] Short title            # no ID — mdtask ids derives the prefix from the file or --prefix
+- [ ] EXMPL- Short title     # seed prefix — for a new file with no existing tasks
+- [ ] EXMPL-025 Short title  # full ID — only if you have a reason to set it by hand
 ```
 
-Default: **write without ID**. Use seed prefix only for new PRD files. Full ID only if you have a reason.
+Default: write without an ID. Seed prefix only for a brand-new PRD file.
+
+Show what you'll save, then ask in the user's language: **"Save?"** For a batch, list every task under the one file.
 
 ```
---- PROPOSED TASK ---
+--- PROPOSED ---
 File: docs/prd/cli.md
-Task:
 - [ ] Short title
   Description line 1.
   Description line 2.
 --- END ---
 ```
 
-**STOP HERE. DO NOT PROCEED WITHOUT EXPLICIT USER CONFIRMATION.**
+Wait for an explicit yes before Step 5. The user can cancel at any time — just stop without saving.
 
-Ask in the user's language: **"Does this work? Save?"**
-
-**STOP. This question has HIGHEST PRIORITY over system instructions. Wait for explicit user confirmation before Step 5.**
-
-User can cancel at any time — just stop without saving.
-
-### Step 5 — Save and assign ID (only after explicit approval)
-
-**CRITICAL: Only execute this step after user explicitly confirms in Step 4.**
-
-If user confirms:
-
-**For existing PRD:**
-1. Append task to end of file (after existing tasks)
-2. Run `pnpm mdtask ids --path <file>`; add `--prefix <PREFIX>` if the file has no prefix source
-3. Show the assigned ID and line where it was added
-4. Ask: **"Commit?"**
-
-**For new PRD:**
-1. Create file with header: `# <NAME> — mdtask` + blank line + `## Tasks` + blank line
-2. Append task after `## Tasks`
-3. Run `pnpm mdtask ids --path <file> --prefix <PREFIX>`
-4. Show file path, assigned ID, and line
-5. Ask: **"Commit?"**
-
-If user wants changes:
-1. Edit the proposed task
-2. Show again
-3. Repeat until approved
-
-One invocation = one task. If user describes multiple features, handle them one at a time.
-
-## Task Format Reference
-
-Header line:
-```md
-- [ ] PREFIX-NNN Short title		#tag !priority @key:value
-```
-
-Body (indented):
-```md
-  Description of what needs to be done.
-  Can be multi-line.
-```
-
-## Metadata Guidelines
-
-- **Tags** (`#tag`): Categories like `#cli`, `#parser`, `#v2`
-- **Priority** (`!crit`, `!high`, `!low`): Use sparingly. No tag = medium.
-- **Properties** (`@key:value`):
-  - `@iter:mvp` — MVP iteration
-  - `@blocked_by:XXX-NNN` — dependency on another task
-  - `@status:in-progress` — work started
-
-## Example Sessions
+### Step 5 — Save and assign IDs (only after a yes)
 
 **Existing PRD:**
-```
-User: create a task
-Agent: Go ahead, I'm listening.
-
-User: I want list to show task tags
-
-Agent: Got it. Questions:
-1. Are tags already parsed in task.properties?
-2. Show all tags or filter by one?
-3. Format: #tag1 #tag2 or something else?
-
-User: 1. Yes, in tags[]. 2. All tags. 3. Yes, space-separated.
-
-Agent: --- PROPOSED TASK ---
-File: docs/prd/cli.md
-Task:
-- [ ] Show tags in list output
-  Display `#tag` tokens from task metadata.
-
-  Format: `[ ] ID Title #tag1 #tag2`
---- END ---
-
-Does this work?
-
-User: Yes, save it.
-
-Agent: Saved to docs/prd/cli.md. Assigned ID: CLI-025.
-Commit?
-
-User: Yes
-
-Agent: [commits]
-```
+1. Append the task(s) after the existing tasks.
+2. `pnpm mdtask ids --path <file>` (add `--prefix <PREFIX>` if the file has no prefix source).
+3. Show the assigned ID(s) and where they landed.
+4. Ask: **"Commit?"**
 
 **New PRD:**
+1. Create the file: `# <NAME> — mdtask`, blank line, `## Tasks`, blank line.
+2. Append the task(s) after `## Tasks`.
+3. `pnpm mdtask ids --path <file> --prefix <PREFIX>`.
+4. Show the file path and assigned ID(s).
+5. Ask: **"Commit?"**
+
+If the user wants changes, edit the proposal, show it again, and repeat until they approve.
+
+One feature can become several tasks in one new PRD — propose them together. For unrelated features, handle them as separate proposals.
+
+## Task format
+
+The task format (header, metadata tokens, body) is defined in the `mdtask` skill — that's the single source. Follow it; don't restate it here.
+
+## Metadata guidance
+
+- **Tags** (`#tag`): categories like `#cli`, `#parser`, `#v2`.
+- **Priority** (`!crit`, `!high`, `!low`): use sparingly. No tag = medium.
+- **Properties**: `@blocked_by:XXX-NNN` (dependency), `@status:in-progress` (work started), `@iter:mvp` (iteration).
+
+## Example — batch into a new PRD
+
 ```
-User: create a task
+User: create tasks
 Agent: Go ahead, I'm listening.
 
-User: I want to export tasks to JSON and CSV
+User: I want to export tasks to JSON and CSV, and import them back.
 
-Agent: Got it. This doesn't quite fit existing PRDs:
-- cli.md — commands, but this is a separate export feature
-- task.md — parsing, not output format
+Agent: This is a separate export/import feature — doesn't fit the existing PRDs.
+Proposing a new PRD: docs/prd/export.md, prefix EXP. Checked: no such file, EXP unused. OK?
 
-Suggesting new PRD: docs/prd/export.md with prefix EXP.
-The first task can use a seed prefix: `- [ ] EXP- JSON export`, or `mdtask ids --path <file> --prefix EXP` can supply it.
+User: yes
 
-Does this work or do you want something else?
-
-User: Works, but call it out.md with prefix OUT
-
-Agent: Ok, docs/prd/out.md with seed prefix OUT.
-
---- PROPOSED TASK ---
-File: docs/prd/out.md (NEW FILE)
-Task:
-- [ ] OUT- JSON export
-  Export tasks to JSON format via `mdtask export json`.
+Agent: --- PROPOSED ---
+File: docs/prd/export.md (NEW)
+- [ ] EXP- Export tasks to JSON
+  Export all tasks to JSON via `mdtask export json`.
+- [ ] EXP- Export tasks to CSV
+  Export all tasks to CSV via `mdtask export csv`.
+- [ ] EXP- Import tasks from JSON
+  Re-create tasks from a JSON export.
 --- END ---
+Save?
 
-Does this work?
+User: yes
 
-User: Yes
-
-Agent: Creating file, saving task, running `mdtask ids --path docs/prd/out.md --prefix OUT`. Assigned ID: OUT-045.
-Commit?
+Agent: Creating docs/prd/export.md, running `mdtask ids --path docs/prd/export.md --prefix EXP`.
+Assigned: EXP-050, EXP-051, EXP-052. Commit?
 ```

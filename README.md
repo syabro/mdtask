@@ -85,7 +85,7 @@ When changing one — check the others for consistency.
 
 Spec-driven development. PRD is both the spec and the manual.
 
-See [docs/spec-driven-development.md](docs/spec-driven-development.md) for the full workflow with examples.
+See [docs/skills/sdd/SKILL.md](docs/skills/sdd/SKILL.md) for the full workflow with examples.
 
 ## Project Structure
 
