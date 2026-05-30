@@ -13,6 +13,10 @@ Do not run npm publish yourself. The user must run the publish step manually bec
 `pnpm mdtask <command>` — runs CLI via tsx (no build needed). Use this for local development and testing.
 Always use `pnpm mdtask` to work with tasks. Never parse task files manually if there is a functionality in `mdtask` cli
 
+## Referencing tasks
+
+Never cite a task by its bare ID. Whenever you mention a task (`CLI-059`, `TSK-061`, …) — in chat or in docs — include its title/text right next to the ID. The reader does not have task IDs memorized; an ID with no content is meaningless. Citing several at once? List each ID with its title.
+
 ## Development Workflow
 
 read @docs/skills/sdd/SKILL.md — spec-driven development, PRD structure, examples.
