@@ -8,18 +8,18 @@ import '../styles/global.css'
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MDTASK | The Markdown-Native Task System</title>
-    <meta name="description" content="CLI task manager where checkboxes in your .md files are the database. Tasks live inside your PRDs, READMEs, and notes. No server, no GUI, no second system." />
-    
+    <title>MDTASK | Your AI agent's backlog lives in your files</title>
+    <meta name="description" content="A CLI task manager where Markdown checkboxes in your PRDs and READMEs are the backlog. You and your AI coding agent edit the same lines — no second tracker, nothing to sync. Spec-driven development without the drift." />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="MDTASK | The Markdown-Native Task System" />
-    <meta property="og:description" content="CLI task manager where checkboxes in your .md files are the database. No server, no GUI, no second system." />
-    
+    <meta property="og:title" content="MDTASK | Your AI agent's backlog lives in your files" />
+    <meta property="og:description" content="Markdown checkboxes in your PRDs and READMEs are the backlog. You and your AI agent edit the same lines. No second tracker, nothing to sync." />
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary" />
-    <meta property="twitter:title" content="MDTASK | The Markdown-Native Task System" />
-    <meta property="twitter:description" content="CLI task manager where checkboxes in your .md files are the database. No server, no GUI, no second system." />
+    <meta property="twitter:title" content="MDTASK | Your AI agent's backlog lives in your files" />
+    <meta property="twitter:description" content="Markdown checkboxes in your PRDs and READMEs are the backlog. You and your AI agent edit the same lines. No second tracker, nothing to sync." />
 
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
@@ -38,9 +38,9 @@ import '../styles/global.css'
     <nav class="w-full bg-background flex justify-between items-center px-6 py-4 max-w-full mx-auto border-b border-surface-container">
       <div class="text-lg font-bold tracking-tighter text-on-background">MDTASK</div>
       <div class="hidden md:flex gap-8 items-center">
-        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#format">Format</a>
-        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#why">Why</a>
-        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#commands">Commands</a>
+        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#proof">Proof</a>
+        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#how">How it works</a>
+        <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#compare">Compare</a>
         <a class="font-body uppercase tracking-[0.05em] text-[0.6875rem] text-on-surface-variant hover:text-on-background transition-colors" href="#faq">FAQ</a>
       </div>
     </nav>
@@ -49,20 +49,21 @@ import '../styles/global.css'
       <!-- Hero -->
       <section class="px-6 md:px-24 py-12 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
         <div class="flex flex-col">
+          <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-5">Spec-Driven Development</span>
           <h1 class="text-[2.25rem] md:text-[2.75rem] leading-[1.1] font-bold tracking-tight text-on-background mb-8">
-            Your markdown files are already your task system
+            Your AI agent's backlog lives in your Markdown files
           </h1>
           <div class="space-y-4 mb-16">
             <p class="text-on-background text-lg max-w-2xl leading-relaxed">
-              CLI task manager where checkboxes in your .md files are the database.
+              Tasks are checkboxes in the PRDs and READMEs you already have. You and your coding agent read and edit the exact same lines — no second tracker, no API, nothing to sync.
             </p>
-            <p class="text-on-background text-lg max-w-2xl leading-relaxed">
-              Tasks live inside your PRDs, READMEs, and notes. No server, no GUI, no second system. Humans and AI agents read the same format.
+            <p class="text-on-surface-variant text-base max-w-2xl leading-relaxed">
+              Your agent picks them up once you drop in the mdtask skill.
             </p>
           </div>
           <div class="flex flex-col sm:flex-row gap-4 items-stretch w-full lg:max-w-xl">
-            <div class="bg-surface-container flex-1 flex items-center justify-between px-4 py-3 group cursor-pointer">
-              <code class="text-[0.875rem] text-on-surface font-medium whitespace-nowrap overflow-hidden text-ellipsis">npm install -g mdtask ; mdtask --help</code>
+            <div id="copy-install" role="button" tabindex="0" aria-label="Copy install command" title="Copy" class="bg-surface-container flex-1 flex items-center justify-between px-4 py-3 group cursor-pointer transition-shadow">
+              <code class="text-[0.875rem] text-on-surface font-medium whitespace-nowrap overflow-hidden text-ellipsis">npm install -g mdtask</code>
               <svg class="ml-4 w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity shrink-0 fill-current text-on-surface" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
               </svg>
@@ -76,176 +77,172 @@ import '../styles/global.css'
           </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-4">
-          <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary shadow-2xl overflow-hidden text-[0.65rem] sm:text-[0.7rem] md:text-[0.8125rem]">
-            <div class="flex justify-between items-center mb-4">
-              <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">docs/features/search.md</span>
-            </div>
-            <pre class="text-on-background leading-loose"># Core Features
-- [x] SRCH-001 Basic CLI parser
-- [ ] SRCH-002 Add priority filtering <span class="text-error">!high</span>
-- [ ] SRCH-003 Git-hook integration <span class="text-secondary">@version:1.2</span>
-- [ ] SRCH-004 Documentation sweep <span class="text-secondary">#docs</span></pre>
+        <div class="bg-surface-container-lowest p-6 border-l-4 border-tertiary shadow-2xl overflow-hidden text-[0.65rem] sm:text-[0.7rem] md:text-[0.8125rem]">
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">docs/prd/deploy.md</span>
           </div>
-          <div class="terminal p-6 text-[0.6rem] sm:text-[0.65rem] md:text-[0.8125rem] overflow-hidden">
-            <div class="flex justify-between items-center mb-4 border-b border-surface-variant/10 pb-2">
-              <span class="text-[0.6875rem] uppercase tracking-widest text-surface/40">Terminal</span>
-            </div>
-            <pre class="leading-loose"><span class="text-surface/30 select-none mr-2">$</span><span class="text-tertiary-fixed-dim font-bold">mdtask list</span>
-<span class="text-surface/40">ID          TITLE                       PRIO   TAGS</span>
-<span class="text-tertiary-fixed-dim">SRCH-002</span>    <span class="text-surface/80">Add priority filtering</span>      <span class="text-error">HIGH</span>   <span class="text-surface/80">-</span>
-<span class="text-tertiary-fixed-dim">SRCH-003</span>    <span class="text-surface/80">Git-hook integration</span>        <span class="text-surface/80">-</span>      <span class="text-secondary-fixed-dim">@version:1.2</span>
-<span class="text-tertiary-fixed-dim">SRCH-004</span>    <span class="text-surface/80">Documentation sweep</span>         <span class="text-surface/80">-</span>      <span class="text-secondary-fixed-dim">#docs</span>
-<span class="text-surface/40">3 tasks pending.</span></pre>
-          </div>
+          <pre class="text-on-background leading-loose"># Deploy pipeline
+- [x] DEP-001 Containerize the API
+- [ ] DEP-002 Blue-green rollout      <span class="text-error">!high</span>
+- [ ] DEP-003 Rollback command        <span class="text-secondary">@blocked_by:DEP-002</span>
+- [ ] DEP-004 Smoke-test on deploy     <span class="text-error">!high</span> <span class="text-secondary">#ci</span></pre>
         </div>
       </section>
 
-      <!-- Format Section -->
-      <section class="bg-surface-container-high py-20 md:py-32 px-6 md:px-24" id="format">
-        <div class="max-w-4xl mx-auto">
+      <!-- Proof: one file, two views -->
+      <section class="bg-surface-container-high py-20 md:py-32 px-6 md:px-24" id="proof">
+        <div class="max-w-5xl mx-auto">
           <div class="mb-12 md:mb-16">
-            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 01. ARCHITECTURE</span>
-            <h2 class="text-[2.5rem] font-bold tracking-tight mb-6">The format is everything</h2>
-            <p class="text-lg text-on-background leading-relaxed">
-              Every task is a markdown checkbox with an ID and inline metadata. Standard syntax, no extensions. Write it by hand, parse it with grep, read it with any LLM.
+            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 01. PROOF</span>
+            <h2 class="text-[2.5rem] font-bold tracking-tight mb-6">One file. Two views.</h2>
+            <p class="text-lg text-on-background leading-relaxed max-w-2xl">
+              The open checkboxes in your spec are the list your agent works from. There is no sync step, because there is no second copy. mdtask is built this way — its own backlog is a set of Markdown files in its repo.
             </p>
           </div>
-          <div class="relative bg-surface-container-lowest p-6 md:p-10 overflow-hidden group border border-outline-variant">
-            <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <svg class="w-[120px] h-[120px] fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-              </svg>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+            <div class="bg-surface-container-lowest p-6 border border-outline-variant overflow-hidden text-[0.62rem] sm:text-[0.7rem] md:text-[0.8125rem]">
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">docs/prd/search.md</span>
+                <span class="text-[0.6rem] uppercase tracking-widest text-tertiary">the spec</span>
+              </div>
+              <pre class="text-on-background leading-loose">## Tasks
+- [x] SRCH-001 Basic CLI parser
+      <span class="opacity-50">**Implemented:** ripgrep scan, 0 deps</span>
+- [ ] SRCH-002 Priority filtering   <span class="text-error">!high</span>
+- [ ] SRCH-003 Git-hook integration <span class="text-secondary">@iter:mvp</span>
+- [ ] SRCH-004 Documentation sweep  <span class="text-secondary">#docs</span></pre>
             </div>
-            <div class="relative z-10 space-y-4 md:space-y-6">
-              <div class="flex flex-wrap items-center gap-2 text-on-background text-[0.65rem] sm:text-xs md:text-base">
+
+            <div class="terminal p-6 text-[0.62rem] sm:text-[0.7rem] md:text-[0.8125rem] overflow-hidden">
+              <div class="flex justify-between items-center mb-4 border-b border-surface-variant/10 pb-2">
+                <span class="text-[0.6875rem] uppercase tracking-widest text-surface/40">Terminal</span>
+                <span class="text-[0.6rem] uppercase tracking-widest text-tertiary-fixed-dim">the backlog</span>
+              </div>
+              <pre class="leading-loose"><span class="text-surface/30 select-none mr-2">$</span><span class="text-tertiary-fixed-dim font-bold">mdtask list</span>
+<span class="text-surface/60">[ ]</span> <span class="text-tertiary-fixed-dim">SRCH-002</span> <span class="text-surface/80">Priority filtering</span>     <span class="text-error">!high</span>
+<span class="text-surface/60">[ ]</span> <span class="text-tertiary-fixed-dim">SRCH-003</span> <span class="text-surface/80">Git-hook integration</span>   <span class="text-secondary-fixed-dim">@iter:mvp</span>
+<span class="text-surface/60">[ ]</span> <span class="text-tertiary-fixed-dim">SRCH-004</span> <span class="text-surface/80">Documentation sweep</span>    <span class="text-secondary-fixed-dim">#docs</span>
+<span class="text-surface/40">3 tasks pending.</span></pre>
+            </div>
+          </div>
+          <p class="text-on-surface-variant text-sm mt-5 leading-relaxed">
+            <span class="text-on-background font-medium">SRCH-001</span> is checked off in the spec, so it is gone from the list. Same lines, no database.
+          </p>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="py-20 md:py-32 px-6 md:px-24 border-t border-surface-container" id="how">
+        <div class="max-w-4xl mx-auto">
+          <div class="mb-12 md:mb-16">
+            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 02. HOW IT WORKS</span>
+            <h2 class="text-[2.5rem] font-bold tracking-tight">It's just Markdown.</h2>
+          </div>
+
+          <!-- Beat 1: a task is one line -->
+          <div class="mb-14">
+            <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-tertiary">Looks like a checkbox — carries an ID, priority, and tags</h3>
+            <div class="relative bg-surface-container-lowest p-6 md:p-8 overflow-hidden border border-outline-variant">
+              <div class="flex flex-wrap items-center gap-2 text-on-background text-[0.65rem] sm:text-xs md:text-base mb-6">
                 <span class="font-mono">- [ ]</span>
                 <span class="font-mono bg-tertiary-container text-on-tertiary-container px-1">CLI-042</span>
                 <span class="font-mono">Add export command</span>
                 <span class="font-mono text-secondary">#cli</span>
-                <span class="font-mono text-secondary">#export</span>
                 <span class="font-mono text-error">!high</span>
                 <span class="font-mono text-on-surface-variant">@status:in-progress</span>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-y-8 gap-x-6 pt-4 md:pt-6 border-t border-surface-container items-start">
-                <div class="flex flex-col gap-2">
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-6 gap-x-6 pt-5 border-t border-surface-container items-start">
+                <div class="flex flex-col gap-1.5">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Status</p>
                   <div class="font-mono text-sm leading-none">[ ]</div>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1.5">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">ID</p>
                   <div><span class="font-mono text-sm leading-none bg-tertiary-container text-on-tertiary-container px-1 inline-block">CLI-042</span></div>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1.5">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Title</p>
                   <div class="font-mono text-sm leading-none">Add export command</div>
                 </div>
-                <div class="flex flex-col gap-2">
-                  <p class="text-[0.6875rem] uppercase font-bold text-outline">Tags</p>
-                  <div class="font-mono text-sm leading-none text-secondary">#cli #export</div>
+                <div class="flex flex-col gap-1.5">
+                  <p class="text-[0.6875rem] uppercase font-bold text-outline">Tag</p>
+                  <div class="font-mono text-sm leading-none text-secondary">#cli</div>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1.5">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Priority</p>
                   <div class="font-mono text-sm leading-none text-error">!high</div>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1.5">
                   <p class="text-[0.6875rem] uppercase font-bold text-outline">Property</p>
                   <div class="font-mono text-sm leading-none text-on-surface-variant">@status:in-progress</div>
                 </div>
               </div>
             </div>
+            <p class="text-on-surface-variant text-sm mt-4 leading-relaxed">The checkbox line holds the ID, title, and metadata. Longer notes — the spec, an <code class="text-on-background">**Implemented:**</code> block — just indent underneath. Standard Markdown: write it by hand, read it in any editor, parse it with grep.</p>
           </div>
-        </div>
-      </section>
 
-      <!-- Why Section -->
-      <section class="py-20 md:py-32 px-6 md:px-24 border-t border-surface-container" id="why">
-        <div class="max-w-5xl mx-auto">
-          <div class="mb-12 md:mb-20">
-            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary block mb-4">// 02. RATIONALE</span>
-            <h2 class="text-[2.5rem] font-bold tracking-tight">The Three Pains</h2>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-y-16 md:gap-y-8 gap-x-8 items-stretch">
-            {[
-              {
-                title: 'AI Visibility',
-                desc: 'LLMs and AI agents can\'t "see" inside your Jira or Linear without complex API setups. If your tasks are in the file, the agent already knows what to do.',
-                code: `<span class="text-surface/40 italic"># claude / codex / opencode</span>\n<span class="text-surface/30 select-none mr-2">❯</span>Read docs/features/search.md\n  and complete all marked #urgent`
-              },
-              {
-                title: 'Zero Overhead',
-                desc: 'No new accounts. No "Second Brain" apps. If you have a code editor, you have a task manager. Tasks are version controlled with your code.',
-                code: `<span class="text-surface/30 select-none mr-2">$</span>git commit \\\n  -m "feat: finish CORE-01"`
-              },
-              {
-                title: 'Single Source',
-                desc: 'Specs and backlogs stay in sync because they are the same document. <br/>No more "the README says one thing, Jira says another."',
-                code: `<span class="text-tertiary-fixed-dim font-bold"># PRD - Search</span>\n- [ ] API-010 Pagination\n- [x] API-011 Filters`
-              }
-            ].map(({ title, desc, code }) => (
-              <div class="flex flex-col">
-                <div class="flex-grow">
-                  <h3 class="text-sm font-bold mb-3 uppercase tracking-widest text-tertiary">{title}</h3>
-                  <p class="text-on-background text-sm leading-relaxed mb-6">
-                    <Fragment set:html={desc} />
-                  </p>
-                </div>
-                <div class="terminal p-5 text-[0.65rem] md:text-[0.7rem] h-24 flex items-center overflow-hidden">
-                  <pre class="text-surface/60 leading-tight"><Fragment set:html={code} /></pre>
-                </div>
+          <!-- Beat 2: your agent works the backlog -->
+          <div class="mb-14">
+            <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-tertiary">Your agent picks a task, ships it, and checks it off</h3>
+            <div class="bg-surface-container-lowest p-6 border border-outline-variant overflow-hidden mb-4 text-[0.7rem] md:text-[0.8125rem]">
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-[0.6875rem] uppercase tracking-widest font-bold opacity-40">docs/prd/deploy.md</span>
+                <span class="text-[0.6rem] uppercase tracking-widest text-tertiary">before → after</span>
               </div>
-            ))}
+              <pre class="leading-loose text-on-background"><span class="opacity-40">- [ ] DEP-002 Blue-green rollout      !high</span>
+
+- [x] DEP-002 Blue-green rollout      <span class="text-error">!high</span>
+      <span class="opacity-60">**Implemented:** ALB target-group swap, zero downtime</span></pre>
+            </div>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Your coding agent reads the open task, does the work, then flips it to <code class="text-on-background">[x]</code> and writes what it did — into the file, not a separate status field. One-time setup: <code class="text-on-background">mdtask install-skills</code> teaches Claude Code, Cursor, or Codex the convention.</p>
+          </div>
+
+          <!-- Beat 3: query across every file -->
+          <div>
+            <h3 class="text-sm font-bold mb-4 uppercase tracking-widest text-tertiary">Query across every file</h3>
+            <div class="terminal p-6 text-[0.7rem] md:text-[0.8125rem] overflow-hidden mb-4">
+              <pre class="leading-loose"><span class="text-surface/30 select-none mr-2">$</span><span class="text-tertiary-fixed-dim font-bold">mdtask list --tag ci --priority high</span>
+<span class="text-surface/60">[ ]</span> <span class="text-tertiary-fixed-dim">DEP-004</span> <span class="text-surface/80">Smoke-test on deploy</span>  <span class="text-error">!high</span>  <span class="text-secondary-fixed-dim">#ci</span></pre>
+            </div>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Scattered across READMEs and PRDs, your checkboxes become one queryable backlog. Filter by tag or priority, flag blockers with <code class="text-on-background">@blocked_by</code>, check integrity with <code class="text-on-background">validate</code>, and auto-assign IDs to existing checkboxes with <code class="text-on-background">ids</code>.</p>
           </div>
         </div>
       </section>
 
-      <!-- Commands Section -->
-      <section class="bg-on-background text-surface py-20 md:py-32 px-6 md:px-24" id="commands">
+      <!-- Compare -->
+      <section class="bg-on-background text-surface py-20 md:py-32 px-6 md:px-24" id="compare">
         <div class="max-w-4xl mx-auto">
-          <div class="mb-12">
-            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary-fixed-dim block mb-4">// 03. INTERFACE</span>
-            <h2 class="text-[2rem] font-bold tracking-tight">Everything you need, nothing you don't</h2>
+          <div class="mb-12 md:mb-16">
+            <span class="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-tertiary-fixed-dim block mb-4">// 03. INSTEAD OF</span>
+            <h2 class="text-[2rem] font-bold tracking-tight">You already have the alternatives. Here's the trade.</h2>
           </div>
-          
-          <div class="terminal p-6 md:p-10 text-xs md:text-sm overflow-hidden">
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-2">
-                <span class="text-surface/30 select-none">$</span>
-                <code class="text-tertiary-fixed-dim font-bold">mdtask --help</code>
-              </div>
-              
-              <div class="text-surface/60 leading-relaxed">
-                <div class="mb-4">
-                  <span class="text-surface/90 font-bold">Usage:</span><br/>
-                  &nbsp;&nbsp;$ mdtask &lt;command&gt; [options]
-                </div>
-                
-                <div>
-                  <span class="text-surface/90 font-bold">Commands:</span>
-                  <div class="grid grid-cols-[auto_1fr] gap-x-8 gap-y-1 mt-1 pl-2">
-                    <code class="text-tertiary-fixed-dim">list [...filters]</code><span>List tasks</span>
-                    <code class="text-tertiary-fixed-dim">view &lt;id&gt;</code><span>View task details</span>
-                    <code class="text-tertiary-fixed-dim">done &lt;id&gt;</code><span>Toggle task done/open</span>
-                    <code class="text-tertiary-fixed-dim">open &lt;id&gt;</code><span>Open task in $EDITOR</span>
-                    <code class="text-tertiary-fixed-dim">move &lt;id&gt; &lt;file&gt;</code><span>Move task to another file</span>
-                    <code class="text-tertiary-fixed-dim">validate</code><span>Check task integrity</span>
-                    <code class="text-tertiary-fixed-dim">install-skills &lt;dir&gt;</code><span>Install mdtask's skills into an agent</span>
-                    <code class="text-tertiary-fixed-dim">set &lt;...args&gt;</code><span>Add metadata to tasks</span>
-                    <code class="text-tertiary-fixed-dim">ids</code><span>Auto-assign IDs to unidentified tasks</span>
-                  </div>
-                </div>
-              </div>
 
-              <div class="flex items-center gap-2 pt-2">
-                <span class="text-surface/30 select-none">$</span>
-                <span class="w-1.5 h-4 bg-tertiary-fixed-dim/40 animate-pulse"></span>
+          <div class="flex flex-col divide-y divide-surface/10">
+            <div class="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-2 md:gap-8 py-7">
+              <div class="text-tertiary-fixed-dim font-bold text-sm uppercase tracking-widest">Spec Kit / Kiro</div>
+              <div class="text-surface/80 leading-relaxed">They generate a spec, then a separate plan that drifts the moment code lands. mdtask makes your spec's own checkboxes the backlog — tick one off and the spec and the work stay the same lines.</div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-2 md:gap-8 py-7">
+              <div class="text-tertiary-fixed-dim font-bold text-sm uppercase tracking-widest">TODO.md</div>
+              <div class="text-surface/80 leading-relaxed">Same instinct, no structure. mdtask adds stable IDs you can reference, cross-file queries, and blockers you can flag — and an agent that reads and ticks them off. Still plain Markdown.</div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-2 md:gap-8 py-7">
+              <div class="text-tertiary-fixed-dim font-bold text-sm uppercase tracking-widest">Linear / Jira</div>
+              <div class="text-surface/80 leading-relaxed">
+                Built without either. For solo and small-team dev with an agent, the Markdown <em>is</em> the tracker — no SaaS, no seats, no sync.
+                <span class="block text-surface/40 text-sm mt-2">Need org-wide sprints and stakeholder dashboards? That part is still Linear's.</span>
               </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-2 md:gap-8 py-7">
+              <div class="text-tertiary-fixed-dim font-bold text-sm uppercase tracking-widest">Obsidian / Logseq</div>
+              <div class="text-surface/80 leading-relaxed">Not a competitor — it's the same files. Because tasks are plain Markdown, they show up in your notes app too. mdtask just adds a CLI your agent and your scripts can drive.</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- FAQ Section -->
+      <!-- FAQ -->
       <section class="py-20 md:py-32 px-6 md:px-24" id="faq">
         <div class="max-w-3xl mx-auto">
           <div class="mb-12 md:mb-20 text-center">
@@ -254,20 +251,20 @@ import '../styles/global.css'
           </div>
           <div class="space-y-12">
             <div class="space-y-4">
-              <p class="font-bold text-lg">Is this an Obsidian plugin?</p>
-              <p class="text-on-background leading-relaxed">No, it's a standalone CLI. However, because it uses standard markdown, it works perfectly inside Obsidian, Logseq, or VS Code. It just reads your files.</p>
+              <p class="font-bold text-lg">Isn't this just a TODO.md?</p>
+              <p class="text-on-background leading-relaxed">Almost — and that's the point. The difference is stable IDs you can reference, queries across every file (<code class="text-on-surface-variant">mdtask list --tag deploy</code>), blockers you can flag, and a format your AI agent already understands. Still plain Markdown you can edit by hand.</p>
             </div>
             <div class="space-y-4">
-              <p class="font-bold text-lg">Does it require a database?</p>
-              <p class="text-on-background leading-relaxed">The markdown files <em>are</em> the database. mdtask scans your folder, builds an in-memory index, and performs actions. No SQLite, no JSON stores.</p>
+              <p class="font-bold text-lg">What about git merge conflicts?</p>
+              <p class="text-on-background leading-relaxed">They're ordinary text conflicts — two people changed lines in the same Markdown file. You resolve them in git like any other line. There's no hidden state and no special tooling; we don't pretend git auto-merges them for you.</p>
             </div>
             <div class="space-y-4">
-              <p class="font-bold text-lg">How do I handle multi-user conflicts?</p>
-              <p class="text-on-background leading-relaxed">Use Git. Since tasks are lines of text, Git's merge logic handles conflicts naturally. If two people mark a task as done, it's a simple line merge.</p>
+              <p class="font-bold text-lg">Does my agent need setup?</p>
+              <p class="text-on-background leading-relaxed">Run <code class="text-on-surface-variant">mdtask install-skills</code> once to drop the skill into your agent's folder. After that Claude Code, Cursor, or Codex read and update tasks in the same files you do. Without it, a plain agent can still read the checkboxes — it just won't follow the conventions.</p>
             </div>
             <div class="space-y-4">
-              <p class="font-bold text-lg">What about performance with large repos?</p>
-              <p class="text-on-background leading-relaxed">mdtask uses multi-threaded regex scanning. It can parse 10,000 markdown files in under 200ms.</p>
+              <p class="font-bold text-lg">What if I outgrow it?</p>
+              <p class="text-on-background leading-relaxed">It's plain Markdown in your repo, so there's nothing to export and no lock-in. Keep it alongside Linear or Jira for the work that hasn't become a team ticket yet, or move on entirely — your tasks stay readable either way.</p>
             </div>
           </div>
         </div>
@@ -277,9 +274,9 @@ import '../styles/global.css'
       <section class="bg-surface-container-high py-20 md:py-32 px-6 md:px-24 border-t border-surface-container">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 md:gap-16 items-center">
           <div class="flex-1 space-y-6">
-            <h2 class="text-[2.5rem] leading-[1.1] font-bold tracking-tight text-on-background">Start with the files you already have</h2>
+            <h2 class="text-[2.5rem] leading-[1.1] font-bold tracking-tight text-on-background">Point it at the files you already have</h2>
             <p class="text-lg text-on-background leading-relaxed max-w-xl">
-              Navigate to any project with markdown files and run the indexer. It will find existing checkboxes and offer to ID them.
+              Run <code class="text-on-surface-variant">mdtask ids</code> in any repo with Markdown. It finds your existing checkboxes and offers to give them IDs — your backlog, already there.
             </p>
             <div class="pt-4">
               <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-[#312e2c] text-surface px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest hover:bg-primary active:translate-y-[1px] transition-all">
@@ -292,7 +289,7 @@ import '../styles/global.css'
             <div class="flex justify-between items-center mb-4 border-b border-surface-variant/10 pb-2 shrink-0">
               <span class="text-[0.6875rem] uppercase tracking-widest text-surface/40">Terminal</span>
             </div>
-            <pre class="leading-loose"><span class="text-surface/30 select-none mr-2">$</span><span class="text-tertiary-fixed-dim font-bold">cd my-project && npx mdtask ids</span>
+            <pre class="leading-loose"><span class="text-surface/30 select-none mr-2">$</span><span class="text-tertiary-fixed-dim font-bold">cd my-project &amp;&amp; npx mdtask ids</span>
 <span class="text-surface/60">Enter prefix for README.md: </span><span class="text-surface">KTL</span>
 <span class="text-surface/60">- [ ]</span> <span class="text-secondary-fixed-dim">KTL-001</span> <span class="text-surface/80">Basic boiling with auto shut-off</span>
 <span class="text-surface/60">- [ ]</span> <span class="text-secondary-fixed-dim">KTL-002</span> <span class="text-surface/80">Tea presets with custom temperatures</span>
@@ -318,5 +315,26 @@ import '../styles/global.css'
         &copy; 2026 MDTASK
       </div>
     </footer>
+
+    <script is:inline>
+      const box = document.getElementById('copy-install');
+      if (box) {
+        const copy = async () => {
+          try {
+            await navigator.clipboard.writeText('npm install -g mdtask');
+            box.classList.add('ring-2', 'ring-tertiary');
+            box.setAttribute('title', 'Copied');
+            setTimeout(() => {
+              box.classList.remove('ring-2', 'ring-tertiary');
+              box.setAttribute('title', 'Copy');
+            }, 900);
+          } catch (e) {}
+        };
+        box.addEventListener('click', copy);
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copy(); }
+        });
+      }
+    </script>
   </body>
 </html>
