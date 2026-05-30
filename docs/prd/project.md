@@ -2,10 +2,6 @@
 
 Project structure and entry point.
 
-## Pattern Matching
-
-`ts-pattern` is available as a dependency. Use it where it improves clarity — e.g. exhaustive matching, complex conditionals, or multi-branch routing. Not required for simple cases where `switch` or `if` is clear enough.
-
 ## Task tag: #noqa
 
 Tasks tagged `#noqa` get a lighter `/mdtask-next` run — the two review steps (plan review at Step 3, code review at Step 5) are skipped. The change is still implemented, validated, documented, and committed. Use for small, low-risk changes where external review is overkill.

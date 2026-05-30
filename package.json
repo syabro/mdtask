@@ -52,7 +52,6 @@
 	},
 	"dependencies": {
 		"cac": "^7.0.0",
-		"picocolors": "^1.1.1",
-		"ts-pattern": "^5.9.0"
+		"picocolors": "^1.1.1"
 	}
 }
