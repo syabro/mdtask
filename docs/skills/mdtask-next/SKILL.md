@@ -20,7 +20,7 @@ Start by creating a todo checklist (the `todowrite` tool in Claude; a `./tmp` ma
 
 ### Step 1 — Pick a task
 
-1. `mdtask list` for all open tasks. Tasks with an unresolved `@blocked_by:ID` are listed — skip them when picking.
+1. `mdtask list` for all open tasks. Tasks with an unresolved `@blocked_by:ID` are listed — skip them when picking. Skip tasks tagged `#user-required` too — they're parked for a human decision (see "When you can't decide" below).
 2. If the user gave scope (tag, area, specific task), filter by it. Otherwise pick the most logical next task.
 3. No open tasks left → tell the user and stop. (This is what makes the skill safe to run in a loop — see "Working a list of tasks" below.)
 
@@ -60,7 +60,7 @@ Then implement, run the relevant existing tests, and run lint/typecheck if confi
 
 > Skip if the task has `#noqa`, or in fast mode.
 
-Resolve the reviewer the same way as Step 3 (named tool → subagent fallback with a warning → self-review with a warning). Send the current diff + task context; ask about correctness, edge cases, style, security. Review it yourself too, then fix what's found. If business logic is genuinely unclear, create a follow-up task tagged `#needhuman` via the mdtask-create skill instead of guessing.
+Resolve the reviewer the same way as Step 3 (named tool → subagent fallback with a warning → self-review with a warning). Send the current diff + task context; ask about correctness, edge cases, style, security. Review it yourself too, then fix what's found. If a decision genuinely needs a human — ambiguous business logic, a product call you can't make — don't guess: park the task (see "When you can't decide" below).
 
 ### Step 6 — Final validation
 
@@ -79,6 +79,16 @@ Run all tests again to confirm nothing broke after review fixes, and lint/typech
 ### Step 8 — Commit
 
 Commit with a message describing what was built.
+
+## When you can't decide — park it
+
+At any step, if you hit a decision that genuinely needs a human — ambiguous business logic, a product call you can't make, a spec gap — don't guess, and don't open a separate task. Park the current task so the loop moves on:
+
+1. Tag it: `mdtask set <ID> #user-required`.
+2. Append a short note to the task body: the exact open question and what you already found (options weighed, where in the code the problem sits). This is what keeps the context from being lost — the tag only marks the task, the note explains it.
+3. Commit the parked state, then stop. The loop picks the next task; parked tasks are skipped (Step 1).
+
+A human later reviews everything parked with `mdtask list #user-required`, makes the call, removes the `#user-required` tag, and the task is back in play.
 
 ## Working a list of tasks
 
