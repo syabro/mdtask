@@ -21,7 +21,7 @@ import {
 	collectTaskBody,
 	computeFenceMask,
 	extractNumericPart,
-	PRIORITY_REGEX,
+	extractPriorityTokens,
 	parseMetadata,
 	parseTaskHeader,
 	parseUnidentifiedTaskLine,
@@ -474,10 +474,10 @@ function handleValidate(options: { path?: string }): void {
 			);
 		}
 
-		for (const match of raw.matchAll(PRIORITY_REGEX)) {
-			if (!VALID_PRIORITIES.has(match[1])) {
+		for (const value of extractPriorityTokens(raw)) {
+			if (!VALID_PRIORITIES.has(value)) {
 				process.stderr.write(
-					`warning: unknown priority !${match[1]} in ${task.filePath}:${task.lineNumber} (${task.id})\n`,
+					`warning: unknown priority !${value} in ${task.filePath}:${task.lineNumber} (${task.id})\n`,
 				);
 			}
 		}

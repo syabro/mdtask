@@ -138,6 +138,28 @@ describe('mdtask list', () => {
 		});
 	});
 
+	describe('metadata at end of line', () => {
+		it('does not match a tag-like word in the middle of a title', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Tag #noqa skips the check',
+					'- [ ] TSK-002 Real thing #noqa',
+					'',
+				].join('\n'),
+			);
+
+			const code = await run(['list', '#noqa']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			// Trailing #noqa is a real tag — task matches the filter.
+			expect(output).toContain('TSK-002');
+			// Mid-title #noqa is part of the title, not a tag — no match.
+			expect(output).not.toContain('TSK-001');
+		});
+	});
+
 	describe('fenced code blocks', () => {
 		it('ignores checkbox lines inside fenced code blocks', async () => {
 			writeFileSync(

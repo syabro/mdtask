@@ -28,18 +28,20 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 
 - Checkbox: `[ ]` (open) or `[x]` (done)
 - ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `CLI-022`, `TSK-038`). Auto-assigned by `mdtask ids`; use `mdtask ids --path <file> --prefix PREFIX` when a file has no prefix source. Short numeric lookup: `mdtask view 22`.
-- Title: free text until first metadata token or end of line
+- Title: free text; metadata is the trailing run of tokens at the end of the line, so a `#`/`!`/`@` earlier in the title stays in the title
 - ` ` (space) or `\t\t` (double tab): optional separator before metadata
 
 ## Metadata Tokens
 
-Appear on the header line. First `#`, `!`, or `@` marks the start of metadata.
+Appear at the **end** of the header line. Metadata is the trailing run of `#tag` / `!priority` / `@key:value` tokens; scanning from the right stops at the first word that isn't one of these. So `Fix #123 in parser` keeps `#123` in the title, while `Refactor parser !high #cleanup` parses `!high #cleanup` as metadata. A `\t\t` separator, when present, splits title from metadata explicitly.
 
 | Token    | Format                 | Example            | Purpose                   |
 |----------|------------------------|--------------------|---------------------------|
 | Tag      | `#name`                | `#backend #v2`     | Categories / filters      |
 | Priority | `!crit` `!high` `!low` | `!high`            | Sorting (no tag = medium) |
 | Property | `@key:value`           | `@status:blocked`  | Extended key:value        |
+
+Tags must start with a letter (`#[A-Za-z]…`), so an issue reference like `#123` is title text, not a tag.
 
 ### `@blocked_by` — the one built-in property
 
@@ -110,5 +112,5 @@ Done task:
 ## Parsing Hints
 
 - Header regex: `^- \[[ x]\] [A-Z]+-\d+ `
-- Metadata from header: split on first `#`, `!`, or `@`
+- Metadata from header: peel the trailing run of `#tag`/`!priority`/`@key:value` tokens from the right (or split at `\t\t`)
 - Body: collect indented lines after header until dedent

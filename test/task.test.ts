@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
 	collectTaskBody,
 	computeFenceMask,
+	extractPriorityTokens,
 	parseMetadata,
 	parseTaskHeader,
 } from '../src/task.js';
@@ -67,9 +68,60 @@ describe('parseTaskHeader', () => {
 			expect(result?.rawMetadata).toBe('#tag !high');
 		});
 
-		it('handles tag with digits', () => {
-			const result = parseTaskHeader('- [ ] TSK-123 Title #v2 #123');
-			expect(result?.rawMetadata).toBe('#v2 #123');
+		it('recognizes a trailing tag that contains digits', () => {
+			const result = parseTaskHeader('- [ ] TSK-123 Title #v2');
+			expect(result?.title).toBe('Title');
+			expect(result?.rawMetadata).toBe('#v2');
+		});
+	});
+
+	describe('metadata from the end of the line', () => {
+		it('keeps a mid-title # in the title and parses only trailing metadata', () => {
+			const result = parseTaskHeader(
+				'- [ ] PRJ-033 Tag #noqa skips /check in /next-task',
+			);
+			expect(result?.title).toBe('Tag #noqa skips /check in /next-task');
+			expect(result?.rawMetadata).toBe('');
+		});
+
+		it('keeps a mid-title # inside inline code in the title', () => {
+			const result = parseTaskHeader(
+				'- [ ] CLI-004 Filter by tag `mdtask list #tag`',
+			);
+			expect(result?.title).toBe('Filter by tag `mdtask list #tag`');
+			expect(result?.rawMetadata).toBe('');
+		});
+
+		it('parses a trailing run of mixed metadata', () => {
+			const result = parseTaskHeader(
+				'- [ ] TSK-1 Refactor parser !high #cleanup @owner:max',
+			);
+			expect(result?.title).toBe('Refactor parser');
+			expect(result?.rawMetadata).toBe('!high #cleanup @owner:max');
+		});
+
+		it('stops the trailing run at the first non-metadata word', () => {
+			const result = parseTaskHeader('- [ ] TSK-1 Do #thing now #done');
+			expect(result?.title).toBe('Do #thing now');
+			expect(result?.rawMetadata).toBe('#done');
+		});
+
+		it('lets a non-tag token at the very end block the whole run', () => {
+			const result = parseTaskHeader('- [ ] TSK-1 Title #real #123');
+			expect(result?.title).toBe('Title #real #123');
+			expect(result?.rawMetadata).toBe('');
+		});
+
+		it('does not treat a title ending in a bare ! as a priority', () => {
+			const result = parseTaskHeader('- [ ] TSK-1 Ship it!');
+			expect(result?.title).toBe('Ship it!');
+			expect(result?.rawMetadata).toBe('');
+		});
+
+		it('keeps an issue reference like #123 in the title', () => {
+			const result = parseTaskHeader('- [ ] TSK-1 Fix bug #123');
+			expect(result?.title).toBe('Fix bug #123');
+			expect(result?.rawMetadata).toBe('');
 		});
 	});
 
@@ -215,14 +267,22 @@ describe('parseMetadata', () => {
 	});
 
 	describe('tags with digits', () => {
-		it('parses tags with digits', () => {
+		it('parses tags that contain digits but requires a letter start', () => {
 			expect(parseMetadata('#v2').tags).toEqual(['#v2']);
-			expect(parseMetadata('#123').tags).toEqual(['#123']);
+			// A tag must start with a letter, so #123 is an issue ref, not a tag.
+			expect(parseMetadata('#123').tags).toEqual([]);
 			expect(parseMetadata('#v2 #feature #123').tags).toEqual([
 				'#v2',
 				'#feature',
-				'#123',
 			]);
+		});
+
+		it('does not extract a tag from a # inside a property value', () => {
+			const result = parseMetadata('@url:https://example.com/page#section');
+			expect(result.properties).toEqual({
+				url: ['https://example.com/page#section'],
+			});
+			expect(result.tags).toEqual([]);
 		});
 	});
 
@@ -386,6 +446,23 @@ describe('collectTaskBody', () => {
 		const lines = ['- [ ] TSK-001 Title', '\tTab indented line'];
 		const result = collectTaskBody(lines, 0);
 		expect(result).toBe('');
+	});
+});
+
+describe('extractPriorityTokens', () => {
+	it('returns priority values from whole tokens', () => {
+		expect(extractPriorityTokens('!high #tag')).toEqual(['high']);
+		expect(extractPriorityTokens('!crit !low')).toEqual(['crit', 'low']);
+	});
+
+	it('ignores a ! inside a property value', () => {
+		expect(extractPriorityTokens('@url:https://example.com/!urgent')).toEqual(
+			[],
+		);
+	});
+
+	it('returns empty when there are no priority tokens', () => {
+		expect(extractPriorityTokens('#tag @k:v')).toEqual([]);
 	});
 });
 

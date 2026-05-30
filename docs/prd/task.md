@@ -10,7 +10,7 @@ The parser recognizes task headers in format `- [ ] ID-123 Title` and extracts:
 - Title: text before metadata
 - Metadata: optional tags (`#tag`), priority (`!high`), or properties (`@key:value`)
 
-Metadata can be separated by double tab (`\t\t`) or space before first `#`, `!`, or `@`. The parser returns null for non-task lines.
+Metadata is the trailing run of `#tag` / `!priority` / `@key:value` tokens at the end of the line. Scanning from the right stops at the first word that isn't one of these, so a `#`, `!`, or `@` earlier in the line stays in the title (e.g. `Fix #123 in parser` keeps `#123` as title text). An explicit double tab (`\t\t`) overrides this and splits title from metadata at the tabs. The parser returns null for non-task lines.
 
 Checkbox lines inside fenced code blocks (` ``` ` or `~~~`, indented 0–3 spaces) are documentation examples, never tasks — every command that scans files (`list`, `view`, `validate`, `ids`, …) skips them. So a PRD can show example tasks in a code block without them leaking into the task list or getting IDs assigned by `mdtask ids`.
 
@@ -18,7 +18,7 @@ Checkbox lines inside fenced code blocks (` ``` ` or `~~~`, indented 0–3 space
 
 After the task title, metadata tokens provide additional categorization:
 
-- **Tags** (`#tag`): Categories like `#feature`, `#bug`, `#v2`. Tags can contain letters and digits.
+- **Tags** (`#tag`): Categories like `#feature`, `#bug`, `#v2`. A tag must start with a letter and may contain letters, digits, hyphens, and underscores — so an issue reference like `#123` is treated as title text, not a tag.
 - **Priority** (`!crit`, `!high`, `!low`): Task urgency. Tasks without priority are considered medium. Any `!\w+` token is accepted as priority; `mdtask validate` warns about values outside the known set.
 - **Properties** (`@key:value`): Key-value pairs for structured data like `@status:blocked` or `@blocked_by:TSK-038`. The same key can appear multiple times to store multiple values.
 
@@ -158,7 +158,7 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
     never assigned IDs by `mdtask ids` — the `EXMPL-` + `excludePrefixes` workaround is no
     longer needed to keep doc examples out of the task list.
 
-- [ ] TSK-062 Parse header metadata from the end of the line
+- [x] TSK-062 Parse header metadata from the end of the line
   A `#`, `!`, or `@` in the middle of a title is currently misread as the start of metadata,
   so the title is truncated and phantom tags appear. Real cases in this repo: `PRJ-033`
   parses as just "Tag", `CLI-004` is cut mid-title, and `PRJ-033` then wrongly matches a
@@ -175,3 +175,13 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
   are never tags and survive anywhere in the line.
 
   The explicit `\t\t` separator keeps working unchanged and still takes priority when present.
+
+  **Implemented:**
+  - `parseTaskHeader` peels the trailing run of metadata tokens from the right; the first
+    non-token word stops the scan, so a `#`/`!`/`@` earlier in the line stays in the title.
+    `PRJ-033` and `CLI-004` now keep their full titles.
+  - Tags must start with a letter (`#[A-Za-z][\w-]*`), so `#123`-style issue refs are never
+    tags — `PRJ-033` no longer matches a `#noqa` filter.
+  - `parseMetadata` is now token-based: each whole token is classified, so a `#`/`!` inside a
+    property value (e.g. a URL fragment `@url:…/page#section`) is not mistaken for a tag or
+    priority. `validate`'s unknown-priority check uses the same token rule (`extractPriorityTokens`).

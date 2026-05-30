@@ -25,9 +25,20 @@ const TASK_ID = `${ID_PREFIX}-\\d+`;
 const TASK_HEADER_REGEX = new RegExp(`^- \\[([ x])\\] (${TASK_ID}) (.*)$`);
 export const TASK_ID_REGEX = new RegExp(`^(?:${TASK_ID}|\\d+)$`);
 
-// Detects metadata start: beginning of string OR whitespace before #tag, !priority, or @key:value
+// Metadata tokens, matched against a whole whitespace-delimited token.
+// Tags must start with a letter so issue references like #123 are never tags.
 // Property keys allow hyphens and underscores: @build-status:value
-const METADATA_START_REGEX = /(?:^|\s+)(?:(?=#[^\s])|(?=!\w)|(?=@[\w-]+:\S))/;
+const TAG_TOKEN_REGEX = /^#[A-Za-z][\w-]*$/;
+const PRIORITY_TOKEN_REGEX = /^![A-Za-z]\w*$/;
+const PROPERTY_TOKEN_REGEX = /^@([\w-]+):(\S+)$/;
+
+function isMetadataToken(token: string): boolean {
+	return (
+		TAG_TOKEN_REGEX.test(token) ||
+		PRIORITY_TOKEN_REGEX.test(token) ||
+		PROPERTY_TOKEN_REGEX.test(token)
+	);
+}
 
 export function parseTaskHeader(line: string): TaskHeader | null {
 	const lineNoCR = line.replace(/\r$/, '');
@@ -51,14 +62,16 @@ export function parseTaskHeader(line: string): TaskHeader | null {
 		title = rest.slice(0, doubleTabIndex).trimEnd();
 		rawMetadata = rest.slice(doubleTabIndex + 2).trimStart();
 	} else {
-		const metadataMatch = METADATA_START_REGEX.exec(rest);
-		if (metadataMatch) {
-			title = rest.slice(0, metadataMatch.index).trimEnd();
-			rawMetadata = rest.slice(metadataMatch.index).trimStart();
-		} else {
-			title = rest.trimEnd();
-			rawMetadata = '';
+		// Metadata is the trailing run of metadata tokens at the end of the line.
+		// Scan tokens right-to-left; stop at the first non-metadata token. A
+		// `#`/`!`/`@` earlier in the line stays in the title.
+		let boundary = rest.length;
+		for (const m of [...rest.matchAll(/\S+/g)].reverse()) {
+			if (!isMetadataToken(m[0])) break;
+			boundary = m.index;
 		}
+		title = rest.slice(0, boundary).trimEnd();
+		rawMetadata = rest.slice(boundary).trimEnd();
 	}
 
 	if (title.length === 0) {
@@ -248,34 +261,51 @@ export function resolveTaskId(input: string, tasks: Task[]): Task {
 	return matches[0];
 }
 
-const TAG_REGEX = /#[\w-]+/g;
-export const PRIORITY_REGEX = /!(\w+)/g;
-const PROPERTY_REGEX = /(?<=^|\s)@([\w-]+):(\S+)/g;
-
 export const VALID_PRIORITIES = new Set(['crit', 'high', 'low']);
+
+// Used by `validate`: the values of all whole priority tokens in raw metadata.
+// Token-based so a `!word` inside a property value (e.g. a URL) is not flagged.
+export function extractPriorityTokens(rawMetadata: string): string[] {
+	const values: string[] = [];
+	for (const token of rawMetadata.split(/\s+/)) {
+		if (PRIORITY_TOKEN_REGEX.test(token)) {
+			values.push(token.slice(1));
+		}
+	}
+	return values;
+}
 
 export function parseMetadata(rawMetadata: string): TaskMetadata {
 	const tags: string[] = [];
 	let priority: string | null = null;
 	const properties: Record<string, string[]> = Object.create(null);
 
-	for (const match of rawMetadata.matchAll(TAG_REGEX)) {
-		tags.push(match[0]);
-	}
+	// Classify each whole token, so a `#` or `!` inside a property value (e.g. a
+	// URL fragment) is never mistaken for a tag or priority.
+	for (const token of rawMetadata.split(/\s+/)) {
+		if (token === '') continue;
 
-	for (const match of rawMetadata.matchAll(PRIORITY_REGEX)) {
-		if (priority === null) {
-			priority = match[1];
+		if (TAG_TOKEN_REGEX.test(token)) {
+			tags.push(token);
+			continue;
 		}
-	}
 
-	for (const match of rawMetadata.matchAll(PROPERTY_REGEX)) {
-		const key = match[1];
-		const value = match[2];
-		if (!Object.hasOwn(properties, key)) {
-			properties[key] = [];
+		if (PRIORITY_TOKEN_REGEX.test(token)) {
+			if (priority === null) {
+				priority = token.slice(1);
+			}
+			continue;
 		}
-		properties[key].push(value);
+
+		const property = PROPERTY_TOKEN_REGEX.exec(token);
+		if (property) {
+			const key = property[1];
+			const value = property[2];
+			if (!Object.hasOwn(properties, key)) {
+				properties[key] = [];
+			}
+			properties[key].push(value);
+		}
 	}
 
 	return {
