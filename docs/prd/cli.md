@@ -747,3 +747,26 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   `mdtask validate` should report duplicate numeric parts across prefixes, naming the
   conflicting IDs and their files, so the conflict is caught at validation time instead of
   at lookup time.
+
+- [ ] CLI-063 Command `mdtask install-skills <dir>` — deliver skills into an agent's skill directory
+  A skill auto-invokes only when its `SKILL.md` sits in the agent's own skill-discovery
+  folder. That folder differs per agent and there are dozens of agents, so mdtask cannot know
+  it — but the agent does, and passes it in. Today the npm package ships no skills at all, so
+  an installed user can't get the SDD methodology the workflow depends on. The skills must also
+  stay current when the mdtask version changes, with no manual reinstall.
+
+  Bundle the shippable skills (`sdd`, `mdtask`, `mdtask-create`, `mdtask-next`) in the npm
+  package (add them to `package.json` `files`); the project-local `check` skill is not shipped.
+
+  `mdtask install-skills <dir>` creates symlinks in the directory the caller names (the agent's
+  own skill folder) — no agent detection, no built-in dir map. The symlink target depends on
+  how mdtask is available:
+  - Installed as a project dependency → link straight into `node_modules/mdtask/skills`. The
+    version is already pinned by the project; no cache, no version check.
+  - Global install or `npx` → link into a per-user cache at `~/.config/mdtask/skills/`. On any
+    `mdtask` invocation, if the cache's version stamp is older than the running version,
+    overwrite the cache with the bundled skills and update the stamp (plain overwrite, no
+    locks; only-if-older so an old run never downgrades). The cache stays current after a
+    version bump, so every agent's symlinks pointing at it update with no manual reinstall.
+
+  No registry of install locations is kept.
