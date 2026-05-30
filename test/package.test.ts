@@ -16,6 +16,17 @@ describe('package.json npm publishing config', () => {
 		expect(pkg.files).toContain('dist');
 	});
 
+	it('ships the bundled skills', () => {
+		// The skills the npm package must carry for `install-skills` to work.
+		expect(pkg.files).toContain('skills');
+		// Their canonical source (copied into skills/ at build) must exist.
+		for (const name of ['sdd', 'mdtask', 'mdtask-create', 'mdtask-next']) {
+			expect(
+				existsSync(resolve(ROOT, 'docs', 'skills', name, 'SKILL.md')),
+			).toBe(true);
+		}
+	});
+
 	it('has license field', () => {
 		expect(pkg.license).toBe('PolyForm-Shield-1.0.0');
 	});

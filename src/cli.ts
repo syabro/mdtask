@@ -16,6 +16,13 @@ import { CAC } from 'cac';
 import p from 'picocolors';
 import { type FilesConfig, loadConfig, resolveBasePath } from './config.js';
 import { findMarkdownFiles } from './files.js';
+import {
+	installSkills,
+	localDepDir,
+	refreshCacheIfStale,
+	runningVersion,
+	userCacheSkillsDir,
+} from './skills.js';
 import { formatTable } from './table.js';
 import {
 	collectTaskBody,
@@ -999,10 +1006,50 @@ const KNOWN_COMMANDS = new Set([
 	'validate',
 	'set',
 	'ids',
+	'install-skills',
 	'help',
 ]);
 
+function cliRoot(): string {
+	return resolve(fileURLToPath(import.meta.url), '..', '..');
+}
+
+function handleInstallSkills(dir: string): void {
+	try {
+		const result = installSkills(resolve(dir), cliRoot(), process.cwd());
+		if (result.linked.length > 0) {
+			process.stdout.write(
+				`Linked ${result.linked.join(', ')} into ${dir} (from ${result.source})\n`,
+			);
+		}
+		for (const s of result.skipped) {
+			process.stderr.write(`mdtask: skipped ${s.name} — ${s.reason}\n`);
+		}
+		// Any skipped skill means the agent dir is incomplete — fail so setup
+		// automation doesn't treat a partial install as success.
+		if (result.skipped.length > 0) {
+			process.exit(1);
+		}
+	} catch (err) {
+		process.stderr.write(
+			`mdtask: ${err instanceof Error ? err.message : String(err)}\n`,
+		);
+		process.exit(1);
+	}
+}
+
 export async function run(args: string[]): Promise<number> {
+	const root = cliRoot();
+	const pkgVersion = runningVersion(root);
+
+	// Keep the shared skills cache current — global/npx installs symlink into it,
+	// so any run refreshes it after a version bump. Skip when mdtask is a local
+	// project dependency (those link directly into node_modules and must not
+	// mutate a global cache) and when no cache exists (nothing points at it).
+	if (existsSync(userCacheSkillsDir()) && !localDepDir(root, process.cwd())) {
+		refreshCacheIfStale(root, pkgVersion);
+	}
+
 	const cli = new CAC('mdtask');
 
 	cli.option(
@@ -1056,6 +1103,15 @@ export async function run(args: string[]): Promise<number> {
 
 	cli
 		.command(
+			'install-skills <dir>',
+			"Symlink mdtask's skills into an agent's skill directory (pass the agent's own skill folder)",
+		)
+		.action((dir) => {
+			handleInstallSkills(dir);
+		});
+
+	cli
+		.command(
 			'set <...args>',
 			'Add metadata to tasks: #tag, !priority, @key:value',
 		)
@@ -1074,16 +1130,6 @@ export async function run(args: string[]): Promise<number> {
 		});
 
 	cli.help();
-
-	const pkgPath = resolve(
-		fileURLToPath(import.meta.url),
-		'..',
-		'..',
-		'package.json',
-	);
-	const pkgVersion = existsSync(pkgPath)
-		? JSON.parse(readFileSync(pkgPath, 'utf-8')).version
-		: 'unknown';
 	cli.version(pkgVersion);
 
 	// Default shortcuts: no args → list, task ID → view

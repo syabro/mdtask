@@ -244,6 +244,21 @@ mdtask 23                # same as: mdtask view 23
 
 Only matches the pattern `[A-Z]+-\d+` or a plain number. If the argument is not a known command and not a valid task ID, an error message and help are shown (exit code 1).
 
+## Installing skills
+
+mdtask ships its dev skills (`sdd`, `mdtask`, `mdtask-create`, `mdtask-next`) inside the npm package. A skill auto-invokes only when its `SKILL.md` lives in the agent's own skill-discovery folder, which differs per agent — so the agent passes that folder in:
+
+```bash
+mdtask install-skills <dir>   # e.g. mdtask install-skills ~/.claude/skills
+```
+
+This symlinks each skill into `<dir>` (creating `<dir>` if needed). The link target depends on how mdtask is available:
+
+- **Project dependency** — links straight into `node_modules/mdtask/skills`. The version is pinned by the project; the links update when you bump the dependency.
+- **Global install or `npx`** — links into a per-user cache at `~/.config/mdtask/skills/` (honors `XDG_CONFIG_HOME`). Any later `mdtask` run refreshes that cache when the running version is newer, so the agent's links stay current with no manual reinstall.
+
+Skills already linked by mdtask are re-pointed on re-run; a real directory or a symlink mdtask doesn't manage is left untouched and reported. If any skill can't be linked, the command exits non-zero so setup automation sees the partial install. The project-local `check` skill is not shipped.
+
 ## Tasks
 
 - [x] CLI-001 Command `mdtask list` — basic output		@iter:mvp @blocked_by:TSK-040 @blocked_by:FLS-028
@@ -766,7 +781,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Uses the same numeric extraction as short lookup, so the warning matches exactly the
     collisions that would make `mdtask view <n>` ambiguous.
 
-- [ ] CLI-063 Command `mdtask install-skills <dir>` — deliver skills into an agent's skill directory
+- [x] CLI-063 Command `mdtask install-skills <dir>` — deliver skills into an agent's skill directory
   A skill auto-invokes only when its `SKILL.md` sits in the agent's own skill-discovery
   folder. That folder differs per agent and there are dozens of agents, so mdtask cannot know
   it — but the agent does, and passes it in. Today the npm package ships no skills at all, so
@@ -788,3 +803,18 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
     version bump, so every agent's symlinks pointing at it update with no manual reinstall.
 
   No registry of install locations is kept.
+
+  **Implemented:**
+  - `mdtask install-skills <dir>` symlinks the 4 shippable skills into `<dir>` (created if
+    needed). Skills are bundled into a top-level `skills/` dir at build time (tsup `onSuccess`
+    runs `scripts/bundle-skills.mjs`) and shipped via `package.json` `files`.
+  - Project-dependency installs link to the logical `node_modules/mdtask/skills/<skill>` path
+    (stable across version bumps); global/`npx` installs link into `~/.config/mdtask/skills/`
+    (honors `XDG_CONFIG_HOME`).
+  - The cache self-refreshes: any `mdtask` run rewrites it when the running version is newer
+    (only-if-older, never downgrades), but only when the cache already exists and the run is
+    not a local dependency — so local/dev runs never mutate a global cache. Best-effort, no
+    locks (single shared cache, newest-wins, by design).
+  - Re-points only mdtask-managed symlinks (path-boundary checked); leaves real dirs and
+    foreign symlinks untouched and reports them. Exits non-zero if any skill is skipped or the
+    bundle is incomplete, so automation never mistakes a partial install for success.
