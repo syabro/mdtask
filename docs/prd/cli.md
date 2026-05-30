@@ -148,6 +148,7 @@ mdtask validate --path docs/   # Check specific directory
 
 Checks performed:
 - **Duplicate IDs** (error) — same task ID appears in multiple places. Reports all locations. Exits with code 1.
+- **Duplicate numeric part** (warning) — the same number used by different prefixes (e.g. `CLI-001` and `PRJ-001`). Short numeric lookup (`mdtask view 1`) would be ambiguous. Names the conflicting IDs and their locations. Reported to stderr.
 - **Empty tags** (warning) — `#` followed by whitespace instead of a tag name. Reported to stderr.
 - **Malformed metadata** (warning) — `@key` without `:value`. Reported to stderr.
 - **Unknown priority** (warning) — `!word` that isn't `crit`, `high`, or `low`. Reported to stderr.
@@ -747,7 +748,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
     priorities OR together.
   - `--help` and the listing docs now lead with the flag form so the feature is discoverable.
 
-- [ ] CLI-060 Warn on duplicate numeric ID parts in `mdtask validate`
+- [x] CLI-060 Warn on duplicate numeric ID parts in `mdtask validate`
   IDs are documented as globally unique by their numeric part, and short numeric lookup
   (`mdtask view 22`) depends on it. But `validate` doesn't check for duplicate numbers, so
   `CLI-001` and `PRJ-001` pass validation and only surface later as an "ambiguous ID" error
@@ -756,6 +757,14 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   `mdtask validate` should report duplicate numeric parts across prefixes, naming the
   conflicting IDs and their files, so the conflict is caught at validation time instead of
   at lookup time.
+
+  **Implemented:**
+  - `mdtask validate` warns (stderr, no exit 1) when one number is used by more than one
+    prefix, naming each conflicting ID with its file:line.
+  - Locations are grouped by full ID, so an exact-duplicate ID (already reported as an error)
+    appears once in the numeric warning instead of twice.
+  - Uses the same numeric extraction as short lookup, so the warning matches exactly the
+    collisions that would make `mdtask view <n>` ambiguous.
 
 - [ ] CLI-063 Command `mdtask install-skills <dir>` — deliver skills into an agent's skill directory
   A skill auto-invokes only when its `SKILL.md` sits in the agent's own skill-discovery

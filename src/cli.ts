@@ -458,6 +458,37 @@ function handleValidate(options: { path?: string }): void {
 		}
 	}
 
+	// Warn on the same numeric part used by different prefixes (e.g. CLI-001 and
+	// PRJ-001). Short numeric lookup (`mdtask view 1`) then becomes ambiguous.
+	// extractNumericPart mirrors how that lookup resolves, so the check matches
+	// exactly what would break. Full IDs still work, so this is a warning.
+	const numericMap = new Map<number, Task[]>();
+	for (const task of tasks) {
+		const num = extractNumericPart(task.id);
+		const group = numericMap.get(num) ?? [];
+		group.push(task);
+		numericMap.set(num, group);
+	}
+
+	for (const [num, group] of numericMap) {
+		const prefixes = new Set(group.map((t) => t.id.replace(/-\d+$/, '')));
+		if (prefixes.size < 2) continue;
+
+		// Group locations by full ID so an exact duplicate isn't listed twice.
+		const byId = new Map<string, string[]>();
+		for (const t of group) {
+			const locs = byId.get(t.id) ?? [];
+			locs.push(`${t.filePath}:${t.lineNumber}`);
+			byId.set(t.id, locs);
+		}
+		const conflicts = [...byId.entries()]
+			.map(([id, locs]) => `${id} (${locs.join(', ')})`)
+			.join(', ');
+		process.stderr.write(
+			`warning: duplicate numeric part ${String(num).padStart(3, '0')} across prefixes: ${conflicts}\n`,
+		);
+	}
+
 	// Check empty tags and malformed metadata
 	for (const task of tasks) {
 		const raw = task.rawMetadata;

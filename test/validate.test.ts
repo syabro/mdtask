@@ -114,6 +114,53 @@ describe('mdtask validate', () => {
 		expect(exitSpy).toHaveBeenCalledWith(1);
 	});
 
+	it('duplicate numeric part across prefixes — warning naming IDs and files, no exit 1', async () => {
+		writeFileSync(join(tempDir, 'cli.md'), '- [ ] CLI-001 CLI task\n');
+		writeFileSync(join(tempDir, 'project.md'), '- [ ] PRJ-001 Project task\n');
+
+		await run(['validate']);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).toContain('warning');
+		expect(stderr).toContain('duplicate numeric part 001');
+		expect(stderr).toMatch(/CLI-001 \([^)]*cli\.md:1\)/);
+		expect(stderr).toMatch(/PRJ-001 \([^)]*project\.md:1\)/);
+		expect(exitSpy).not.toHaveBeenCalledWith(1);
+	});
+
+	it('distinct numeric parts across prefixes — no numeric warning', async () => {
+		writeFileSync(join(tempDir, 'cli.md'), '- [ ] CLI-001 CLI task\n');
+		writeFileSync(join(tempDir, 'project.md'), '- [ ] PRJ-002 Project task\n');
+
+		await run(['validate']);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		expect(stderr).not.toContain('duplicate numeric part');
+		expect(exitSpy).not.toHaveBeenCalled();
+	});
+
+	it('exact duplicate plus cross-prefix — error for the dup, ID listed once in numeric warning', async () => {
+		writeFileSync(
+			join(tempDir, 'a.md'),
+			'- [ ] CLI-001 First\n- [ ] PRJ-001 Other prefix\n',
+		);
+		writeFileSync(join(tempDir, 'b.md'), '- [ ] CLI-001 Duplicate\n');
+
+		await run(['validate']);
+
+		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
+		// Exact duplicate is still an error.
+		expect(stderr).toContain('error');
+		expect(exitSpy).toHaveBeenCalledWith(1);
+		// Numeric warning lists CLI-001 once (with both locations), not twice.
+		const warnLine = stderr
+			.split('\n')
+			.find((l) => l.includes('duplicate numeric part'));
+		expect(warnLine).toBeDefined();
+		expect((warnLine?.match(/CLI-001/g) ?? []).length).toBe(1);
+		expect(warnLine).toContain('PRJ-001');
+	});
+
 	it('empty tag — warning on stderr, no exit 1', async () => {
 		writeFileSync(
 			join(tempDir, 'tasks.md'),
