@@ -138,6 +138,112 @@ describe('mdtask list', () => {
 		});
 	});
 
+	describe('--tag and --priority flags', () => {
+		it('filters by --tag without a shell-hostile #', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 Backend task #backend\n- [ ] A-2 Frontend task #frontend\n',
+			);
+			const code = await run(['list', '--tag', 'backend']);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).not.toContain('A-2');
+		});
+
+		it('filters by --priority', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 High task !high\n- [ ] A-2 Low task !low\n',
+			);
+			const code = await run(['list', '--priority', 'high']);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).not.toContain('A-2');
+		});
+
+		it('ANDs repeated --tag values', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 Both #backend #urgent\n- [ ] A-2 One #backend\n',
+			);
+			const code = await run(['list', '--tag', 'backend', '--tag', 'urgent']);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).not.toContain('A-2');
+		});
+
+		it('ORs repeated --priority values', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 High !high\n- [ ] A-2 Crit !crit\n- [ ] A-3 Low !low\n',
+			);
+			const code = await run([
+				'list',
+				'--priority',
+				'high',
+				'--priority',
+				'crit',
+			]);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).toContain('A-2');
+			expect(output).not.toContain('A-3');
+		});
+
+		it('accepts --tag with a leading #', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 Backend #backend\n- [ ] A-2 Frontend #frontend\n',
+			);
+			const code = await run(['list', '--tag', '#backend']);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).not.toContain('A-2');
+		});
+
+		it('combines a positional filter with a flag', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 Both #backend !high\n- [ ] A-2 Tag only #backend\n',
+			);
+			const code = await run(['list', '#backend', '--priority', 'high']);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).not.toContain('A-2');
+		});
+
+		it('ANDs a positional #tag with a --tag flag', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 Both #backend #urgent\n- [ ] A-2 One #backend\n',
+			);
+			const code = await run(['list', '#backend', '--tag', 'urgent']);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).not.toContain('A-2');
+		});
+
+		it('ORs a positional !priority with a --priority flag', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] A-1 High !high\n- [ ] A-2 Crit !crit\n- [ ] A-3 Low !low\n',
+			);
+			const code = await run(['list', '!high', '--priority', 'crit']);
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('A-1');
+			expect(output).toContain('A-2');
+			expect(output).not.toContain('A-3');
+		});
+	});
+
 	describe('metadata at end of line', () => {
 		it('does not match a tag-like word in the middle of a title', async () => {
 			writeFileSync(

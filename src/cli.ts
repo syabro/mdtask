@@ -514,6 +514,8 @@ function handleList(
 		all?: boolean;
 		sort?: string;
 		path?: string;
+		tag?: string | string[];
+		priority?: string | string[];
 	},
 ): void {
 	const config = loadConfig();
@@ -522,10 +524,21 @@ function handleList(
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
 
-	const tagFilters = filters.filter((f) => f.startsWith('#'));
-	const priorityFilters = filters
-		.filter((f) => f.startsWith('!'))
-		.map((f) => f.slice(1));
+	// cac yields a string for one occurrence and a string[] for repeats; a
+	// numeric-looking value may arrive as a number, so coerce with String.
+	const toArray = (v: string | string[] | undefined): string[] =>
+		v === undefined ? [] : (Array.isArray(v) ? v : [v]).map(String);
+
+	// --tag/--priority flags need no shell quoting; merge them with the
+	// positional #tag / !priority filters using the same semantics.
+	const tagFilters = [
+		...filters.filter((f) => f.startsWith('#')),
+		...toArray(options.tag).map((t) => `#${t.replace(/^#/, '')}`),
+	];
+	const priorityFilters = [
+		...filters.filter((f) => f.startsWith('!')).map((f) => f.slice(1)),
+		...toArray(options.priority).map((p) => p.replace(/^!/, '')),
+	];
 
 	let filteredTasks = options.all
 		? tasks
@@ -969,10 +982,18 @@ export async function run(args: string[]): Promise<number> {
 	cli
 		.command(
 			'list [...filters]',
-			'List tasks. Filter by #tag and/or !priority — quote them: mdtask list "#backend" "!high"',
+			'List tasks. Filter by tag/priority: --tag backend --priority high (no quoting needed), or positional "#backend" "!high"',
 		)
 		.option('--all', 'Show all tasks including done')
 		.option('--sort <field>', 'Sort tasks (e.g. --sort=priority)')
+		.option(
+			'--tag <tag>',
+			'Filter by tag, e.g. --tag backend (repeatable; tags AND together)',
+		)
+		.option(
+			'--priority <priority>',
+			'Filter by priority: crit, high, or low (repeatable; priorities OR together)',
+		)
 		.action((filters: string[], options) => {
 			handleList(filters, options);
 		});

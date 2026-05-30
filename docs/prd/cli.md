@@ -64,20 +64,22 @@ Tasks with the same priority retain their original file order (stable sort).
 ### Filtering by tag
 
 ```bash
-mdtask list '#backend'           # Show only tasks tagged #backend
-mdtask list '#backend' '#urgent' # Show tasks with BOTH tags (AND logic)
+mdtask list --tag backend            # Show only tasks tagged #backend (no quoting)
+mdtask list --tag backend --tag urgent  # Show tasks with BOTH tags (AND logic)
+mdtask list '#backend' '#urgent'     # Same, positional form (must be quoted)
 ```
 
-Multiple tags use AND logic — only tasks that have all specified tags are shown. Tag filters combine with `--all` and `--sort`.
+Prefer the `--tag <name>` flag: a bare `#backend` is eaten by the shell (`#` starts a comment), so the positional form must be quoted. The flag is repeatable; with or without a leading `#`. Multiple tags use AND logic — only tasks that have all specified tags are shown. Flag and positional tags combine. Tag filters combine with `--all` and `--sort`.
 
 ### Filtering by priority
 
 ```bash
-mdtask list '!high'              # Show only high-priority tasks
-mdtask list '!high' '!crit'      # Show high OR crit tasks (OR logic)
+mdtask list --priority high              # Show only high-priority tasks (no quoting)
+mdtask list --priority high --priority crit  # Show high OR crit tasks (OR logic)
+mdtask list '!high' '!crit'              # Same, positional form (must be quoted)
 ```
 
-Multiple priorities use OR logic — tasks matching any of the specified priorities are shown. Priority filters combine with `--all`, `--sort`, and tag filters.
+Prefer the `--priority <crit|high|low>` flag: a bare `!high` triggers shell history expansion, so the positional form must be quoted. The flag is repeatable; with or without a leading `!`. Multiple priorities use OR logic — tasks matching any of the specified priorities are shown. Flag and positional priorities combine. Priority filters combine with `--all`, `--sort`, and tag filters.
 
 ### Unidentified task warnings
 
@@ -728,7 +730,7 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Missing-prefix errors include file, line, and task text
   - Covered targeted file, explicit prefix, invalid prefix, and unrelated-file cases in tests
 
-- [ ] CLI-059 Add `--tag` and `--priority` filter flags to `mdtask list`
+- [x] CLI-059 Add `--tag` and `--priority` filter flags to `mdtask list`
   `mdtask list #backend` and `mdtask list !high` depend on raw `#`/`!` arguments.
   The shell eats them — `#` starts a comment, `!` triggers history expansion — so the
   filter is silently dropped: the user gets the full list with no error and no way to
@@ -737,6 +739,13 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   Add explicit `--tag <name>` and `--priority <crit|high|low>` options that need no shell
   quoting. The positional `#tag` / `!priority` filters keep working unchanged. Multiple
   values follow the same semantics as the existing positional filters.
+
+  **Implemented:**
+  - `mdtask list --tag <name>` and `--priority <level>`, both repeatable and shell-safe;
+    accept the value with or without a leading `#`/`!`.
+  - Flag and positional filters merge with identical semantics: tags AND together,
+    priorities OR together.
+  - `--help` and the listing docs now lead with the flag form so the feature is discoverable.
 
 - [ ] CLI-060 Warn on duplicate numeric ID parts in `mdtask validate`
   IDs are documented as globally unique by their numeric part, and short numeric lookup
