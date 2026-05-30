@@ -20,7 +20,8 @@ read @docs/skills/sdd/SKILL.md — spec-driven development, PRD structure, examp
 ## Project Structure
 
 - `docs/prd/` — PRDs (task, files, cli, config, project, test)
-- `docs/skills/` — dev skills for working in the project (sdd, check, mdtask-create, mdtask-next, mdtask); `.claude/skills/` contains symlinks
+- `docs/skills/` — shippable dev skills (sdd, mdtask-create, mdtask-next, mdtask), symlinked into `.claude/skills/`
+- `.claude/skills/check/` — project-local `check` skill (real file, not shipped)
 - `docs/mdtask.md` — goals, architecture
 - `docs/skills/sdd/SKILL.md` — spec-driven development workflow
 - `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `just deploy` (wrangler → Cloudflare Pages)
@@ -51,6 +52,6 @@ Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Cla
 
 `CLAUDE.md` is `ln -s AGENTS.md` — Claude Code only reads `CLAUDE.md`, not `AGENTS.md`.
 
-All skills live in `docs/skills/` — `.claude/skills/` contains only symlinks.
+Shippable skills live in `docs/skills/` and are symlinked into `.claude/skills/`. The project-local `check` skill is the exception — its real file lives in `.claude/skills/check/`.
 
 Task loop: the `mdtask-next` skill (run `/mdtask-next`). It loads on demand — no need to read it into every session.

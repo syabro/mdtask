@@ -52,9 +52,6 @@ install-skill-mdtask-next:
     cp docs/skills/mdtask-next/* ~/.agents/skills/mdtask-next/
     @echo "Installed mdtask-next skill"
 
-# Note: `check` is a project-local dev skill — available via the committed
-# `.claude/skills/check` symlink, not shipped to ~/.agents/skills.
-
 # Release to npm (just release patch/minor/major)
 release bump="patch":
     @git diff-index --quiet HEAD || (echo "Error: uncommitted changes" && exit 1)
