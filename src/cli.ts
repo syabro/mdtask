@@ -954,7 +954,10 @@ const KNOWN_COMMANDS = new Set([
 export async function run(args: string[]): Promise<number> {
 	const cli = new CAC('mdtask');
 
-	cli.option('--path <path>', 'Base directory for tasks (default: .)');
+	cli.option(
+		'--path <path>',
+		'Base directory or file path for tasks (default: .)',
+	);
 
 	cli
 		.command('list [...filters]', 'List tasks')

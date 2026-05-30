@@ -24,7 +24,7 @@ read @docs/skills/sdd/SKILL.md — spec-driven development, PRD structure, examp
 - `.claude/skills/check/` — project-local `check` skill (real file, not shipped)
 - `docs/mdtask.md` — goals, architecture
 - `docs/skills/sdd/SKILL.md` — spec-driven development workflow
-- `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `just deploy` (wrangler → Cloudflare Pages)
+- `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `cd ../website && just deploy` (wrangler → Cloudflare Pages)
 
 ## Example IDs in docs
 
