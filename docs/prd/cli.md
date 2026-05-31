@@ -818,3 +818,11 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
   - Re-points only mdtask-managed symlinks (path-boundary checked); leaves real dirs and
     foreign symlinks untouched and reports them. Exits non-zero if any skill is skipped or the
     bundle is incomplete, so automation never mistakes a partial install for success.
+
+- [ ] CLI-064 Command `mdtask archive` — move done tasks out of PRDs
+  Done `[x]` tasks bloat PRD files and burn agent context. `mdtask archive`
+  moves done task blocks (same extraction as `mdtask move`) into one archive file.
+  - `mdtask archive` — all done in base; `archive <id...>` — точечно; `--path <file>` — один файл.
+  - Default path `<basePath>/_archive.md`, override via `.mdtaskrc` `archivePath`.
+    Must stay inside the scanned base so `@blocked_by`/`view` to archived tasks resolve.
+  - Never archive from the archive file itself.
