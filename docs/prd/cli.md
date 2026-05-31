@@ -170,6 +170,25 @@ Errors (exit code 1):
 - Source or target file is read-only (permission denied)
 - Target path is a directory
 
+## Archiving done tasks
+
+`mdtask archive` moves done tasks into an archive file so active PRDs stay focused:
+
+```bash
+mdtask archive                    # archive all done tasks in the base
+mdtask archive TSK-038 TSK-039    # archive specific done tasks
+mdtask archive --path docs/prd/cli.md  # archive done tasks from one file
+```
+
+The default archive is `<basePath>/_archive.md`. Set `.mdtaskrc` `archivePath` to use another file inside the scanned base. The archive file is skipped during archiving, so already archived tasks are not moved again. `--path <file>` scopes both bulk archiving and explicit ID lookup to that file.
+
+Errors (exit code 1):
+- Task ID not found or duplicate
+- Explicit task ID is open, not done
+- Archive path is outside the scanned base
+- Source or archive file is read-only (permission denied)
+- Archive path is a directory
+
 ## Symlink handling
 
 File discovery follows symlinks — both symlinked `.md` files and symlinked directories are included in search results. Circular symlinks (e.g., a directory linking back to an ancestor) are detected and handled gracefully without hanging or errors.
@@ -819,10 +838,16 @@ Full blocker info (including resolved ones) remains in the task file, visible vi
     foreign symlinks untouched and reports them. Exits non-zero if any skill is skipped or the
     bundle is incomplete, so automation never mistakes a partial install for success.
 
-- [ ] CLI-064 Command `mdtask archive` — move done tasks out of PRDs
+- [x] CLI-064 Command `mdtask archive` — move done tasks out of PRDs
   Done `[x]` tasks bloat PRD files and burn agent context. `mdtask archive`
   moves done task blocks (same extraction as `mdtask move`) into one archive file.
   - `mdtask archive` — all done in base; `archive <id...>` — точечно; `--path <file>` — один файл.
   - Default path `<basePath>/_archive.md`, override via `.mdtaskrc` `archivePath`.
     Must stay inside the scanned base so `@blocked_by`/`view` to archived tasks resolve.
   - Never archive from the archive file itself.
+
+  **Implemented:**
+  - `mdtask archive` moves all done tasks in the scanned base into `<basePath>/_archive.md`.
+  - `mdtask archive <id...>` archives only named done tasks and rejects open tasks.
+  - `--path <file>` limits archiving and explicit ID lookup to one file.
+  - `.mdtaskrc` `archivePath` selects another archive file inside the scanned base, and the archive file itself is skipped.

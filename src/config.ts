@@ -10,6 +10,7 @@ export type Config = {
 	path?: string;
 	files?: FilesConfig;
 	excludePrefixes?: string[];
+	archivePath?: string;
 };
 
 /**
@@ -72,6 +73,9 @@ function validateConfig(value: unknown): Config {
 	const excludePrefixes = validateStringArray(obj.excludePrefixes);
 	if (excludePrefixes) {
 		config.excludePrefixes = excludePrefixes;
+	}
+	if (typeof obj.archivePath === 'string') {
+		config.archivePath = obj.archivePath;
 	}
 	return config;
 }

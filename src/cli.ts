@@ -9,7 +9,7 @@ import {
 	statSync,
 	writeFileSync,
 } from 'node:fs';
-import { dirname, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import * as rl from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { CAC } from 'cac';
@@ -29,6 +29,7 @@ import {
 	computeFenceMask,
 	extractNumericPart,
 	extractPriorityTokens,
+	findTaskBlockRange,
 	parseMetadata,
 	parseTaskHeader,
 	parseUnidentifiedTaskLine,
@@ -335,25 +336,7 @@ function handleMove(
 	}
 
 	// Collect block range: header + indented/empty body lines
-	let endIndex = headerIndex + 1;
-	while (endIndex < lines.length) {
-		const currentLine = lines[endIndex];
-		if (currentLine.trim() === '') {
-			endIndex++;
-			continue;
-		}
-		if (!currentLine.startsWith(' ')) {
-			break;
-		}
-		endIndex++;
-	}
-
-	// Trim trailing empty lines from block
-	let blockEnd = endIndex;
-	while (blockEnd > headerIndex + 1 && lines[blockEnd - 1].trim() === '') {
-		blockEnd--;
-	}
-
+	const { end: blockEnd } = findTaskBlockRange(lines, headerIndex);
 	const blockLines = lines.slice(headerIndex, blockEnd);
 
 	// Pre-check: source must be writable
@@ -407,6 +390,172 @@ function handleMove(
 	// Remove block from source
 	lines.splice(headerIndex, blockEnd - headerIndex);
 	writeFileSync(task.filePath, lines.join('\n'));
+}
+
+type TaskBlock = {
+	task: Task;
+	headerIndex: number;
+	blockEnd: number;
+	lines: string[];
+};
+
+function isInsideBase(targetPath: string, basePath: string): boolean {
+	const rel = relative(basePath, targetPath);
+	return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel));
+}
+
+function archiveBaseAndFiles(
+	pathOption: string | undefined,
+	config: ReturnType<typeof loadConfig>,
+): { basePath: string; files: string[] } {
+	const rawPath = resolveBasePath(pathOption, config);
+	const resolvedPath = resolve(rawPath);
+	try {
+		const stats = statSync(resolvedPath);
+		if (stats.isFile()) {
+			return { basePath: dirname(resolvedPath), files: [resolvedPath] };
+		}
+	} catch {
+		// Missing paths are handled by the normal scanner, matching other commands.
+	}
+
+	return {
+		basePath: resolvedPath,
+		files: taskFiles(resolvedPath, config?.files),
+	};
+}
+
+function handleArchive(ids: string[], options: { path?: string }): void {
+	const config = loadConfig();
+	const { basePath, files } = archiveBaseAndFiles(options.path, config);
+	const archivePath = resolve(basePath, config?.archivePath ?? '_archive.md');
+
+	if (!isInsideBase(archivePath, basePath)) {
+		process.stderr.write(
+			`mdtask: archive path '${archivePath}' is outside the base directory\n`,
+		);
+		process.exit(1);
+		return;
+	}
+
+	if (existsSync(archivePath) && statSync(archivePath).isDirectory()) {
+		process.stderr.write(`mdtask: '${archivePath}' is a directory\n`);
+		process.exit(1);
+		return;
+	}
+
+	const sourceFiles = files.filter(
+		(filePath) => !sameFile(filePath, archivePath),
+	);
+	const tasks = sourceFiles.flatMap((filePath) =>
+		readFileTasks(filePath, config?.excludePrefixes),
+	);
+	const selected: Task[] = [];
+
+	if (ids.length > 0) {
+		for (const id of ids) {
+			try {
+				selected.push(resolveTaskId(id, tasks));
+			} catch (err: unknown) {
+				process.stderr.write(
+					`mdtask: ${err instanceof Error ? err.message : err}\n`,
+				);
+				process.exit(1);
+				return;
+			}
+		}
+	} else {
+		selected.push(...tasks.filter((task) => task.status === 'done'));
+	}
+
+	for (const task of selected) {
+		if (task.status !== 'done') {
+			process.stderr.write(`mdtask: task '${task.id}' is not done\n`);
+			process.exit(1);
+			return;
+		}
+	}
+
+	if (selected.length === 0) return;
+
+	const sorted = [...selected].sort((a, b) => {
+		if (a.filePath === b.filePath) return a.lineNumber - b.lineNumber;
+		return a.filePath.localeCompare(b.filePath);
+	});
+	const blocks: TaskBlock[] = [];
+
+	for (const task of sorted) {
+		const fileLines = readFileSync(task.filePath, 'utf-8').split('\n');
+		const headerIndex = task.lineNumber - 1;
+		if (!fileLines[headerIndex]?.includes(task.id)) {
+			process.stderr.write(
+				`mdtask: file changed, task '${task.id}' not at expected line\n`,
+			);
+			process.exit(1);
+			return;
+		}
+		const { end } = findTaskBlockRange(fileLines, headerIndex);
+		blocks.push({
+			task,
+			headerIndex,
+			blockEnd: end,
+			lines: fileLines.slice(headerIndex, end),
+		});
+	}
+
+	const sourcePaths = [...new Set(blocks.map((block) => block.task.filePath))];
+	for (const sourcePath of sourcePaths) {
+		try {
+			accessSync(sourcePath, constants.W_OK);
+		} catch {
+			process.stderr.write(
+				`mdtask: cannot write to '${sourcePath}': permission denied\n`,
+			);
+			process.exit(1);
+			return;
+		}
+	}
+
+	if (existsSync(archivePath)) {
+		try {
+			accessSync(archivePath, constants.W_OK);
+		} catch {
+			process.stderr.write(
+				`mdtask: cannot write to '${archivePath}': permission denied\n`,
+			);
+			process.exit(1);
+			return;
+		}
+	} else {
+		mkdirSync(dirname(archivePath), { recursive: true });
+	}
+
+	let archiveContent = existsSync(archivePath)
+		? readFileSync(archivePath, 'utf-8')
+		: '';
+	if (archiveContent.length > 0 && !archiveContent.endsWith('\n'))
+		archiveContent += '\n';
+	if (archiveContent.length > 0) archiveContent += '\n';
+	archiveContent += `${blocks.map((block) => block.lines.join('\n')).join('\n\n')}\n`;
+	writeFileSync(archivePath, archiveContent);
+
+	const byFile = new Map<string, TaskBlock[]>();
+	for (const block of blocks) {
+		const existing = byFile.get(block.task.filePath) ?? [];
+		existing.push(block);
+		byFile.set(block.task.filePath, existing);
+	}
+
+	for (const [filePath, fileBlocks] of byFile) {
+		const content = readFileSync(filePath, 'utf-8');
+		const lines = content.split('\n');
+		for (const block of [...fileBlocks].sort(
+			(a, b) => b.headerIndex - a.headerIndex,
+		)) {
+			lines.splice(block.headerIndex, block.blockEnd - block.headerIndex);
+		}
+		writeFileSync(filePath, lines.join('\n'));
+	}
 }
 
 function handleOpen(id: string, options: { path?: string }): void {
@@ -1003,6 +1152,7 @@ const KNOWN_COMMANDS = new Set([
 	'done',
 	'open',
 	'move',
+	'archive',
 	'validate',
 	'set',
 	'ids',
@@ -1095,6 +1245,12 @@ export async function run(args: string[]): Promise<number> {
 		.command('move <id> <file>', 'Move task to another file')
 		.action((id, file, options) => {
 			handleMove(id, file, options);
+		});
+
+	cli
+		.command('archive [...ids]', 'Move done tasks into the archive file')
+		.action((ids: string[], options) => {
+			handleArchive(ids, options);
 		});
 
 	cli.command('validate', 'Check task integrity').action((options) => {

@@ -132,28 +132,38 @@ export function computeFenceMask(lines: string[]): boolean[] {
 	return mask;
 }
 
-export function collectTaskBody(lines: string[], headerIndex: number): string {
-	const raw: string[] = [];
-
-	for (let i = headerIndex + 1; i < lines.length; i++) {
-		const line = lines[i].replace(/\r$/, '');
-
+// Boundary of a task block: header line plus its indented/blank body lines,
+// with trailing blank lines trimmed. Single source of block geometry, shared by
+// view (collectTaskBody), move, and archive.
+export function findTaskBlockRange(
+	lines: string[],
+	headerIndex: number,
+): { start: number; end: number } {
+	let endIndex = headerIndex + 1;
+	while (endIndex < lines.length) {
+		const line = lines[endIndex];
 		if (line.trim() === '') {
-			raw.push('');
+			endIndex++;
 			continue;
 		}
-
-		if (!line.startsWith(' ')) {
-			break;
-		}
-
-		raw.push(line);
+		if (!line.startsWith(' ')) break;
+		endIndex++;
 	}
 
-	// Trim trailing empty lines
-	while (raw.length > 0 && raw[raw.length - 1] === '') {
-		raw.pop();
+	let end = endIndex;
+	while (end > headerIndex + 1 && lines[end - 1].trim() === '') {
+		end--;
 	}
+
+	return { start: headerIndex, end };
+}
+
+export function collectTaskBody(lines: string[], headerIndex: number): string {
+	const { end } = findTaskBlockRange(lines, headerIndex);
+	const raw = lines.slice(headerIndex + 1, end).map((line) => {
+		const stripped = line.replace(/\r$/, '');
+		return stripped.trim() === '' ? '' : stripped;
+	});
 
 	if (raw.length === 0) return '';
 
