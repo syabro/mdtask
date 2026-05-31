@@ -4,3 +4,4 @@ dist/
 skills/
 tsconfig.tsbuildinfo
 .sisyphus
+tmp/
