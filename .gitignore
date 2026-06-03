@@ -5,3 +5,4 @@ skills/
 tsconfig.tsbuildinfo
 .sisyphus
 tmp/
+.DS_Store
