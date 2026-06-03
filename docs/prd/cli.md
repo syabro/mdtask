@@ -280,7 +280,17 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
 
 ## Tasks
 
+- [ ] CLI-065 Replace `## Tasks` journal boundary with H1 `# Tasks`
+  Separate prose-spec from the task journal by heading level.
+  Current boundary is `## Tasks` (H2), sharing a level with prose `##`.
+  Target: H1 `# Tasks` at the bottom, story groups as `##` beneath it.
+  Parser and blocker graph ignore heading levels; affects file layout,
+  `archive`, and any code that writes/locates the task section.
 
+- [ ] CLI-066 Archive done tasks by user-story group
+  `mdtask archive` currently moves individual done tasks into a flat `_archive.md`.
+  Target: when a whole story group is closed, move the group with its heading,
+  removing it from the live file. Living file is cleaned per story, not per task.
 
 ## Blocker display in list
 
