@@ -64,7 +64,8 @@ import '../styles/global.css'
             <div class="sp"></div>
             <div class="ln"><span class="h">## Login</span></div>
             <div class="ln"><span class="dim">Users sign in with email and password.</span></div>
-            <div class="ln"><span class="dim">Sessions last 30 days; tokens rotate.</span></div>
+            <div class="ln"><span class="dim">Sessions last 30 days; refresh tokens rotate on every use.</span></div>
+            <div class="ln"><span class="dim">Repeated failures are throttled per IP and per account.</span></div>
             <div class="gbrace">
               <svg viewBox="0 0 24 100" preserveAspectRatio="none" width="16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2 C17 2 17 18 17 34 C17 43 20 48 23 50 C20 52 17 57 17 66 C17 82 17 98 5 98" /></svg>
               <span class="lbl">spec</span>
@@ -75,10 +76,21 @@ import '../styles/global.css'
           <div class="sp"></div>
 
           <div class="brace-block">
-            <div class="ln"><span class="h">## Tasks</span></div>
+            <div class="ln"><span class="h"># Tasks</span></div>
             <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-001</span><span class="txt">  Add email and password login</span></div>
-            <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Add magic-link login</span><span class="pri">        !high</span></div>
-            <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-005</span><span class="txt">  Rate-limit the magic-link endpoint</span></div>
+            <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">**Implemented:**</span></span></div>
+            <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POST /auth/login verifies the password hash</span></div>
+            <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and issues a 30-day session cookie.</span></div>
+            <div class="sp"></div>
+            <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-003</span><span class="txt">  Rotate refresh tokens on every use</span></div>
+            <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">**Implemented:**</span></span></div>
+            <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Each refresh swaps the token, revokes the old one.</span></div>
+            <div class="sp"></div>
+            <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Add passwordless magic-link login          !high</span></div>
+            <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email a one-time link that signs the user in.</span></div>
+            <div class="sp"></div>
+            <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-005</span><span class="txt">  Rate-limit the magic-link    </span><span class="blk">@blocked_by:</span><span class="id">AUTH-004</span></div>
+            <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cap requests per email and per IP once the endpoint exists.</span></div>
             <div class="gbrace">
               <svg viewBox="0 0 24 100" preserveAspectRatio="none" width="16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2 C17 2 17 18 17 34 C17 43 20 48 23 50 C20 52 17 57 17 66 C17 82 17 98 5 98" /></svg>
               <span class="lbl">tasks</span>
@@ -107,10 +119,13 @@ import '../styles/global.css'
         <div class="sp"></div>
         <div class="ln"><span class="h">## Tasks</span></div>
         <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-001</span><span class="txt">  Email + password login</span></div>
+        <div class="sp"></div>
         <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-002</span><span class="txt">  Password reset over email</span></div>
-        <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Magic-link login</span><span class="pri">                    !high</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Magic-link login                    !high</span></div>
         <div class="ln"><span class="note">      Send a one-time link to the user's email.</span></div>
         <div class="ln"><span class="note">      Signs them in, no password needed.</span></div>
+        <div class="sp"></div>
         <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-005</span><span class="txt">  Rate-limit login attempts</span><span class="blk">           @blocked_by:</span><span class="id">AUTH-004</span></div>
       </div>
     </div>
@@ -151,7 +166,7 @@ import '../styles/global.css'
     <div class="card mt-9">
       <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/auth.md</span></div>
       <div class="code">
-        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-004</span><span class="txt">  Magic-link login</span><span class="pri">   !high</span></div>
+        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-004</span><span class="txt">  Magic-link login   !high</span></div>
         <div class="ln"><span class="note">      Send a one-time link to the user's email.</span></div>
         <div class="ln"><span class="note">      **Implemented:** POST /auth/magic-link issues a signed token (15-min TTL);</span></div>
         <div class="ln"><span class="note">      /auth/magic-link/verify signs the user in.</span></div>

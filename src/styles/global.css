@@ -253,8 +253,8 @@ code {
 
 .code {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.45rem;
+  font-size: 0.75rem;
+  line-height: 1.45em;
   color: var(--color-ink-soft);
   padding: 22px 24px;
 }
@@ -279,7 +279,7 @@ code {
 
 .id {
   color: var(--color-ink);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .txt { color: var(--color-ink-soft); }
@@ -290,11 +290,6 @@ code {
 }
 
 .note { color: var(--color-muted); }
-
-.pri {
-  color: var(--color-acc);
-  font-weight: 600;
-}
 
 .blk { color: var(--color-muted); }
 
