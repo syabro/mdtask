@@ -316,67 +316,45 @@ import '../styles/global.css'
 
 <!-- ============ COMPARISON ============ -->
 <section id="compare" class="bg-bg-alt py-20 lg:py-26">
-  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
+  <div class="mx-auto max-w-[980px] px-5 sm:px-8 lg:px-14">
     <h2 class="text-h2 text-ink">How it's different</h2>
-    <p class="mt-4 text-body text-ink-soft">Same payoff against the whole class: your spec and tasks are one git artifact —
-      there's no second system to keep in sync.</p>
+    <p class="mt-4 text-body text-ink-soft">Most tools split specs and tasks into different places. mdtask keeps them in one Markdown file.</p>
 
-    <div class="mt-10 border-t border-line">
-      <div class="grid grid-cols-1 lg:grid-cols-[minmax(170px,210px)_1fr] gap-2.5 lg:gap-9 py-6 px-1 border-b border-line items-start">
-        <div class="text-h4 text-ink">SDD frameworks<span class="block font-mono text-ui font-medium text-muted mt-1.5">Spec Kit<br />OpenSpec</span></div>
-        <div class="text-body text-ink-soft">Keep spec, plan, and tasks as separate artifacts. There's a gap between them
-          where they drift. <b class="text-ink font-semibold">mdtask keeps tasks inside the spec file</b> — nothing to sync.</div>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-[minmax(170px,210px)_1fr] gap-2.5 lg:gap-9 py-6 px-1 border-b border-line items-start">
-        <div class="text-h4 text-ink">Trackers<span class="block font-mono text-ui font-medium text-muted mt-1.5">GitHub Issues<br />Jira<br />Linear</span></div>
-        <div class="text-body text-ink-soft">A task is a separate object tied to the repo — the issue lives in the tracker's
-          database, never in your files or your diff. <b class="text-ink font-semibold">mdtask keeps the task in the same file as the
-          spec</b>, under one git history.</div>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-[minmax(170px,210px)_1fr] gap-2.5 lg:gap-9 py-6 px-1 border-b border-line items-start">
-        <div class="text-h4 text-ink">Flat TODO.md<span class="block font-mono text-ui font-medium text-muted mt-1.5">plain checklist</span></div>
-        <div class="text-body text-ink-soft">Same instinct, no structure. <b class="text-ink font-semibold">mdtask adds stable IDs, file queries, and a
-          dependency graph</b> — still plain Markdown.</div>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-[minmax(170px,210px)_1fr] gap-2.5 lg:gap-9 py-6 px-1 border-b border-line items-start">
-        <div class="text-h4 text-ink">Markdown note apps<span class="block font-mono text-ui font-medium text-muted mt-1.5">Obsidian<br />etc.</span></div>
-        <div class="text-body text-ink-soft">Not a competitor — same files. <b class="text-ink font-semibold">mdtask adds a CLI on top.</b></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FAQ ============ -->
-<section id="faq" class="py-20 lg:py-26">
-  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">Questions</h2>
-    <div class="mt-9 grid gap-0.5">
-      <div class="border-t border-line py-6">
-        <div class="text-h4 text-ink">Isn't this just a TODO file?</div>
-        <div class="mt-2.5 text-body text-ink-soft">No. Tasks live in the same file as the spec, with stable IDs, an
-          <code>@blocked_by</code> dependency graph, and queries. A plain TODO does none of that. Still Markdown.</div>
-      </div>
-      <div class="border-t border-line py-6">
-        <div class="text-h4 text-ink">What about git merge conflicts?</div>
-        <div class="mt-2.5 text-body text-ink-soft">Normal text conflicts in a <code>.md</code> file, resolved like any lines in git.
-          Small, focused commits keep them rare. No magic auto-merge.</div>
-      </div>
-      <div class="border-t border-line py-6">
-        <div class="text-h4 text-ink">Does my agent need setup?</div>
-        <div class="mt-2.5 text-body text-ink-soft">Your agent installs the skill itself from one instruction, once. You don't set
-          paths or install anything by hand.</div>
-      </div>
-      <div class="border-t border-b border-line py-6">
-        <div class="text-h4 text-ink">What if I outgrow it?</div>
-        <div class="mt-2.5 text-body text-ink-soft">It's Markdown in your repo. Annotations are readable and editable by hand with
-          normal text tools. No lock-in — the files are already yours.</div>
-      </div>
-    </div>
+    <ul class="mt-10 grid gap-8">
+      <li>
+        <h3 class="text-h4 text-ink">SDD frameworks</h3>
+        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+          <p>Spec Kit and OpenSpec help you structure specs. You can keep using whatever spec format you like.</p>
+          <p><b class="text-ink font-semibold">mdtask adds the task layer inside those Markdown specs.</b> It complements your spec workflow instead of replacing it.</p>
+        </div>
+      </li>
+      <li>
+        <h3 class="text-h4 text-ink">Trackers</h3>
+        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+          <p>GitHub Issues, Jira, and Linear make you check a board to understand what changed and why.</p>
+          <p><b class="text-ink font-semibold">mdtask puts the task in the same diff as the code and spec.</b> Reviewers see the whole change in git.</p>
+        </div>
+      </li>
+      <li>
+        <h3 class="text-h4 text-ink">Flat TODO.md</h3>
+        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+          <p>A plain checklist works until you need to find owners, blockers, related work, or everything for one area.</p>
+          <p><b class="text-ink font-semibold">mdtask makes that checklist queryable</b> without turning it into a database.</p>
+        </div>
+      </li>
+      <li>
+        <h3 class="text-h4 text-ink">Markdown note apps</h3>
+        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+          <p>Obsidian and other note apps are good for writing, but they do not give agents a task workflow.</p>
+          <p><b class="text-ink font-semibold">mdtask gives agents a small task system</b> while keeping the source as Markdown.</p>
+        </div>
+      </li>
+    </ul>
   </div>
 </section>
 
 <!-- ============ SETUP ============ -->
-<section id="setup" class="bg-bg-alt py-20 lg:py-26">
+<section id="setup" class="py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
     <h2 class="text-h2 text-ink">Get started in a minute</h2>
     <p class="mt-3.5 text-body text-ink-soft">Your agent does this from one instruction — not you by hand.</p>
@@ -410,7 +388,7 @@ import '../styles/global.css'
 </section>
 
 <!-- ============ CTA ============ -->
-<section class="text-center py-30">
+<section class="bg-panel text-center py-30">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
     <h2 class="text-cta text-ink">A spec that ships with the code</h2>
     <div class="block font-hand text-subline text-muted mt-7 -rotate-1">Because it's one file.</div>
