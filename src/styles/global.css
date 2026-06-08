@@ -142,6 +142,56 @@ code {
   border-radius: 10px;
 }
 
+.feature-cloud {
+  position: relative;
+  max-width: 27rem;
+  height: 8.25rem;
+  margin-top: 2.5rem;
+}
+
+.feature-cloud span {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #000;
+  opacity: .86;
+  white-space: nowrap;
+}
+
+.feature-cloud span:nth-child(1) { top: .9rem; left: 2.1rem; }
+
+.feature-cloud span:nth-child(2) {
+  top: 1rem;
+  left: 13rem;
+}
+
+.feature-cloud span:nth-child(3) {
+  top: 3.15rem;
+  left: 3.7rem;
+}
+
+.feature-cloud span:nth-child(4) {
+  top: 3.25rem;
+  left: 9.2rem;
+}
+
+.feature-cloud span:nth-child(5) {
+  top: 5.35rem;
+  left: .5rem;
+}
+
+.feature-cloud span:nth-child(6) {
+  top: 5.75rem;
+  left: 14rem;
+}
+
+.feature-cloud span:nth-child(7) {
+  top: 7.1rem;
+  left: 7.4rem;
+}
+
 .actions .btn,
 .actions .copyfield { height: 50px; }
 
