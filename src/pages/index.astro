@@ -104,12 +104,15 @@ import '../styles/global.css'
 
 <!-- ============ 01 — SIMPLICITY ============ -->
 <section id="simplicity" class="bg-bg-alt py-20 lg:py-26">
-  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">Simplicity. Zen. Markdown.</h2>
-    <p class="mt-4 text-body text-ink-soft">Specs and tasks live together in Markdown spec files.</p>
-    <p class="mt-3 text-body text-ink-soft">Each file shows what exists, what is planned, and what is being built.</p>
+  <div class="mx-auto grid max-w-page grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-18 lg:px-14">
+    <div class="lg:order-2">
+      <h2 class="text-h2 text-ink">Markdown is enough</h2>
+      <p class="mt-4 text-body text-ink-soft">Specs and tasks live together in Markdown spec files.</p>
+      <p class="mt-3 text-body text-ink-soft">Each file shows what exists, what is planned, and what is being built.</p>
+      <p class="mt-6 text-body text-ink-soft">No boards. No database. No workspace. Just Markdown.</p>
+    </div>
 
-    <div class="card mt-10">
+    <div class="card lg:order-1">
       <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/auth.md</span></div>
       <div class="code">
         <div class="ln"><span class="h"># Authentication</span></div>
@@ -124,19 +127,13 @@ import '../styles/global.css'
         <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Add passwordless magic-link login</span></div>
       </div>
     </div>
-    <p class="mt-6 text-body text-ink-soft">No boards. No database. No workspace. Just Markdown.</p>
   </div>
 </section>
 
 <!-- ============ 02 — CLI ============ -->
 <section id="cli" class="py-20 lg:py-26">
-  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">CLI</h2>
-    <p class="mt-4 text-body text-ink-soft">Turn Markdown specs into a task system.</p>
-    <p class="mt-3 text-body text-ink-soft">Show open work, find blockers, filter by tags, group by custom fields,
-      navigate relationships, and assign missing task IDs.</p>
-
-    <div class="term mt-9">
+  <div class="mx-auto grid max-w-page grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-18 lg:px-14">
+    <div class="term lg:order-2">
       <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">terminal</span></div>
       <div class="code">
         <div class="ln"><span class="prompt">$</span> mdtask list --tag auth --priority high</div>
@@ -145,15 +142,21 @@ import '../styles/global.css'
       </div>
     </div>
 
-    <p class="mt-7 text-body text-ink-soft">No boards. No setup. No separate task database.
-      Just your specs, queried from the terminal.</p>
+    <div class="lg:order-1">
+      <h2 class="text-h2 text-ink">CLI</h2>
+      <p class="mt-4 text-body text-ink-soft">Turn Markdown specs into a task system.</p>
+      <p class="mt-3 text-body text-ink-soft">Show open work, find blockers, filter by tags, group by custom fields,
+        navigate relationships, and assign missing task IDs.</p>
+      <p class="mt-7 text-body text-ink-soft">No boards. No setup. No separate task database.
+        Just your specs, queried from the terminal.</p>
+    </div>
   </div>
 </section>
 
 <!-- ============ 03 — FORMAT ============ -->
 <section id="format" class="bg-bg-alt py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">It's just Markdown.</h2>
+    <h2 class="text-h2 text-ink">It's just Markdown</h2>
     <p class="mt-4 text-body text-ink-soft">Looks like a checkbox. Carries an ID, priority, tags, and custom fields.</p>
 
     <div class="card mt-9 md:-mx-20">
@@ -307,7 +310,7 @@ import '../styles/global.css'
 <!-- ============ COMPARISON ============ -->
 <section id="compare" class="bg-bg-alt py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">How it's different.</h2>
+    <h2 class="text-h2 text-ink">How it's different</h2>
     <p class="mt-4 text-body text-ink-soft">Same payoff against the whole class: your spec and tasks are one git artifact —
       there's no second system to keep in sync.</p>
 
@@ -339,7 +342,7 @@ import '../styles/global.css'
 <!-- ============ FAQ ============ -->
 <section id="faq" class="py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">Questions.</h2>
+    <h2 class="text-h2 text-ink">Questions</h2>
     <div class="mt-9 grid gap-0.5">
       <div class="border-t border-line py-6">
         <div class="text-h4 text-ink">Isn't this just a TODO file?</div>
@@ -368,7 +371,7 @@ import '../styles/global.css'
 <!-- ============ SETUP ============ -->
 <section id="setup" class="bg-bg-alt py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">Get started in a minute.</h2>
+    <h2 class="text-h2 text-ink">Get started in a minute</h2>
     <p class="mt-3.5 text-body text-ink-soft">Your agent does this from one instruction — not you by hand.</p>
 
     <div class="mt-10 grid gap-5">
@@ -402,7 +405,7 @@ import '../styles/global.css'
 <!-- ============ CTA ============ -->
 <section class="text-center py-30">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-cta text-ink">A spec that ships with the code.</h2>
+    <h2 class="text-cta text-ink">A spec that ships with the code</h2>
     <div class="block font-hand text-subline text-muted mt-7 -rotate-1">Because it's one file.</div>
     <div class="actions flex flex-wrap gap-3 justify-center items-center mt-9">
       <copy-field command="npm install -g mdtask"></copy-field>
