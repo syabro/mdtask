@@ -179,45 +179,128 @@ import '../styles/global.css'
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
     <h2 class="text-h2 text-ink">Living Specs</h2>
     <p class="mt-4 text-body text-ink-soft">One commit carries the code, the task closure, and the PRD or spec update.</p>
-
-    <div class="card mt-9">
-      <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/auth.md</span></div>
-      <div class="code">
-        <div class="ln"><span class="h">## Login</span></div>
-        <div class="ln"><span class="dim">Passwordless magic-link: a one-time link signs the user in.</span></div>
-        <div class="sp"></div>
-        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-004</span><span class="txt">  Add passwordless magic-link login</span></div>
-        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">**Implemented:**</span></span></div>
-        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POST /auth/magic-link issues a signed token.</span></div>
-      </div>
-    </div>
-    <p class="mt-6 text-body text-ink-soft">Agents follow a predefined skill-based workflow.
+    <p class="mt-3 text-body text-ink-soft">Agents follow a predefined skill-based workflow.
       A task is not complete until the implementation, task state, and documentation are updated together.</p>
   </div>
-</section>
 
-<!-- ============ 04 — DIFF ============ -->
-<section id="diff" class="py-20 lg:py-26">
-  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">One commit. One file.<br />Spec and code move together.</h2>
-  </div>
-  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14 mt-11">
-    <div class="diff">
-      <div class="dhead">docs/prd/auth.md</div>
-      <div class="body">
-        <div class="drow ctx"><span class="g"> </span><span class="h">## Login</span></div>
-        <div class="drow ctx"><span class="g"> </span>Email and password.</div>
-        <div class="drow add"><span class="g">+</span>Passwordless magic-link: a one-time link signs the user in.</div>
-        <div class="drow ctx"><span class="g"> </span> </div>
-        <div class="drow ctx"><span class="g"> </span><span class="h">## Tasks</span></div>
-        <div class="drow del"><span class="g">-</span>- [ ] AUTH-004  Magic-link login   !high</div>
-        <div class="drow add"><span class="g">+</span>- [x] AUTH-004  Magic-link login   !high</div>
-        <div class="drow add"><span class="g">+</span>      **Implemented:** POST /auth/magic-link issues a signed token (15-min TTL).</div>
+  <div class="mx-auto mt-12 max-w-page px-5 sm:px-8 lg:px-14">
+    <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
+      <div class="flex flex-col">
+        <div class="mb-2 text-eyebrow uppercase text-muted">The usual way</div>
+        <div class="relative">
+          <div class="relative z-10">
+            <div class="mb-3 flex min-h-8 items-center gap-2 font-hand text-base font-normal leading-tight text-drift">
+              <span aria-hidden="true">x</span>
+              <span>Code is shipped and the task is closed, but the <span class="underline decoration-drift/50 underline-offset-4">spec is stale</span></span>
+            </div>
+            <article class="overflow-hidden rounded-lg border border-line bg-paper shadow-card">
+              <div class="flex items-center gap-2 border-b border-line bg-bg-alt px-3 py-2">
+                <span class="flex gap-1"><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i></span>
+                <span class="ml-1 font-mono text-xs text-muted">docs/specs/auth.md</span>
+              </div>
+              <div class="px-4 py-4 font-mono text-sm leading-relaxed text-ink-soft">
+                <div class="font-semibold text-ink"># Authentication</div>
+                <div class="h-2"></div>
+                <div class="font-semibold text-ink">## Login</div>
+                <div>Users sign in with email and password.</div>
+                <div>Sessions last 30 days.</div>
+                <div class="-mx-4 my-1 rounded-md border border-dashed border-drift/40 bg-drift-bg px-4 py-1 font-hand font-normal text-drift">Forgot to add magic-link login behavior</div>
+                <div class="h-2"></div>
+                <div class="font-semibold text-ink">## Password reset</div>
+                <div>Users request a reset link by email.</div>
+                <div class="h-2"></div>
+                <div class="font-semibold text-ink">## Security</div>
+                <div>Failed attempts are throttled per IP.</div>
+              </div>
+            </article>
+          </div>
+
+          <div class="relative z-20 ml-auto mr-4 -mt-7 w-11/12">
+            <article class="ml-auto mr-6 mt-3 w-4/5 overflow-hidden rounded-lg border border-line bg-paper shadow-lg">
+              <div class="flex items-center gap-2 border-b border-line bg-bg-alt px-3 py-2">
+                <span class="flex gap-1"><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i></span>
+                <span class="ml-1 font-mono text-xs text-muted">bash</span>
+              </div>
+              <div class="px-4 py-3 font-mono text-sm leading-relaxed text-ink-soft">
+                <div><span class="text-muted">$</span> <span class="text-ink">git show --stat a1b2c3d</span></div>
+                <div class="mb-2"><span>a1b2c3d</span> AUTH-004 Add magic-link login endpoint</div>
+                <div class="flex justify-between gap-4"><span class="text-ink">auth/magic-link.ts</span><span class="text-muted"><span class="font-semibold text-sync">+128</span></span></div>
+                <div class="flex justify-between gap-4"><span class="text-ink">auth/views.ts</span><span class="text-muted"><span class="font-semibold text-sync">+34</span></span></div>
+                <div class="mt-1 text-muted">2 files changed, 162 insertions(+)</div>
+              </div>
+            </article>
+
+            <article class="relative z-30 ml-5 -mt-5 w-3/4 overflow-hidden rounded-lg border border-line bg-paper p-4 shadow-lg">
+              <div class="absolute inset-y-0 left-0 w-1 bg-sync"></div>
+              <div class="mb-2 flex items-center gap-2">
+                <span class="flex size-4 items-center justify-center rounded-full bg-sync text-xs font-semibold text-paper">✓</span>
+                <span class="font-mono text-xs text-muted">AUTH-004</span>
+                <span class="ml-auto text-xs font-semibold text-sync">Done</span>
+              </div>
+              <div class="text-base font-medium tracking-tight text-ink">Add magic-link login</div>
+              <div class="mt-3 flex items-center gap-2">
+                <span class="rounded-full border border-line bg-bg-alt px-2 py-0.5 text-xs font-medium text-ink-soft">High</span>
+                <span class="rounded-full border border-line bg-bg-alt px-2 py-0.5 text-xs font-medium text-ink-soft">Auth</span>
+                <span class="ml-auto flex size-5 items-center justify-center rounded-full border border-line bg-bg-alt text-xs font-semibold text-muted">JD</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="mb-2 text-eyebrow uppercase text-muted">With mdtask</div>
+        <div class="relative">
+          <div class="relative z-10">
+            <div class="mb-3 flex min-h-8 items-center gap-2 font-hand text-base font-normal leading-tight text-sync">
+              <span aria-hidden="true">✓</span>
+              <span><span class="underline decoration-sync/50 underline-offset-4">Spec updated</span> in the same commit :)</span>
+            </div>
+            <article class="overflow-hidden rounded-lg border border-line bg-paper shadow-card">
+              <div class="flex items-center gap-2 border-b border-line bg-bg-alt px-3 py-2">
+                <span class="flex gap-1"><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i></span>
+                <span class="ml-1 font-mono text-xs text-muted">docs/specs/auth.md</span>
+              </div>
+              <div class="px-4 py-4 font-mono text-sm leading-relaxed text-ink-soft">
+                <div class="font-semibold text-ink"># Authentication</div>
+                <div class="h-2"></div>
+                <div class="font-semibold text-ink">## Login</div>
+                <div>Users sign in with email and password.</div>
+                <div>Sessions last 30 days.</div>
+                <div class="-mx-4 bg-sync/10 px-4 font-semibold">Plus a one-time magic link that signs the user in.</div>
+                <div class="h-2"></div>
+                <div class="font-semibold text-ink">## Password reset</div>
+                <div>Users request a reset link by email.</div>
+                <div class="h-2"></div>
+                <div class="font-semibold text-ink">## Security</div>
+                <div>Failed attempts are throttled per IP.</div>
+                <div class="h-2"></div>
+                <div class="h-2"></div>
+                <div class="font-semibold text-ink"># Tasks</div>
+                <div>- [<span class="bg-git-add font-bold text-sync">x</span>] <span class="font-semibold text-ink">AUTH-004</span>  Add magic-link login</div>
+              </div>
+            </article>
+          </div>
+
+          <div class="relative z-20 ml-auto mr-4 -mt-4 w-11/12">
+            <article class="ml-auto mr-6 w-4/5 overflow-hidden rounded-lg border border-line bg-paper shadow-lg">
+              <div class="flex items-center gap-2 border-b border-line bg-bg-alt px-3 py-2">
+                <span class="flex gap-1"><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i></span>
+                <span class="ml-1 font-mono text-xs text-muted">bash</span>
+              </div>
+              <div class="px-4 py-3 font-mono text-sm leading-tight text-ink-soft">
+                <div><span class="text-muted">$</span> <span class="text-ink">git show --stat a1b2c3d</span></div>
+                <div class="mb-2"><span>a1b2c3d</span> AUTH-004 Add magic-link login</div>
+                <div class="-mx-4 flex justify-between gap-4 bg-sync/10 px-4"><span class="font-semibold text-ink">docs/specs/auth.md</span><span class="font-semibold text-ink"><span class="font-semibold text-sync">+3</span></span></div>
+                <div class="flex justify-between gap-4"><span class="text-ink">auth/magic-link.ts</span><span class="text-muted"><span class="font-semibold text-sync">+128</span></span></div>
+                <div class="flex justify-between gap-4"><span class="text-ink">auth/views.ts</span><span class="text-muted"><span class="font-semibold text-sync">+34</span></span></div>
+                <div class="mt-1 text-muted">3 files changed, 165 insertions(+)</div>
+              </div>
+            </article>
+          </div>
+        </div>
       </div>
     </div>
-    <p class="mt-6 text-body text-ink-soft">The spec line at the top and the checkbox at the bottom
-      changed in the <b class="text-ink font-semibold">same commit</b> — because there's no gap between
-      them. It's just a file in git: the agent edited text, and you review a normal diff and merge it like any code.</p>
   </div>
 </section>
 

@@ -22,6 +22,11 @@
   --color-del-bg: oklch(var(--g-bg-l) var(--g-bg-c) var(--h-del));
   --color-del-ink: oklch(var(--g-ink-l) var(--g-ink-c) var(--h-del));
   --color-del-mark: oklch(var(--g-mark-l) var(--g-mark-c) var(--h-del));
+  --color-drift: #c2701c;
+  --color-drift-bg: #fbf3e8;
+  --color-sync: #2f8f5b;
+  --color-sync-bg: #eef7f1;
+  --color-git-add: #e6ffec;
 
   --text-eyebrow: 0.8rem;
   --text-eyebrow--line-height: 1;
