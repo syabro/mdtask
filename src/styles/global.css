@@ -221,7 +221,7 @@ code {
 
 .card {
   background: var(--color-paper);
-  border-radius: 16px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: var(--shadow-dreamy);
 }
@@ -229,30 +229,31 @@ code {
 .card-head {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 13px 18px;
+  gap: 7px;
+  min-height: 32px;
+  padding: 7px 12px;
   background: var(--color-bg-alt);
   border-bottom: 1px solid var(--color-line);
-  border-radius: 15px 15px 0 0;
+  border-radius: 9px 9px 0 0;
 }
 
 .tl {
   display: flex;
-  gap: 6px;
+  gap: 5px;
 }
 
 .tl i {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 99px;
   background: var(--color-dot);
   display: block;
 }
 
 .fname {
-  margin-left: 6px;
+  margin-left: 5px;
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   color: var(--color-muted);
 }
 
@@ -319,7 +320,7 @@ code {
 
 .term {
   background: var(--color-paper);
-  border-radius: 14px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: var(--shadow-dreamy);
 }
