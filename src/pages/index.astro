@@ -22,10 +22,10 @@ import '../styles/global.css'
       <span class="font-mono font-semibold text-acc">[x]</span><span class="font-mono font-semibold text-ink">mdtask</span>
     </div>
     <nav class="flex items-center gap-6 text-ui font-medium text-ink-soft">
-      <a href="#format" class="hidden sm:inline hover:text-ink transition-colors">Format</a>
-      <a href="#diff" class="hidden sm:inline hover:text-ink transition-colors">How it works</a>
-      <a href="#faq" class="hidden sm:inline hover:text-ink transition-colors">FAQ</a>
-      <a href="#setup" class="btn sm">Get started</a>
+      <a href="#simplicity" class="hidden sm:inline hover:text-ink transition-colors">Simplicity</a>
+      <a href="#cli" class="hidden sm:inline hover:text-ink transition-colors">CLI</a>
+      <a href="#living-specs" class="hidden sm:inline hover:text-ink transition-colors">Living specs</a>
+      <a href="#cli" class="btn sm">Get started</a>
       <a href="https://github.com" target="_blank" rel="noopener" aria-label="Star on GitHub" class="inline-flex items-center justify-center p-2 -mx-1 rounded-lg text-ink-soft hover:text-ink hover:bg-bg-alt transition-colors">
         <svg width="19" height="19" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
       </a>
@@ -37,14 +37,14 @@ import '../styles/global.css'
 <section class="pt-16 pb-24">
   <div class="mx-auto max-w-page px-5 sm:px-8 lg:px-14 flex flex-col lg:flex-row gap-11 lg:gap-14 items-center">
     <div class="lg:flex-[0_0_500px] lg:max-w-[500px] min-w-0">
-      <div class="inline-flex items-center gap-2 whitespace-nowrap text-eyebrow uppercase text-muted">
-        <span class="size-1.5 rounded-full bg-acc block"></span>Open-source CLI
+      <h1 class="text-h1 text-ink font-mono"><span class="text-acc">[x]</span>mdtask</h1>
+      <h2 class="mt-4 text-h2 text-ink">Spec-first task tracking in Markdown</h2>
+      <div class="mt-4 space-y-3 text-lead text-ink-soft">
+        <p>Plan, track, and build software from Markdown specs.</p>
+        <p>Write specs in Markdown.</p>
+        <p>Keep tasks inside those specs.</p>
+        <p>Use CLI and agent skills to keep work, implementation, and documentation in sync.</p>
       </div>
-      <h1 class="mt-4 text-h1 text-ink">Tasks and spec<br />in one file.</h1>
-      <p class="mt-4 text-lead text-ink-soft">mdtask keeps your tasks as Markdown checkboxes inside the same
-        <code>.md</code> files as the spec itself. Close a task and update the spec in one
-        git commit. Your coding agent reads and edits the file directly — like code, not a
-        separate tool.</p>
       <div class="actions flex flex-wrap gap-3 mt-7 items-center">
         <copy-field command="npm install -g mdtask"></copy-field>
         <a class="btn" href="https://github.com" target="_blank" rel="noopener">
@@ -102,12 +102,12 @@ import '../styles/global.css'
   </div>
 </section>
 
-<!-- ============ 01 — FORMAT ============ -->
-<section id="format" class="bg-bg-alt py-20 lg:py-26">
+<!-- ============ 01 — SIMPLICITY ============ -->
+<section id="simplicity" class="bg-bg-alt py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">It's just Markdown.</h2>
-    <p class="mt-4 text-body text-ink-soft">Two zones in one file. The prose on top describes what the product does
-      today. The checkboxes under <code>## Tasks</code> are the work that implements it.</p>
+    <h2 class="text-h2 text-ink">Simplicity. Zen. Markdown.</h2>
+    <p class="mt-4 text-body text-ink-soft">Specs and tasks live together in Markdown spec files.</p>
+    <p class="mt-3 text-body text-ink-soft">Each file shows what exists, what is planned, and what is being built.</p>
 
     <div class="card mt-10">
       <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/auth.md</span></div>
@@ -115,65 +115,84 @@ import '../styles/global.css'
         <div class="ln"><span class="h"># Authentication</span></div>
         <div class="sp"></div>
         <div class="ln"><span class="h">## Login</span></div>
-        <div class="ln"><span class="dim">Email and password.</span></div>
+        <div class="ln"><span class="dim">Users sign in with email and password.</span></div>
+        <div class="ln"><span class="dim">Sessions last 30 days.</span></div>
         <div class="sp"></div>
-        <div class="ln"><span class="h">## Tasks</span></div>
-        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-001</span><span class="txt">  Email + password login</span></div>
+        <div class="ln"><span class="h"># Tasks</span></div>
+        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-001</span><span class="txt">  Add email and password login</span></div>
         <div class="sp"></div>
-        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-002</span><span class="txt">  Password reset over email</span></div>
-        <div class="sp"></div>
-        <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Magic-link login                    !high</span></div>
-        <div class="ln"><span class="note">      Send a one-time link to the user's email.</span></div>
-        <div class="ln"><span class="note">      Signs them in, no password needed.</span></div>
-        <div class="sp"></div>
-        <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-005</span><span class="txt">  Rate-limit login attempts</span><span class="blk">           @blocked_by:</span><span class="id">AUTH-004</span></div>
+        <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Add passwordless magic-link login</span></div>
       </div>
     </div>
-    <p class="mt-6 text-body text-ink-soft">Renders on GitHub. Opens in any editor or Obsidian. Diffs like any text file.
-      No lock-in — the annotations are readable and editable by hand.</p>
+    <p class="mt-6 text-body text-ink-soft">No boards. No database. No workspace. Just Markdown.</p>
   </div>
 </section>
 
-<!-- ============ 02 — AGENT FINDS A TASK ============ -->
-<section id="agent" class="py-20 lg:py-26">
+<!-- ============ 02 — CLI ============ -->
+<section id="cli" class="py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">The agent picks the next task itself.</h2>
+    <h2 class="text-h2 text-ink">CLI</h2>
+    <p class="mt-4 text-body text-ink-soft">Turn Markdown specs into a task system.</p>
+    <p class="mt-3 text-body text-ink-soft">Show open work, find blockers, filter by tags, group by custom fields,
+      navigate relationships, and assign missing task IDs.</p>
 
     <div class="term mt-9">
       <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">terminal</span></div>
       <div class="code">
-        <div class="ln"><span class="prompt">$</span> mdtask list</div>
-        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Magic-link login        <span class="tflag">!high</span></div>
-        <div class="ln tblocked">  [ ] AUTH-005  Rate-limit login        ⊘ blocked by AUTH-004</div>
+        <div class="ln"><span class="prompt">$</span> mdtask list --tag auth --priority high</div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login</div>
+        <div class="ln tblocked">  [ ] AUTH-005  Rate-limit magic-link  ⊘ blocked by AUTH-004</div>
       </div>
     </div>
 
-    <p class="mt-7 text-body text-ink-soft"><code>mdtask list</code> queries your files and shows what's ready to
-      work on. <b class="whitespace-nowrap text-ink font-semibold">AUTH-005</b> is blocked by <b class="whitespace-nowrap text-ink font-semibold">AUTH-004</b>, so the agent
-      skips it and takes <b class="whitespace-nowrap text-ink font-semibold">AUTH-004</b>. Filter by tag and priority; dependencies come from
-      <code>@blocked_by</code>. The agent reads the files directly to decide what to do — no API,
-      no separate board.</p>
+    <p class="mt-7 text-body text-ink-soft">No boards. No setup. No separate task database.
+      Just your specs, queried from the terminal.</p>
   </div>
 </section>
 
-<!-- ============ 03 — COMMIT ============ -->
-<section id="commit" class="bg-bg-alt py-20 lg:py-26">
+<!-- ============ 03 — FORMAT ============ -->
+<section id="format" class="bg-bg-alt py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">Closing a task documents it.</h2>
-    <p class="mt-4 text-body text-ink-soft">Before committing, the agent does it in one move: update the prose spec on
-      top, write an <code>Implemented:</code> note in the task body, check the box. Then commit.</p>
+    <h2 class="text-h2 text-ink">It's just Markdown.</h2>
+    <p class="mt-4 text-body text-ink-soft">Looks like a checkbox. Carries an ID, priority, tags, and custom fields.</p>
+
+    <div class="card mt-9 md:-mx-20">
+      <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/cli.md</span></div>
+      <div class="code format-code">
+        <div class="ln"><span class="h"># CLI</span></div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="omit">...</span></div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="h"># Tasks</span></div>
+        <div class="ln"><span class="box">- [ ] </span><span class="id">CLI-042</span><span class="txt">  Add export command    #cli !high @status:in-progress</span></div>
+        <div class="ln"><span class="txt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Write task output as JSON for scripts and agents.</span></div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="omit">...</span></div>
+        <div class="ln">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 — LIVING SPECS ============ -->
+<section id="living-specs" class="bg-panel py-20 lg:py-26">
+  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
+    <h2 class="text-h2 text-ink">Living Specs</h2>
+    <p class="mt-4 text-body text-ink-soft">One commit carries the code, the task closure, and the PRD or spec update.</p>
 
     <div class="card mt-9">
       <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/auth.md</span></div>
       <div class="code">
-        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-004</span><span class="txt">  Magic-link login   !high</span></div>
-        <div class="ln"><span class="note">      Send a one-time link to the user's email.</span></div>
-        <div class="ln"><span class="note">      **Implemented:** POST /auth/magic-link issues a signed token (15-min TTL);</span></div>
-        <div class="ln"><span class="note">      /auth/magic-link/verify signs the user in.</span></div>
+        <div class="ln"><span class="h">## Login</span></div>
+        <div class="ln"><span class="dim">Passwordless magic-link: a one-time link signs the user in.</span></div>
+        <div class="sp"></div>
+        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-004</span><span class="txt">  Add passwordless magic-link login</span></div>
+        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">**Implemented:**</span></span></div>
+        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POST /auth/magic-link issues a signed token.</span></div>
       </div>
     </div>
-    <p class="mt-6 text-body text-ink-soft">This is a step the agent follows (via the <code>/mdtask-next</code> skill), not a gate
-      mdtask enforces. mdtask won't block a commit that skips the spec.</p>
+    <p class="mt-6 text-body text-ink-soft">Agents follow a predefined skill-based workflow.
+      A task is not complete until the implementation, task state, and documentation are updated together.</p>
   </div>
 </section>
 

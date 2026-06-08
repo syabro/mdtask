@@ -260,6 +260,10 @@ code {
 }
 
 .code.hero-code { padding: 20px 22px; }
+.code.format-code {
+  font-size: 1rem;
+  line-height: 1.5em;
+}
 
 .ln {
   white-space: pre;
@@ -297,6 +301,8 @@ code {
   color: var(--color-faint);
   letter-spacing: 5px;
 }
+
+.omit { color: var(--color-faint); }
 
 .ck {
   color: var(--color-add-ink);
