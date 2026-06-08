@@ -341,8 +341,6 @@ code {
 
 .term .tbox { color: var(--color-muted); }
 
-.term .tblocked { color: var(--color-faint); }
-
 .hero-file { overflow: visible; }
 
 .brace-block { position: relative; }
