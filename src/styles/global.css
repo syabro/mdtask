@@ -376,9 +376,13 @@ code {
   position: relative;
   display: inline-block;
   overflow: visible;
+  line-height: 1.15;
   border-radius: 3px;
   background: color-mix(in oklch, var(--ann-color) 6%, transparent);
-  box-shadow: 0 0 0 2px color-mix(in oklch, var(--ann-color) 6%, transparent);
+  box-shadow:
+    -0.3em 0 0 0 color-mix(in oklch, var(--ann-color) 6%, transparent),
+    0.3em 0 0 0 color-mix(in oklch, var(--ann-color) 6%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--ann-color) 6%, transparent);
 }
 
 .ann::after {
@@ -619,4 +623,5 @@ code {
     font-size: 0.8rem;
     line-height: 1.4rem;
   }
+
 }
