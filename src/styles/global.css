@@ -119,17 +119,16 @@ code {
   white-space: nowrap;
   cursor: pointer;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  border-radius: 14px;
-  padding: 12px 18px;
+  border-radius: 8px;
+  padding: 10px 15px;
   color: var(--color-ink);
   background: var(--color-paper);
-  box-shadow: inset 0 2px 1px var(--hl), inset 0 -2px 2px rgb(var(--sh)/.09), 0 0 0 1px rgb(var(--sh)/.08);
+  box-shadow: inset 0 2px 1px var(--hl), inset 0 -2px 2px rgb(var(--sh)/.09), 0 0 0 1px rgb(var(--sh)/.14), 0 10px 22px -16px rgb(var(--sh)/.4);
   transition: transform .1s, box-shadow .15s;
 }
 
-.btn:hover { box-shadow: inset 0 2px 1px var(--hl), inset 0 -2px 2px rgb(var(--sh)/.09), 0 0 0 1px rgb(var(--sh)/.13); }
 
 .btn:active {
   transform: translateY(1px);
@@ -137,9 +136,9 @@ code {
 }
 
 .btn.sm {
-  padding: 8px 13px;
-  font-size: 0.85rem;
-  border-radius: 10px;
+  padding: 7px 11px;
+  font-size: 0.8rem;
+  border-radius: 6px;
 }
 
 .feature-cloud {
@@ -192,7 +191,6 @@ code {
   left: 7.4rem;
 }
 
-.actions .btn,
 .actions .copyfield { height: 50px; }
 
 .copyfield {
