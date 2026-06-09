@@ -280,11 +280,6 @@ code {
 }
 
 .code.hero-code { padding: 20px 22px; }
-.code.format-code {
-  font-size: 1rem;
-  line-height: 1.5em;
-}
-
 .format-card { overflow: visible; }
 
 .format-card .card-head { overflow: hidden; }
