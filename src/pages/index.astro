@@ -26,7 +26,7 @@ import '../styles/global.css'
       <a href="#cli" class="hidden sm:inline hover:text-ink transition-colors">CLI</a>
       <a href="#living-specs" class="hidden sm:inline hover:text-ink transition-colors">Living specs</a>
       <a href="#cli" class="btn sm">Get started</a>
-      <a href="https://github.com" target="_blank" rel="noopener" aria-label="Star on GitHub" class="inline-flex items-center justify-center p-2 -mx-1 rounded-lg text-ink-soft hover:text-ink hover:bg-bg-alt transition-colors">
+      <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" aria-label="Star on GitHub" class="inline-flex items-center justify-center p-2 -mx-1 rounded-lg text-ink-soft hover:text-ink hover:bg-bg-alt transition-colors">
         <svg width="19" height="19" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
       </a>
     </nav>
@@ -47,7 +47,7 @@ import '../styles/global.css'
       </div>
       <div class="actions flex flex-wrap gap-3 mt-7 items-center">
         <copy-field command="npm install -g mdtask"></copy-field>
-        <a class="btn" href="https://github.com" target="_blank" rel="noopener">
+        <a class="btn" href="https://github.com/syabro/mdtask" target="_blank" rel="noopener">
           <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
           Star on GitHub
         </a>
@@ -370,8 +370,8 @@ import '../styles/global.css'
       <div class="grid grid-cols-[auto_1fr] gap-3 items-start">
         <div class="font-mono text-ui font-semibold text-muted leading-none pt-1.5">2</div>
         <div>
-          <div class="text-body font-semibold text-ink">Paste this to your agent</div>
-          <div class="mt-3"><copy-field block prompt="false" command="Install the mdtask skill, then pick the next unblocked task in docs/prd, implement it, update the spec in the same file, and close it."></copy-field></div>
+          <div class="text-body font-semibold text-ink">Install the agent skills</div>
+          <div class="mt-3"><copy-field block prompt="false" command="Run `mdtask install-skills &lt;agent-skills-dir&gt;` to install the four mdtask agent skills."></copy-field></div>
         </div>
       </div>
       <div class="grid grid-cols-[auto_1fr] gap-3 items-start">
@@ -394,12 +394,12 @@ import '../styles/global.css'
     <div class="block font-hand text-subline text-muted mt-7 -rotate-1">Because it's one file.</div>
     <div class="actions flex flex-wrap gap-3 justify-center items-center mt-9">
       <copy-field command="npm install -g mdtask"></copy-field>
-      <a class="btn" href="https://github.com" target="_blank" rel="noopener">
+      <a class="btn" href="https://github.com/syabro/mdtask" target="_blank" rel="noopener">
         <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
         Star on GitHub
       </a>
     </div>
-    <a class="inline-block mt-5 text-ui text-muted no-underline border-b border-line pb-0.5 hover:text-ink transition-colors" href="https://github.com" target="_blank" rel="noopener">Full command reference in the README →</a>
+    <a class="inline-block mt-5 text-ui text-muted no-underline border-b border-line pb-0.5 hover:text-ink transition-colors" href="https://github.com/syabro/mdtask" target="_blank" rel="noopener">Full command reference in the README →</a>
   </div>
 </section>
 
@@ -408,7 +408,7 @@ import '../styles/global.css'
     <div class="flex items-baseline gap-2 text-ui font-medium">
       <span class="font-mono font-semibold text-acc">[x]</span><span class="font-mono font-semibold text-ink">mdtask</span>
     </div>
-    <div>Open source · MIT · <a href="https://github.com" target="_blank" rel="noopener" class="text-ink-soft no-underline hover:text-ink">GitHub</a></div>
+    <div>Open source · MIT · <a href="https://github.com/syabro/mdtask" target="_blank" rel="noopener" class="text-ink-soft no-underline hover:text-ink">GitHub</a></div>
   </div>
 </footer>
 
