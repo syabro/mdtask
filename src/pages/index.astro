@@ -137,8 +137,19 @@ import '../styles/global.css'
       <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">terminal</span></div>
       <div class="code">
         <div class="ln"><span class="prompt">$</span> mdtask list</div>
-        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login</div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login  <span class="tflag">!high</span></div>
         <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="prompt">$</span> mdtask list --all</div>
+        <div class="ln text-faint">  [x] AUTH-001  Add email and password login</div>
+        <div class="ln text-faint">  [x] AUTH-003  Rotate refresh tokens on every use</div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login  <span class="tflag">!high</span></div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="prompt">$</span> mdtask view AUTH-005</div>
+        <div class="ln blk">  docs/prd/auth.md:42</div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
+        <div class="ln note">        Cap requests per email and per IP once the endpoint exists.</div>
       </div>
     </div>
 

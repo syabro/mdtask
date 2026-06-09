@@ -463,7 +463,7 @@ code {
   box-shadow: var(--shadow-dreamy);
 }
 
-.term .code { padding: 20px 24px; }
+.term .code { padding: 20px 24px; overflow-x: auto; }
 
 .prompt { color: var(--color-muted); }
 
@@ -577,6 +577,11 @@ code {
   .code {
     font-size: 0.8rem;
     line-height: 1.3rem;
+  }
+
+  .term .code {
+    font-size: 0.62rem;
+    line-height: 1.05rem;
   }
 
   .diff {
