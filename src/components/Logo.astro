@@ -5,8 +5,9 @@ interface Props {
 }
 
 const { as: Tag = 'div', class: className = '' } = Astro.props;
+const classes = ['font-mono font-semibold text-ink', className].filter(Boolean).join(' ');
 ---
 
-<Tag class={className}>
-  <span class="text-acc">[x]</span><span class="text-ink">mdtask</span>
+<Tag class={classes}>
+  <span class="text-acc">[x]</span><span>mdtask</span>
 </Tag>
