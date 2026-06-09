@@ -301,7 +301,7 @@ code {
 .box { color: var(--color-muted); }
 
 .id {
-  color: var(--color-ink);
+  color: var(--color-ink-soft);
   font-weight: 400;
 }
 
