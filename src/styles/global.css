@@ -577,6 +577,10 @@ code {
 .drow .h { color: var(--color-ink); }
 
 @media (max-width: 560px) {
+  .format-card {
+    overflow: hidden;
+  }
+
   .code {
     font-size: 0.8rem;
     line-height: 1.3rem;
