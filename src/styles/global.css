@@ -341,11 +341,11 @@ code {
   overflow: visible;
   line-height: 1.15;
   border-radius: 3px;
-  background: color-mix(in oklch, var(--ann-color) 6%, transparent);
+  background: color-mix(in oklch, var(--ann-color) 10%, transparent);
   box-shadow:
-    -0.3em 0 0 0 color-mix(in oklch, var(--ann-color) 6%, transparent),
-    0.3em 0 0 0 color-mix(in oklch, var(--ann-color) 6%, transparent),
-    0 0 0 1px color-mix(in oklch, var(--ann-color) 6%, transparent);
+    -0.3em 0 0 0 color-mix(in oklch, var(--ann-color) 10%, transparent),
+    0.3em 0 0 0 color-mix(in oklch, var(--ann-color) 10%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--ann-color) 10%, transparent);
 }
 
 .ann::after {
@@ -360,7 +360,7 @@ code {
   font-weight: 400;
   line-height: 1.05;
   color: var(--ann-color);
-  opacity: .7;
+  opacity: .9;
   white-space: normal;
   pointer-events: none;
 }
@@ -373,7 +373,7 @@ code {
   height: 38px;
   transform-origin: 50% 50%;
   background: var(--ann-color);
-  opacity: .5;
+  opacity: .9;
   pointer-events: none;
 }
 
