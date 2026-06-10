@@ -38,7 +38,10 @@ import '../styles/global.css'
   <div class="mx-auto max-w-page px-5 sm:px-8 lg:px-14 flex flex-col lg:flex-row gap-11 lg:gap-14 items-center">
     <div class="lg:flex-[0_0_500px] lg:max-w-[500px] min-w-0">
       <Logo as="h1" class="text-h1" />
-      <h2 class="mt-4 text-h2 text-ink">Spec-first task tracking in Markdown</h2>
+      <h2 class="mt-12 text-h2 text-ink">
+        <span class="relative inline-block whitespace-nowrap"><span class="text-ink-soft">Regular</span><svg class="absolute inset-0 h-full w-full text-sync" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M3 56 C 25 48, 60 62, 97 52" /><path vector-effect="non-scaling-stroke" d="M4 76 C 30 66, 65 80, 96 70" /><path vector-effect="non-scaling-stroke" d="M2 64 C 40 80, 70 50, 98 74" /></svg><span class="absolute left-0 -top-[0.95em] -rotate-2 whitespace-nowrap font-hand text-[0.85em] font-semibold text-sync">Spec-driven</span></span>
+        task tracking <span class="inline-block -rotate-1 font-hand text-[0.85em] font-semibold text-sync lg:block lg:text-right">in Markdown</span>
+      </h2>
       <div class="mt-4 space-y-3 text-lead text-ink-soft">
         <p>A spec is a single Markdown file: how it works on top, its tasks as checkboxes below.</p>
         <p>Your agent picks a task, builds it, and closes it in place — the code, the checkbox, and the updated spec land in one commit.</p>

@@ -2,6 +2,15 @@
 
 Astro landing page for mdtask. Lives in a git worktree on the `website` branch of the main repo.
 
+## Local preview
+
+```bash
+pnpm dev
+```
+
+Astro dev server with hot reload at http://localhost:4321. Use it to preview changes —
+no build step needed, no ad-hoc static servers over `dist/`.
+
 ## Deploy
 
 ```bash
