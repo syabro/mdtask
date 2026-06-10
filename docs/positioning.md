@@ -19,9 +19,9 @@ Lead with this everywhere.
 
 ## The agent runs the loop, not the tool
 
-- `mdtask done` only toggles the checkbox. The `Implemented:` note, the prose update, and
-  the commit are done by the agent via the `mdtask-next` skill. mdtask ships no loop or
-  orchestrator.
+- The agent closes a task by editing the file directly: the checkbox, the `Implemented:`
+  note, the prose update, and the commit — via the `mdtask-next` skill. mdtask ships no
+  loop or orchestrator.
 - So in any text: "your agent picks a task, builds it, and closes it in place" — never
   "mdtask closes it / mdtask commits".
 
