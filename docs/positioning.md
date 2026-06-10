@@ -1,38 +1,44 @@
-# mdtask — принятые решения по смыслу
+# mdtask — positioning decisions
 
-## Главный месседж
+These decisions apply to the whole project: landing, README, docs, skills. Where code or
+docs don't follow them yet, that's an unfinished migration, not an exception.
 
-**Один коммит: код, закрытие задачи и обновлённая спека.**
-Это проверяемый факт (`git show --stat`), им ведём. Страница строится: заявление (hero) →
-доказательство (Living Specs) → где живёт (репо) → инструменты.
+## Core message
 
-## Единица — спека
+**One commit: the code, the task closure, and the updated spec.**
+Lead with this everywhere.
 
-- Спека = один markdown-файл. `auth.md` — это вся аутентификация.
-- Фичи (magic-link, password reset) — задачи внутри спеки, не отдельные файлы.
-- Файлов-спек много, их набор и есть бэклог.
-- Это НЕ «весь проект в одном файле» — частая ошибка чтения, формулировки обязаны её исключать.
-- Терминология: `specs` (`docs/specs/`), не PRD.
+## The unit is a spec
 
-## Петлю крутит агент, не тул
+- A spec is a single Markdown file. `auth.md` is all of authentication.
+- Features (magic-link login, password reset) are tasks inside the spec, not separate files.
+- There are many spec files; together they are the backlog.
+- Never phrase it so it reads as "the whole project in one file".
+- Terminology: `specs` (`docs/specs/`), not PRD. Project-wide decision; the repo still has
+  `docs/prd/` and "PRD" in docs and skills — migration not done yet.
 
-- `mdtask done` только переключает чекбокс. `Implemented:` + правку прозы + коммит делает
-  агент через скилл (`mdtask-next`). mdtask не содержит лупа и оркестратора.
-- Поэтому в текстах: «your agent picks a task, builds it, and closes it in place» —
-  никогда «mdtask закрывает / mdtask коммитит».
+## The agent runs the loop, not the tool
 
-## Спека отражает только сделанное
+- `mdtask done` only toggles the checkbox. The `Implemented:` note, the prose update, and
+  the commit are done by the agent via the `mdtask-next` skill. mdtask ships no loop or
+  orchestrator.
+- So in any text: "your agent picks a task, builds it, and closes it in place" — never
+  "mdtask closes it / mdtask commits".
 
-Проза описывает то, что работает. Поведение открытой задачи в прозе не упоминается.
-Закрыл задачу — обновил прозу, тем же коммитом.
+## The spec describes only what's done
 
-## Против кого
+Prose covers what works. Behavior of an open task is not mentioned in the prose.
+Close the task — update the prose, in the same commit.
 
-- **OpenSpec / Spec Kit:** mdtask заменяет их файловую церемонию — папку сгенерённых
-  spec/plan/tasks и слэш-команды. Оркестрацию не заменяет: петля — забота агента.
-- **Трекеры (Jira/Linear/Issues):** статус у них в облаке; у mdtask — в том же диффе, что код.
+## Versus
+
+- **OpenSpec / Spec Kit:** mdtask replaces their file ceremony — the folder of generated
+  spec/plan/tasks files and the slash commands. It does not replace orchestration: the loop
+  is the agent's job.
+- **Trackers (Jira / Linear / Issues):** their status lives in the cloud; mdtask's lives in
+  the same diff as the code.
 
 ## @blocked_by
 
-Custom field, поддержанный из коробки: парсится, задача подсвечивается как заблокированная.
-Это НЕ граф зависимостей — нет обхода и циклов, не переклеймивать.
+A custom field supported out of the box: parsed, and the task is shown as blocked.
+It is NOT a dependency graph — no traversal, no cycles. Don't oversell it.
