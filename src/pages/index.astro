@@ -39,10 +39,9 @@ import '../styles/global.css'
       <Logo as="h1" class="text-h1" />
       <h2 class="mt-4 text-h2 text-ink">Spec-first task tracking in Markdown</h2>
       <div class="mt-4 space-y-3 text-lead text-ink-soft">
-        <p>Plan, track, and build software from Markdown specs.</p>
-        <p>Write specs in Markdown.</p>
-        <p>Keep tasks inside those specs.</p>
-        <p>Use CLI and agent skills to keep work, implementation, and documentation in sync.</p>
+        <p>Each feature is one Markdown file: the spec on top, its tasks as checkboxes below.</p>
+        <p>Your agent picks a task, builds it, and closes it in place — the code, the checkbox, and the updated spec land in one commit.</p>
+        <p>Plain files in your repo, queryable from the CLI.</p>
       </div>
       <div class="mt-9 flex justify-center">
         <a class="inline-block -rotate-2 font-hand text-subline text-muted hover:text-ink transition-colors" href="#setup"><span class="underline decoration-2 underline-offset-6">Get Started</span> -&gt;</a>
@@ -52,7 +51,7 @@ import '../styles/global.css'
     <!-- file card -->
     <div class="flex-1 min-w-0 flex justify-start max-[560px]:hidden">
       <div class="card hero-file" style="max-width:512px;">
-        <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/auth.md</span></div>
+        <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/specs/auth.md</span></div>
         <div class="code hero-code max-[560px]:!text-[0.6rem] max-[560px]:!leading-[1rem]">
           <div class="brace-block">
             <div class="ln"><span class="h"># Authentication</span></div>
@@ -97,108 +96,11 @@ import '../styles/global.css'
   </div>
 </section>
 
-<!-- ============ 01 — SIMPLICITY ============ -->
-<section id="simplicity" class="relative bg-bg-alt py-20 lg:py-26">
-  <p class="absolute right-5 top-4 rotate-3 font-hand text-subline font-semibold text-faint opacity-10">J**A SUCKS!!!</p>
-  <div class="mx-auto grid max-w-page grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-18 lg:px-14">
-    <div class="order-1 mx-auto w-full max-w-prose px-5 sm:px-8 lg:order-2 lg:px-0">
-      <h2 class="text-h2 text-ink">Markdown is enough</h2>
-      <p class="mt-3 text-body text-ink-soft">Specs and tasks live together in Markdown spec files.</p>
-      <p class="mt-3 text-body text-ink-soft">Each file shows what already works and what tasks are planned.</p>
-      <p class="mt-3 text-body text-ink-soft">No boards. No database. No workspace. Just Markdown.</p>
-    </div>
-
-    <div class="card order-2 mx-auto w-full max-w-prose lg:order-1 lg:max-w-none">
-      <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/auth.md</span></div>
-      <div class="code">
-        <div class="ln"><span class="h"># Authentication</span></div>
-        <div class="sp"></div>
-        <div class="ln"><span class="h">## Login</span></div>
-        <div class="ln"><span class="dim">Users sign in with email and password.</span></div>
-        <div class="ln"><span class="dim">Sessions last 30 days; refresh tokens rotate on every use.</span></div>
-        <div class="sp"></div>
-        <div class="ln"><span class="h"># Tasks</span></div>
-        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-001</span><span class="txt">  Add email and password login</span></div>
-        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">**Implemented:**</span></span></div>
-        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POST /auth/login verifies the password hash</span></div>
-        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and issues a 30-day session cookie.</span></div>
-        <div class="sp"></div>
-        <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Add passwordless magic-link login  !high</span></div>
-        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email a one-time link that signs the user in.</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 02 — CLI ============ -->
-<section id="cli" class="py-20 lg:py-26">
-  <div class="mx-auto grid max-w-page grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-18 lg:px-14">
-    <div class="term order-2 mx-auto w-full max-w-prose lg:order-2 lg:max-w-none">
-      <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">terminal</span></div>
-      <div class="code">
-        <div class="ln"><span class="prompt">$</span> mdtask list</div>
-        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login  <span class="tflag">!high</span></div>
-        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
-        <div class="sp"></div>
-        <div class="ln"><span class="prompt">$</span> mdtask list --all</div>
-        <div class="ln text-faint">  [x] AUTH-001  Add email and password login</div>
-        <div class="ln text-faint">  [x] AUTH-003  Rotate refresh tokens on every use</div>
-        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login  <span class="tflag">!high</span></div>
-        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
-        <div class="sp"></div>
-        <div class="ln"><span class="prompt">$</span> mdtask view AUTH-005</div>
-        <div class="ln blk">  docs/prd/auth.md:42</div>
-        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
-        <div class="ln note">        Cap requests per email and per IP once the endpoint exists.</div>
-      </div>
-    </div>
-
-    <div class="order-1 mx-auto w-full max-w-prose px-5 sm:px-8 lg:order-1 lg:px-0">
-      <h2 class="text-h2 text-ink">CLI</h2>
-      <p class="mt-3 text-body text-ink-soft">Query your Markdown specs like a task tracker.</p>
-      <div class="feature-cloud mt-2" aria-label="CLI features">
-        <span>Open tasks</span>
-        <span>Blockers</span>
-        <span>Tags</span>
-        <span>Custom fields</span>
-        <span>Relationships</span>
-        <span>Archive</span>
-        <span>Missing IDs</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 03 — FORMAT ============ -->
-<section id="format" class="bg-bg-alt py-20 lg:py-26">
-  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
-    <h2 class="text-h2 text-ink">It's just Markdown</h2>
-    <p class="mt-4 text-body text-ink-soft">A checkbox, stable ID, title, and optional description make a task. Priority, tags, and custom fields can be added when needed.</p>
-
-    <div class="card format-card mt-9 md:-mx-20">
-      <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/prd/cli.md</span></div>
-      <div class="code !text-base !leading-[1.5em] max-[560px]:!text-[0.6rem] max-[560px]:!leading-[1rem]">
-        <div class="ln"><span class="h"># CLI</span></div>
-        <div class="ln">&nbsp;</div>
-        <div class="ln"><span class="omit">...</span></div>
-        <div class="ln">&nbsp;</div>
-        <div class="ln"><span class="h"># Tasks</span></div>
-        <div class="ln"><span class="box">- </span><span class="box ann ann-n ann-amber" data-note="open task">[ ]</span><span class="box">&nbsp;</span><span class="id ann ann-s ann-blue" data-note="stable ID">CLI-042</span><span class="txt">&nbsp;Add export command&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="txt ann ann-se ann-green" data-note="tag">#cli</span><span class="txt">&nbsp;</span><span class="txt ann ann-sw ann-red" data-note="priority">!high</span><span class="txt">&nbsp;</span><span class="txt ann ann-nw ann-purple" data-note="custom field">@blocked_by:CLI-041</span></div>
-        <div class="ln"><span class="txt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="txt ann ann-n" data-note="description">Write task output as JSON for scripts and agents</span></div>
-        <div class="ln">&nbsp;</div>
-        <div class="ln">&nbsp;</div>
-        <div class="ln"><span class="omit">...</span></div>
-        <div class="ln">&nbsp;</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 03 — LIVING SPECS ============ -->
+<!-- ============ LIVING SPECS ============ -->
 <section id="living-specs" class="bg-panel py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
     <h2 class="text-h2 text-ink">Living Specs</h2>
-    <p class="mt-4 text-body text-ink-soft">One commit carries the code, the task closure, and the PRD or spec update.</p>
+    <p class="mt-4 text-body text-ink-soft">One commit carries the code, the task closure, and the spec update.</p>
     <p class="mt-3 text-body text-ink-soft">Agents follow a predefined skill-based workflow.
       A task is not complete until the implementation, task state, and documentation are updated together.</p>
   </div>
@@ -216,7 +118,7 @@ import '../styles/global.css'
             <article class="overflow-hidden rounded-lg border border-line bg-paper shadow-card">
               <div class="flex items-center gap-2 border-b border-line bg-bg-alt px-3 py-2">
                 <span class="flex gap-1"><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i></span>
-                <span class="ml-1 font-mono text-xs text-muted">docs/prd/auth.md</span>
+                <span class="ml-1 font-mono text-xs text-muted">docs/specs/auth.md</span>
               </div>
               <div class="px-4 py-4 font-mono text-sm leading-relaxed text-ink-soft">
                 <div class="font-semibold text-ink"># Authentication</div>
@@ -279,7 +181,7 @@ import '../styles/global.css'
             <article class="overflow-hidden rounded-lg border border-line bg-paper shadow-card">
               <div class="flex items-center gap-2 border-b border-line bg-bg-alt px-3 py-2">
                 <span class="flex gap-1"><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i><i class="block size-2 rounded-full bg-dot"></i></span>
-                <span class="ml-1 font-mono text-xs text-muted">docs/prd/auth.md</span>
+                <span class="ml-1 font-mono text-xs text-muted">docs/specs/auth.md</span>
               </div>
               <div class="px-4 py-4 font-mono text-sm leading-relaxed text-ink-soft">
                 <div class="font-semibold text-ink"># Authentication</div>
@@ -311,7 +213,7 @@ import '../styles/global.css'
               <div class="px-4 py-3 font-mono text-sm leading-tight text-ink-soft">
                 <div><span class="text-muted">$</span> <span class="text-ink">git show --stat a1b2c3d</span></div>
                 <div class="mb-2"><span>a1b2c3d</span> AUTH-004 Add magic-link login</div>
-                <div class="-mx-4 flex justify-between gap-4 bg-sync/10 px-4"><span class="font-semibold text-ink">docs/prd/auth.md</span><span class="font-semibold text-ink"><span class="font-semibold text-sync">+3</span></span></div>
+                <div class="-mx-4 flex justify-between gap-4 bg-sync/10 px-4"><span class="font-semibold text-ink">docs/specs/auth.md</span><span class="font-semibold text-ink"><span class="font-semibold text-sync">+3</span></span></div>
                 <div class="flex justify-between gap-4"><span class="text-ink">auth/magic-link.ts</span><span class="text-muted"><span class="font-semibold text-sync">+128</span></span></div>
                 <div class="flex justify-between gap-4"><span class="text-ink">auth/views.ts</span><span class="text-muted"><span class="font-semibold text-sync">+34</span></span></div>
                 <div class="mt-1 text-muted">3 files changed, 165 insertions(+)</div>
@@ -324,8 +226,117 @@ import '../styles/global.css'
   </div>
 </section>
 
+<!-- ============ 01 — SIMPLICITY ============ -->
+<section id="simplicity" class="relative bg-bg-alt py-20 lg:py-26">
+  <p class="absolute right-5 top-4 rotate-3 font-hand text-subline font-semibold text-faint opacity-10">J**A SUCKS!!!</p>
+  <div class="mx-auto grid max-w-page grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-18 lg:px-14">
+    <div class="order-1 mx-auto w-full max-w-prose px-5 sm:px-8 lg:order-2 lg:px-0">
+      <h2 class="text-h2 text-ink">The tracker is your repo</h2>
+      <p class="mt-4 text-body text-ink-soft">Every feature has its own spec file. Together they are your backlog.</p>
+      <p class="mt-3 text-body text-ink-soft">Each file shows what already works and what tasks are planned.</p>
+      <p class="mt-3 text-body text-ink-soft">No boards. No database. No workspace. Just files in your repo.</p>
+    </div>
+
+    <div class="order-2 mx-auto w-full max-w-prose lg:order-1 lg:max-w-none">
+      <div class="card">
+        <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/specs/auth.md</span></div>
+        <div class="code">
+        <div class="ln"><span class="h"># Authentication</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="h">## Login</span></div>
+        <div class="ln"><span class="dim">Users sign in with email and password.</span></div>
+        <div class="ln"><span class="dim">Sessions last 30 days; refresh tokens rotate on every use.</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="h"># Tasks</span></div>
+        <div class="ln done"><span class="box">- [</span><span class="ck">x</span><span class="box">] </span><span class="id">AUTH-001</span><span class="txt">  Add email and password login</span></div>
+        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">**Implemented:**</span></span></div>
+        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POST /auth/login verifies the password hash</span></div>
+        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and issues a 30-day session cookie.</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="box">- [ ] </span><span class="id">AUTH-004</span><span class="txt">  Add passwordless magic-link login  !high</span></div>
+        <div class="ln"><span class="note">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email a one-time link that signs the user in.</span></div>
+        </div>
+      </div>
+      <div class="relative z-10 -mt-6 ml-auto w-fit max-w-full lg:-mr-8">
+        <div class="absolute right-full bottom-5 mr-3 hidden whitespace-nowrap -rotate-2 font-hand text-base text-muted md:block">one file per feature &rarr;</div>
+        <div class="term">
+          <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">terminal</span></div>
+          <div class="code">
+            <div class="ln"><span class="prompt">$</span> ls docs/specs/</div>
+            <div class="ln">auth.md  billing.md  onboarding.md  search.md</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 — CLI ============ -->
+<section id="cli" class="py-20 lg:py-26">
+  <div class="mx-auto grid max-w-page grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-18 lg:px-14">
+    <div class="term order-2 mx-auto w-full max-w-prose lg:order-2 lg:max-w-none">
+      <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">terminal</span></div>
+      <div class="code">
+        <div class="ln"><span class="prompt">$</span> mdtask list</div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login  <span class="tflag">!high</span></div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="prompt">$</span> mdtask list --all</div>
+        <div class="ln text-faint">  [x] AUTH-001  Add email and password login</div>
+        <div class="ln text-faint">  [x] AUTH-003  Rotate refresh tokens on every use</div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-004</span>  Add passwordless magic-link login  <span class="tflag">!high</span></div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
+        <div class="sp"></div>
+        <div class="ln"><span class="prompt">$</span> mdtask view AUTH-005</div>
+        <div class="ln blk">  docs/specs/auth.md:42</div>
+        <div class="ln">  <span class="tbox">[ ]</span> <span class="tid">AUTH-005</span>  Rate-limit the magic-link  <span class="blk">@blocked_by:</span><span class="tid">AUTH-004</span></div>
+        <div class="ln note">        Cap requests per email and per IP once the endpoint exists.</div>
+      </div>
+    </div>
+
+    <div class="order-1 mx-auto w-full max-w-prose px-5 sm:px-8 lg:order-1 lg:px-0">
+      <h2 class="text-h2 text-ink">CLI</h2>
+      <p class="mt-4 text-body text-ink-soft">Query your Markdown specs like a task tracker.</p>
+      <div class="feature-cloud mt-2" aria-label="CLI features">
+        <span>Open tasks</span>
+        <span>Blockers</span>
+        <span>Tags</span>
+        <span>Custom fields</span>
+        <span>Relationships</span>
+        <span>Archive</span>
+        <span>Missing IDs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 — FORMAT ============ -->
+<section id="format" class="bg-bg-alt py-20 lg:py-26">
+  <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
+    <h2 class="text-h2 text-ink">It's just Markdown</h2>
+    <p class="mt-4 text-body text-ink-soft">A checkbox, stable ID, title, and optional description make a task. Priority, tags, and custom fields can be added when needed.</p>
+
+    <div class="card format-card mt-9 md:-mx-20">
+      <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">docs/specs/cli.md</span></div>
+      <div class="code !text-base !leading-[1.5em] max-[860px]:!text-[clamp(0.6rem,1.9vw,0.875rem)] max-[560px]:!text-[0.6rem] max-[560px]:!leading-[1rem]">
+        <div class="ln"><span class="h"># CLI</span></div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="omit">...</span></div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="h"># Tasks</span></div>
+        <div class="ln"><span class="box">- </span><span class="box ann ann-n ann-amber" data-note="open task">[ ]</span><span class="box">&nbsp;</span><span class="id ann ann-s ann-blue" data-note="stable ID">CLI-042</span><span class="txt">&nbsp;Add export command&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="txt ann ann-se ann-green" data-note="tag">#cli</span><span class="txt">&nbsp;</span><span class="txt ann ann-sw ann-red" data-note="priority">!high</span><span class="txt">&nbsp;</span><span class="txt ann ann-nw ann-purple" data-note="custom field">@blocked_by:CLI-041</span></div>
+        <div class="ln"><span class="txt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="txt ann ann-n" data-note="description">Write task output as JSON for scripts and agents</span></div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln">&nbsp;</div>
+        <div class="ln"><span class="omit">...</span></div>
+        <div class="ln">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ COMPARISON ============ -->
-<section id="compare" class="bg-bg-alt py-20 lg:py-26">
+<section id="compare" class="bg-panel py-20 lg:py-26">
   <div class="mx-auto max-w-[980px] px-5 sm:px-8 lg:px-14">
     <h2 class="text-h2 text-ink">How it's different</h2>
     <p class="mt-4 text-body text-ink-soft">Most tools split specs and tasks into different places. mdtask keeps them in one Markdown file.</p>
@@ -333,28 +344,28 @@ import '../styles/global.css'
     <ul class="mt-10 grid gap-8">
       <li>
         <h3 class="text-h4 text-ink">Spec frameworks</h3>
-        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+        <div class="mt-2.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
           <p>OpenSpec and Spec Kit spin up their own multi-step workflow: each feature gets a separate folder of generated files — spec, plan, tasks — and a set of slash commands to drive them. A second set of documents to keep in line with your code.</p>
           <p><b class="text-ink font-semibold">mdtask skips all of that.</b> The task is a checkbox in the same file as the spec. Mark it done and update the spec to describe how the feature works now — one commit. No second set of files, no separate workflow to keep in sync.</p>
         </div>
       </li>
       <li>
         <h3 class="text-h4 text-ink">Trackers</h3>
-        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+        <div class="mt-2.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
           <p>GitHub Issues, Jira, and Linear make you check a board to understand what changed and why.</p>
           <p><b class="text-ink font-semibold">mdtask puts the task in the same diff as the code and spec.</b> Reviewers see the whole change in git.</p>
         </div>
       </li>
       <li>
         <h3 class="text-h4 text-ink">Flat TODO.md</h3>
-        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+        <div class="mt-2.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
           <p>A plain checklist works until you need to find owners, blockers, related work, or everything for one area.</p>
           <p><b class="text-ink font-semibold">mdtask makes that checklist queryable</b> without turning it into a database.</p>
         </div>
       </li>
       <li>
         <h3 class="text-h4 text-ink">Markdown note apps</h3>
-        <div class="mt-1.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
+        <div class="mt-2.5 grid gap-4 text-body text-ink-soft md:grid-cols-2 md:gap-8">
           <p>Obsidian and other note apps are good for writing, but they do not give agents a task workflow.</p>
           <p><b class="text-ink font-semibold">mdtask gives agents a small task system</b> while keeping the source as Markdown.</p>
         </div>
@@ -367,7 +378,7 @@ import '../styles/global.css'
 <section id="setup" class="py-20 lg:py-26">
   <div class="mx-auto max-w-prose px-5 sm:px-8 lg:px-14">
     <h2 class="text-h2 text-ink">Get started in a minute</h2>
-    <p class="mt-3.5 text-body text-ink-soft">Your agent does this from one instruction — not you by hand.</p>
+    <p class="mt-4 text-body text-ink-soft">Your agent does this from one instruction — not you by hand.</p>
 
     <div class="mt-10 grid gap-5">
       <div class="grid grid-cols-[auto_1fr] gap-3 items-start">
