@@ -43,8 +43,8 @@
   --text-h4--font-weight: 500;
   --text-subline: 1.9rem;
   --text-subline--line-height: 1;
-  --text-h2: clamp(1.95rem, 4.4vw, 2.4rem);
-  --text-h2--line-height: 1.1;
+  --text-h2: clamp(1.7rem, 3.8vw, 2.05rem);
+  --text-h2--line-height: 1.3;
   --text-h2--letter-spacing: -0.02em;
   --text-h2--font-weight: 500;
   --text-h1: clamp(2.1rem, 6vw, 3.4rem);
@@ -101,6 +101,9 @@ body {
 }
 
 ::selection { background: var(--color-sel); }
+
+/* text-h2 size token can't carry a font-family — pin the h2 font here */
+.text-h2 { font-family: var(--font-mono); }
 
 code {
   font-family: var(--font-mono);
