@@ -292,6 +292,9 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   Target: when a whole story group is closed, move the group with its heading,
   removing it from the live file. Living file is cleaned per story, not per task.
 
+- [ ] CLI-067 Remove the `done` command
+  The agent edits the file directly anyway; a separate toggle command is not needed.
+
 ## Blocker display in list
 
 `mdtask list` only shows **unresolved** blockers — if a blocker task is done, it is hidden from the output:
