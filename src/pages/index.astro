@@ -39,7 +39,7 @@ import '../styles/global.css'
       <Logo as="h1" class="text-h1" />
       <h2 class="mt-4 text-h2 text-ink">Spec-first task tracking in Markdown</h2>
       <div class="mt-4 space-y-3 text-lead text-ink-soft">
-        <p>Each domain has one spec file: how it works on top, its tasks as checkboxes below.</p>
+        <p>A spec is a single Markdown file: how it works on top, its tasks as checkboxes below.</p>
         <p>Your agent picks a task, builds it, and closes it in place — the code, the checkbox, and the updated spec land in one commit.</p>
         <p>Plain files in your repo, queryable from the CLI.</p>
       </div>
@@ -59,7 +59,6 @@ import '../styles/global.css'
             <div class="ln"><span class="h">## Login</span></div>
             <div class="ln"><span class="dim">Users sign in with email and password.</span></div>
             <div class="ln"><span class="dim">Sessions last 30 days; refresh tokens rotate on every use.</span></div>
-            <div class="ln"><span class="dim">Repeated failures are throttled per IP and per account.</span></div>
             <div class="gbrace">
               <svg viewBox="0 0 24 100" preserveAspectRatio="none" width="16" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2 C17 2 17 18 17 34 C17 43 20 48 23 50 C20 52 17 57 17 66 C17 82 17 98 5 98" /></svg>
               <span class="lbl">spec</span>
@@ -232,7 +231,7 @@ import '../styles/global.css'
   <div class="mx-auto grid max-w-page grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-18 lg:px-14">
     <div class="order-1 mx-auto w-full max-w-prose px-5 sm:px-8 lg:order-2 lg:px-0">
       <h2 class="text-h2 text-ink">The tracker is your repo</h2>
-      <p class="mt-4 text-body text-ink-soft">Every domain has its own spec file. Together they are your backlog.</p>
+      <p class="mt-4 text-body text-ink-soft">Each spec is one file. Together they are your backlog.</p>
       <p class="mt-3 text-body text-ink-soft">Each file shows what already works and what tasks are planned.</p>
       <p class="mt-3 text-body text-ink-soft">No boards. No database. No workspace. Just files in your repo.</p>
     </div>
@@ -258,7 +257,7 @@ import '../styles/global.css'
         </div>
       </div>
       <div class="relative z-10 -mt-6 ml-auto w-fit max-w-full lg:-mr-8">
-        <div class="absolute right-full bottom-5 mr-3 hidden whitespace-nowrap -rotate-2 font-hand text-base text-muted md:block">one spec per domain &rarr;</div>
+        <div class="absolute right-full bottom-5 mr-3 hidden whitespace-nowrap -rotate-2 font-hand text-base text-muted md:block">the backlog &rarr;</div>
         <div class="term">
           <div class="card-head"><span class="tl"><i></i><i></i><i></i></span><span class="fname">terminal</span></div>
           <div class="code">
