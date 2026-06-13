@@ -106,3 +106,9 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   max_line_length=120, plus a sensible end_of_line/charset), and remove `indentStyle`
   from biome.json so it stops overriding editorconfig — Biome reads editorconfig via
   useEditorconfig, on by default. Reformat the whole codebase in the same change.
+
+- [ ] PRJ-079 Re-run code review after review fixes, until it's clean
+  When code review finds problems and they get fixed, the task is committed without running
+  review again — so the fixed version is never reviewed. Result wanted: after each round of
+  review fixes, code review runs again, and the task is committed only once review has no
+  remaining issues.
