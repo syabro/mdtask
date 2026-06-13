@@ -1,7 +1,7 @@
-# mdtask — positioning (draft)
+# mdtask — positioning
 
-Replacement for `docs/positioning.md`, built section by section through Q&A.
-All sections are drafted; promote to `docs/positioning.md` when approved.
+Source of truth for how mdtask is positioned and sold — governs the website, README, and
+skills. Where a surface disagrees with this document, the surface is wrong.
 Last updated: 2026-06-13.
 
 ---
