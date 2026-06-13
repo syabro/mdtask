@@ -1,10 +1,10 @@
 ---
 name: mdtask
-description: Load this skill when user asks to list, find, filter, summarize, or check status of tasks in .md files. Provides task format spec.
+description: Load this skill when user asks to list, find, filter, summarize, or check status of tasks in .md files, or how to write one. Defines the task format and what goes in a task body.
 disable-model-invocation: false
 ---
 
-# /mdtask - Task format reference
+# /mdtask - Task format and content reference
 
 ## How to use
 
@@ -56,9 +56,24 @@ All other properties (`@status`, `@iter`, …) are per-project conventions with 
 
 ## Task Body
 
+The body captures information that future implementers, reviewers, or maintainers would still need after implementation begins.
+
+Include:
+
+- Context — the problem, bug, request, or opportunity behind the task.
+- Outcome — what becomes true once it's done.
+- Constraints — decisions and rules that must hold, including APIs or contracts that must remain compatible, product decisions that have already been made, accepted architectural choices, and performance, security, reliability, or UX requirements.
+- Acceptance Criteria — observable conditions that determine whether the task is complete.
+
+Leave out anything that represents only one possible implementation approach, including step-by-step plans (create class X, add method Y, refactor Z, split A into B), personal implementation preferences, temporary debugging notes, and speculation about solutions that have not been decided.
+
+A detail belongs in the task if a future implementer would make a different decision without it.
+
+The goal is not to avoid implementation details. The goal is to preserve decisions and requirements while leaving implementation choices open unless those choices have already been made.
+
 - All lines indented by ≥1 space after header
-- Empty lines within body are allowed
-- Block ends at first non-indented non-empty line
+- Empty lines within the body are allowed
+- The body ends at the first non-indented non-empty line
 
 ## File Organization
 

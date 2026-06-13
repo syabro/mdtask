@@ -78,9 +78,9 @@ If the user wants changes, edit the proposal, show it again, and repeat until th
 
 One feature can become several tasks in one new PRD — propose them together. For unrelated features, handle them as separate proposals.
 
-## Task format
+## How to write a task
 
-The task format (header, metadata tokens, body) is defined in the `mdtask` skill — that's the single source. Follow it; don't restate it here.
+How to write a task — the format (header, metadata tokens, body) and what belongs in the body — is defined in the `mdtask` skill, the single source. Follow it; don't restate it here.
 
 ## Metadata guidance
 

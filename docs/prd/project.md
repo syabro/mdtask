@@ -108,13 +108,18 @@ A spec starts with prose sections that explain the feature from the user's side.
   review fixes, code review runs again, and the task is committed only once review has no
   remaining issues.
 
-- [ ] PRJ-080 Skill should require tasks to state the result, not invented steps
+- [x] PRJ-080 Skill should require tasks to state the result, not invented steps
   Nothing in the task-creation guidance separates a task's outcome from its implementation,
   so tasks drift into agent-invented step-by-step recipes. Result wanted: the mdtask-create
   skill, and the sdd "What goes in a task" guidance, make the rule explicit — a task states
   what should be true when it's done. Concrete steps or details belong in a task only when
   they record a decision the user made or a real constraint confirmed with the user, never
   implementation the agent invented on its own.
+
+  **Implemented:**
+  - "How to write a task" now has one source — the `mdtask` skill's `## Task Body` — defined operationally: Include (Context, Outcome, Constraints, Acceptance Criteria), Leave out (single-implementation approaches and invented step recipes).
+  - The rule is explicit: a detail belongs only if a future implementer would decide differently without it — decisions and constraints stay, invented steps go.
+  - `sdd` and `mdtask-create` now point at that single source instead of restating it. Consolidated into `mdtask` rather than split across mdtask-create and sdd as this task originally guessed.
 
 - [x] PRJ-081 Change the spec task-journal boundary from `## Tasks` to `# Tasks`
   In every spec file the prose manual and the task journal are separated by `## Tasks`

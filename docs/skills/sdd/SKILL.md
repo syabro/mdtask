@@ -145,7 +145,4 @@ The rule: match the section to the feature, not to the task.
 
 ## What goes in a task
 
-A task describes **what** needs to be built and **why** — not how to test it.
-Don't list tests in the task body. The implementer decides test coverage during development.
-
-Exception: if there are non-obvious edge cases or specific scenarios that **must** be covered, describe them in the task body. These are part of the spec, not a test plan.
+How to write a task — the format and what belongs in the body — lives in the `mdtask` skill, the single source. sdd adds only the rhythm: a task is the spec, written before the code, and documented once it's built (see the Cycle above).
