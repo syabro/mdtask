@@ -56,7 +56,6 @@ By default, open tasks with unresolved `@blocked_by:ID` dependencies are hidden 
 
 ### 6.2 Modify
 
-- `mdtask done <ID>` — toggle `[ ] ↔ [x]` in-place. Duplicate IDs cause an error.
 - `mdtask move <ID> <file>` — move task block to another file. Creates target if needed.
 - `mdtask set <ID...> <tokens...>` — add metadata (tags, priority, properties) to tasks.
 - `mdtask ids` — auto-assign globally unique IDs to unidentified tasks.

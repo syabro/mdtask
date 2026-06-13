@@ -10,7 +10,6 @@ All commands that accept a task ID also accept a plain number. The number is mat
 
 ```bash
 mdtask view 22          # resolves to CLI-022 (or whichever task has NNN=22)
-mdtask done 38          # resolves to TSK-038
 mdtask open 1           # resolves to CLI-001
 ```
 
@@ -124,17 +123,6 @@ docs/prd/cli.md:42
 The first line shows the file path (relative to cwd) and line number. In a terminal, this line is displayed in gray; when piped, it's plain text.
 
 If the task is not found, exits with error code 1.
-
-## Toggling task status
-
-`mdtask done <ID>` toggles a task between open and done:
-
-```bash
-mdtask done TSK-038      # [ ] → [x]
-mdtask done TSK-038      # [x] → [ ] (toggle back)
-```
-
-The file is modified in-place. If the ID is not found, exits with error code 1. If the ID appears in multiple files (duplicate), exits with error code 1.
 
 ## Opening a task in editor
 
@@ -294,8 +282,13 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   Target: when a whole story group is closed, move the group with its heading,
   removing it from the live file. Living file is cleaned per story, not per task.
 
-- [ ] CLI-067 Remove the `done` command
+- [x] CLI-067 Remove the `done` command
   The agent edits the file directly anyway; a separate toggle command is not needed.
+
+  **Implemented:**
+  - `mdtask done` command and `handleDone` function removed from `src/cli.ts`
+  - `test/done.test.ts` deleted
+  - All documentation references removed from `README.md`, `docs/prd/cli.md`, and `docs/mdtask.md`
 
 - [x] CLI-068 Hide blocked tasks from `list` by default
   `mdtask list` already shows only open tasks. Extend the default to also hide tasks

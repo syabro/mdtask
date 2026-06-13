@@ -254,42 +254,6 @@ function handleView(id: string, options: { path?: string }): void {
 	}
 }
 
-function handleDone(id: string, options: { path?: string }): void {
-	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
-	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
-
-	let task: Task;
-	try {
-		task = resolveTaskId(id, tasks);
-	} catch (err: unknown) {
-		process.stderr.write(
-			`mdtask: ${err instanceof Error ? err.message : err}\n`,
-		);
-		process.exit(1);
-		return;
-	}
-	const content = readFileSync(task.filePath, 'utf-8');
-	const lines = content.split('\n');
-	const line = lines[task.lineNumber - 1];
-
-	if (!line.includes(task.id)) {
-		process.stderr.write(
-			`mdtask: file changed, task '${id}' not at expected line\n`,
-		);
-		process.exit(1);
-		return;
-	}
-
-	if (task.status === 'open') {
-		lines[task.lineNumber - 1] = line.replace(/^(- )\[ \]/, '$1[x]');
-	} else {
-		lines[task.lineNumber - 1] = line.replace(/^(- )\[x\]/, '$1[ ]');
-	}
-
-	writeFileSync(task.filePath, lines.join('\n'));
-}
-
 function handleMove(
 	id: string,
 	targetFile: string,
@@ -1163,7 +1127,6 @@ const KNOWN_COMMANDS = new Set([
 	'list',
 	'view',
 	'show',
-	'done',
 	'open',
 	'move',
 	'archive',
@@ -1247,10 +1210,6 @@ export async function run(args: string[]): Promise<number> {
 		.action((id, options) => {
 			handleView(id, options);
 		});
-
-	cli.command('done <id>', 'Toggle task done/open').action((id, options) => {
-		handleDone(id, options);
-	});
 
 	cli.command('open <id>', 'Open task in $EDITOR').action((id, options) => {
 		handleOpen(id, options);

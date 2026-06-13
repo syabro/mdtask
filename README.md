@@ -59,7 +59,6 @@ mdtask list --all            # all tasks including done
 mdtask list '#backend'       # filter by tag (quote: # is a shell comment)
 mdtask list '!high'          # filter by priority
 mdtask view <ID>             # print full task block by ID
-mdtask done <ID>             # toggle task [ ] ↔ [x]
 mdtask open <ID>             # open task in $EDITOR at line
 mdtask move <ID> <file>      # move task to another file
 mdtask set <ID...> <tokens>  # add metadata to tasks
