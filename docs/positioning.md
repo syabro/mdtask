@@ -58,9 +58,10 @@ Three layers, kept separate on purpose:
 - **CLI** — the format. Reads and edits the Markdown tasks; knows nothing about the method.
   No database, no server.
 - **Skills** — the method. How an agent creates a task, and how it takes one task from pick
-  to commit.
-- **The loop** — driving the whole backlog. That's the agent's harness re-running the
-  one-task skill until nothing is left. mdtask ships no loop or orchestrator.
+  to commit. This per-task cycle is the micro-loop.
+- **The macro-loop** — driving the whole backlog. That's the agent's harness re-running the
+  one-task skill until nothing is left. mdtask ships no macro-loop or orchestrator; the CLI
+  contains no loop at all.
 
 ### 2.4 Guarantee vs convention
 
@@ -133,7 +134,14 @@ tags, priority, blockers, and CLI filtering — without turning it into a databa
 A TODO.md is also a good starting point: mdtask picks up the checkboxes you already have and
 assigns them IDs, so migrating is quick.
 
-### 3.6 Honest limits
+### 3.6 Alongside agent loops
+
+mdtask runs the micro-loop: the `mdtask-next` skill takes one task from picked to built to
+closed, with the code and the spec update in the same commit. Macro-loops — Ralph, GOAL-style
+harness workflows — drive the whole backlog by repeating that step until it's empty. The
+macro-loop calls mdtask's per-task loop; mdtask doesn't replace it.
+
+### 3.7 Honest limits
 
 **The one-commit rule is a convention, not a guarantee.**
 mdtask doesn't check that the spec was updated when a task is closed — you can tick `[x]`
