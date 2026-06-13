@@ -51,13 +51,24 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   Document the format in CLAUDE.md so it's followed in all future commits.
 
 - [ ] PRJ-069 Rename docs/prd/ to docs/specs/ and update config
-  Positioning standardizes on "spec" / `docs/specs/` (see docs/positioning-draft.md).
+  Positioning standardizes on "spec" / `docs/specs/` (see docs/positioning.md).
   Move all task files from `docs/prd/` to `docs/specs/`, change `.mdtaskrc` `path`
   from `docs/prd` to `docs/specs`, and fix any other reference to the old path.
   After the move, `mdtask list` must still find every task.
 
-- [ ] PRJ-070 Replace "PRD" with "spec" in skills and README		@blocked_by:PRJ-069
-  Positioning standardizes on "spec", not "PRD" (see docs/positioning-draft.md).
-  Update the four shipped skills (sdd, mdtask, mdtask-create, mdtask-next) and the README:
+- [ ] PRJ-070 Replace "PRD" with "spec" in skills		@blocked_by:PRJ-069
+  Positioning standardizes on "spec", not "PRD" (see docs/positioning.md).
+  Update the four shipped skills (sdd, mdtask, mdtask-create, mdtask-next):
   replace "PRD" wording with "spec", and `docs/prd/` with `docs/specs/` in examples.
   Do this after the folder rename so examples point at the real path.
+  README is handled separately.
+
+- [ ] PRJ-071 Rewrite README from docs/positioning.md		@blocked_by:PRJ-069
+  The README diverges from docs/positioning.md: it leads with the old pitch ("CLI task
+  manager where Markdown is the single source of truth"), uses "PRD", and omits the
+  one-liner, the core message (specs don't drift), the category, and several shipped commands.
+  Rewrite it: open with the one-liner; explain the model (a spec is one Markdown file —
+  prose plus tasks — and a task closes in the same commit as the code and the spec update);
+  describe the three layers (CLI / skills / macro-loop); give an accurate command reference
+  including `archive`, `install-skills`, blockers, and `.mdtaskrc`; use "spec" / `docs/specs/`
+  terminology. Takes the README out of PRJ-070's scope.
