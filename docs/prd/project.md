@@ -120,3 +120,12 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   what should be true when it's done. Concrete steps or details belong in a task only when
   they record a decision the user made or a real constraint confirmed with the user, never
   implementation the agent invented on its own.
+
+- [ ] PRJ-081 Change the spec task-journal boundary from `## Tasks` to `# Tasks`
+  In every spec file the prose manual and the task journal are separated by `## Tasks`
+  (H2), which sits at the same heading level as the prose `##` sections — so the boundary
+  doesn't stand out from the prose. Result wanted: the journal opens with an H1 `# Tasks`
+  at the bottom of the file, with story groups as `##` beneath it, one level clearer than
+  its prose. This is an sdd authoring convention — mdtask's parser finds tasks by their
+  `- [ ]` lines and ignores heading levels — so the change is to the sdd skill and the
+  existing spec files, not to any CLI command.
