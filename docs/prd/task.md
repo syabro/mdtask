@@ -43,12 +43,3 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 ## Tasks
 
 
-
-
-
-
-- [ ] TSK-043 Support @bb as shorthand for @blocked_by
-  `@bb:ID` should be parsed as equivalent to `@blocked_by:ID`.
-  Same behavior: filtering in list, red coloring, resolved hiding.
-
-
