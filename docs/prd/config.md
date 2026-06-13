@@ -52,7 +52,5 @@ Hide tasks whose ID starts with a given prefix from all commands:
 
 Tasks with matching prefixes are skipped during collection — they won't appear in `list`, `validate`, or any other command. Useful for filtering out example/documentation tasks.
 
-## Tasks
-
-
+# Tasks
 

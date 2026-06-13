@@ -13,5 +13,5 @@ The function:
 - Supports additional exclusions via the `excludeDirs` option or `MDTASK_EXCLUDE_DIRS` environment variable
 - Handles file names with spaces and special characters
 
-## Tasks
+# Tasks
 

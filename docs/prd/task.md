@@ -40,6 +40,5 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 
 → `"Body line 1\nBody line 2\n\nMore body after empty line"`
 
-## Tasks
-
+# Tasks
 

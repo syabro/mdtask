@@ -68,8 +68,8 @@ Wait for an explicit yes before Step 5. The user can cancel at any time — just
 4. Ask: **"Commit?"**
 
 **New PRD:**
-1. Create the file: `# <NAME> — mdtask`, blank line, `## Tasks`, blank line.
-2. Append the task(s) after `## Tasks`.
+1. Create the file: `# <NAME> — mdtask`, blank line, `# Tasks`, blank line.
+2. Append the task(s) after `# Tasks`.
 3. `pnpm mdtask ids --path <file> --prefix <PREFIX>`.
 4. Show the file path and assigned ID(s).
 5. Ask: **"Commit?"**

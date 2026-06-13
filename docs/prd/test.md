@@ -8,5 +8,5 @@ Group related assertions into a single `it()` block when they test variations of
 
 Do NOT merge tests that require different filesystem setup (different `writeFileSync` calls).
 
-## Tasks
+# Tasks
 

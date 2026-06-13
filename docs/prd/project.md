@@ -16,16 +16,11 @@ Release workflow: `just release` (default: patch) or `just release minor` / `jus
 
 License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0/) — free to use, modify, and distribute; competing products prohibited.
 
-## Tasks
+## Spec authoring convention
 
+A spec starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `sdd` skill for the full PRD structure.
 
-
-
-
-
-
-
-
+# Tasks
 
 - [ ] PRJ-034 Define layered architecture
   Analyze current code and define clear data flow layers.
@@ -121,7 +116,7 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   they record a decision the user made or a real constraint confirmed with the user, never
   implementation the agent invented on its own.
 
-- [ ] PRJ-081 Change the spec task-journal boundary from `## Tasks` to `# Tasks`
+- [x] PRJ-081 Change the spec task-journal boundary from `## Tasks` to `# Tasks`
   In every spec file the prose manual and the task journal are separated by `## Tasks`
   (H2), which sits at the same heading level as the prose `##` sections — so the boundary
   doesn't stand out from the prose. Result wanted: the journal opens with an H1 `# Tasks`
@@ -129,3 +124,9 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   its prose. This is an sdd authoring convention — mdtask's parser finds tasks by their
   `- [ ]` lines and ignores heading levels — so the change is to the sdd skill and the
   existing spec files, not to any CLI command.
+
+  **Implemented:**
+  - Spec task journals now start with `# Tasks`
+  - Story groups under the task journal stay available as `##` headings
+  - The SDD, task creation, and task execution skills now use the new boundary
+  - Excess blank lines around affected task journals were removed

@@ -14,14 +14,14 @@ No code without a spec. PRD is both the spec and the manual.
 2. **Build** — implement the task
 3. **Document** — after the task is done:
    - Mark the task `[x]` and add `**Implemented:**` bullets inside the task body
-   - Update the feature description above `## Tasks` based on what was implemented
+   - Update the feature description above `# Tasks` based on what was implemented
 
 ## PRD structure
 
 Each PRD file has two parts:
 
 1. **Feature description** (top) — what the product does, how to use it
-2. **Tasks** (bottom) — backlog and implementation history
+2. **Task journal** (bottom) — starts with `# Tasks`; story groups under it use `##` headings
 
 The feature description is the manual.
 A reader should understand what's available and how to use it without reading the tasks.
@@ -39,7 +39,7 @@ We start by creating a PRD with tasks. No code yet, just the spec:
 
 Wi-Fi kettle with app control.
 
-## Tasks
+# Tasks
 
 - [ ] KTL-001 Basic boiling with auto shut-off
   Heat to 100°C, beep on completion.
@@ -61,7 +61,7 @@ No feature description yet — nothing is built.
 
 We implement boiling. After the task is done, two things happen:
 1. The task gets marked `[x]` with an `**Implemented:**` block
-2. A feature description appears above `## Tasks`
+2. A feature description appears above `# Tasks`
 
 ```markdown
 # Brewing — Smart Kettle
@@ -73,7 +73,7 @@ Wi-Fi kettle with app control.
 Tap "Boil" in the app or press the physical button. Heats water to 100°C,
 beeps when done. Auto shut-off after 5 minutes.
 
-## Tasks
+# Tasks
 
 - [x] KTL-001 Basic boiling with auto shut-off
   Heat to 100°C, beep on completion.
@@ -116,7 +116,7 @@ Three built-in presets:
 Custom presets: Settings → Presets → Add. Set temperature (40–100°C)
 and steep time (1–15 min).
 
-## Tasks
+# Tasks
 
 - [x] KTL-001 Basic boiling with auto shut-off
   ...

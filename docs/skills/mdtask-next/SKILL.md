@@ -72,7 +72,7 @@ Run all tests again to confirm nothing broke after review fixes, and lint/typech
 
 > Full workflow with examples: the `sdd` skill.
 
-**Place 1 — feature description (above `## Tasks`):** in the PRD file where the task lives, add a new `## Section` for a new feature, or update the existing section if the task extends one. Match the section to the feature, not to the task. Describe it from the user's side — what to run, what config to use — concise, how-to-use, not implementation detail.
+**Place 1 — feature description (above `# Tasks`):** in the PRD file where the task lives, add a new `## Section` for a new feature, or update the existing section if the task extends one. Match the section to the feature, not to the task. Describe it from the user's side — what to run, what config to use — concise, how-to-use, not implementation detail.
 
 **Place 2 — the task body:** mark it `[x]` and add an `**Implemented:**` block (2–5 bullets, outcomes only — no code, no internals). **Only touch the task you worked on — never modify other tasks or their Implemented blocks.**
 

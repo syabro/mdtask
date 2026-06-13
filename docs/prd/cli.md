@@ -275,7 +275,7 @@ This symlinks each skill into `<dir>` (creating `<dir>` if needed). The link tar
 
 Skills already linked by mdtask are re-pointed on re-run; a real directory or a symlink mdtask doesn't manage is left untouched and reported. If any skill can't be linked, the command exits non-zero so setup automation sees the partial install. The project-local `check` skill is not shipped.
 
-## Tasks
+# Tasks
 
 - [ ] CLI-066 Archive done tasks by user-story group
   `mdtask archive` currently moves individual done tasks into a flat `_archive.md`.
@@ -302,37 +302,3 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   - `mdtask list --blocked` includes blocked open tasks again
   - The list prints a hidden-task note with the count and reveal flag
   - Docs and task-picking skill text now describe the new default
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
