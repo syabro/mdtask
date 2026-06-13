@@ -49,3 +49,15 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
 - [ ] PRJ-053 Define commit message format
   Discuss and agree on a commit message convention with the user.
   Document the format in CLAUDE.md so it's followed in all future commits.
+
+- [ ] PRJ-069 Rename docs/prd/ to docs/specs/ and update config
+  Positioning standardizes on "spec" / `docs/specs/` (see docs/positioning-draft.md).
+  Move all task files from `docs/prd/` to `docs/specs/`, change `.mdtaskrc` `path`
+  from `docs/prd` to `docs/specs`, and fix any other reference to the old path.
+  After the move, `mdtask list` must still find every task.
+
+- [ ] PRJ-070 Replace "PRD" with "spec" in skills and README		@blocked_by:PRJ-069
+  Positioning standardizes on "spec", not "PRD" (see docs/positioning-draft.md).
+  Update the four shipped skills (sdd, mdtask, mdtask-create, mdtask-next) and the README:
+  replace "PRD" wording with "spec", and `docs/prd/` with `docs/specs/` in examples.
+  Do this after the folder rename so examples point at the real path.
