@@ -46,12 +46,13 @@ project/
 
 ### 6.1 View
 
-- `mdtask list` — flat list of open tasks
+- `mdtask list` — flat list of open, unblocked tasks
+- `mdtask list --blocked` — include open tasks with unresolved blockers
 - `mdtask list --all` — include done tasks
 - `mdtask view <ID>` — print full task block (header + dedented body)
 - `mdtask open <ID>` — open task in `$EDITOR` at the line where it's defined
 
-Tasks display `@blocked_by:ID` dependencies. Only unresolved blockers are shown; done blockers are hidden. Non-existent blockers are treated as open. Open blockers are shown in red when output is a terminal.
+By default, open tasks with unresolved `@blocked_by:ID` dependencies are hidden and the list prints a note with the hidden count. Use `--blocked` to include them. Done blockers are hidden from displayed blocker metadata. Non-existent blockers are treated as unresolved. Open blockers are shown in red when output is a terminal.
 
 ### 6.2 Modify
 

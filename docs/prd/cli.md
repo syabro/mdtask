@@ -25,16 +25,19 @@ Errors: not found (exit 1), ambiguous (multiple prefixes share the same NNN), du
 The `mdtask list` command searches all `.md` files recursively from the current directory and displays tasks in a compact format:
 
 ```bash
-mdtask list              # Show only open tasks
-mdtask list --all        # Show all tasks including done
+mdtask list              # Show open, unblocked tasks
+mdtask list --blocked    # Include open tasks blocked by unresolved @blocked_by
+mdtask list --all        # Include done tasks
 ```
+
+By default, `mdtask list` hides open tasks with unresolved blockers. A blocker is unresolved when the referenced task is open or missing. If any matching tasks are hidden, the command prints a note with the hidden count and the `--blocked` flag to reveal them.
 
 When output is to a terminal (TTY), tasks are displayed as a compact table with aligned columns:
 ```
  ID            │ TITLE                          │ PRI   │ TAGS     │ PROPS
 ───────────────┼────────────────────────────────┼───────┼──────────┼──────────────────
  [ ] EXMPL-001 │ Fix authentication bug         │ !high │          │
- [ ] EXMPL-002 │ Update documentation           │       │          │ @blocked_by:EXMPL-001 @iter:mvp
+ [ ] EXMPL-002 │ Update documentation           │       │          │ @iter:mvp
  [x] EXMPL-003 │ Refactor utils                 │ !low  │ #backend │ @status:done
 ```
 
@@ -49,9 +52,15 @@ Priorities are color-coded:
 When piped to another command, output uses flat format with no colors for clean parsing:
 ```
 [ ] EXMPL-001 Fix authentication bug !high
-[ ] EXMPL-002 Update documentation @blocked_by:EXMPL-001 @iter:mvp
+[ ] EXMPL-002 Update documentation @iter:mvp
 [x] EXMPL-003 Refactor utils !low @status:done
 ```
+
+### Blocked tasks
+
+`mdtask list --blocked` includes blocked open tasks in the output. When blocked tasks are shown, only unresolved `@blocked_by:ID` values are displayed. Resolved blockers stay in the task file and remain visible via `mdtask view`.
+
+Non-existent blockers are treated as unresolved. When output is to a terminal (TTY), unresolved blockers are shown in red. When piped, plain text is output for clean parsing.
 
 ### Sorting
 
@@ -295,26 +304,18 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
 - [ ] CLI-067 Remove the `done` command
   The agent edits the file directly anyway; a separate toggle command is not needed.
 
-- [ ] CLI-068 Hide blocked tasks from `list` by default
+- [x] CLI-068 Hide blocked tasks from `list` by default
   `mdtask list` already shows only open tasks. Extend the default to also hide tasks
   with an unresolved `@blocked_by`, so the list shows only what's workable right now.
   After the list, print a note that N blocked tasks are hidden, with the flag to reveal
   them (e.g. `mdtask list --blocked` shows them too).
   This moves the "skip blocked tasks" logic out of the mdtask-next skill and into the CLI.
 
-## Blocker display in list
-
-`mdtask list` only shows **unresolved** blockers — if a blocker task is done, it is hidden from the output:
-
-```
-[ ] EXMPL-005 Fix auth bug @blocked_by:EXMPL-003
-```
-
-Here EXMPL-001 was also a blocker but is already done, so it's not shown. Non-existent blockers are treated as open and always displayed.
-
-When output is to a terminal (TTY), open blockers are shown in red. When piped, plain text is output for clean parsing.
-
-Full blocker info (including resolved ones) remains in the task file, visible via `mdtask view`.
+  **Implemented:**
+  - `mdtask list` hides open tasks with unresolved blockers by default
+  - `mdtask list --blocked` includes blocked open tasks again
+  - The list prints a hidden-task note with the count and reveal flag
+  - Docs and task-picking skill text now describe the new default
 
 
 

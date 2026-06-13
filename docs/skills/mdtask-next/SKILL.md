@@ -20,7 +20,7 @@ Start by creating a todo checklist (the `todowrite` tool in Claude; a `./tmp` ma
 
 ### Step 1 — Pick a task
 
-1. `mdtask list` for all open tasks. Tasks with an unresolved `@blocked_by:ID` are listed — skip them when picking. Skip tasks tagged `#user-required` too — they're parked for a human decision (see "When you can't decide" below).
+1. `mdtask list` for open, unblocked tasks. The CLI hides tasks with unresolved `@blocked_by:ID` by default. Skip tasks tagged `#user-required` — they're parked for a human decision (see "When you can't decide" below).
 2. If the user gave scope (tag, area, specific task), filter by it. Otherwise pick the most logical next task.
 3. No open tasks left → tell the user and stop. (This is what makes the skill safe to run in a loop — see "Working a list of tasks" below.)
 

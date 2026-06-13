@@ -53,7 +53,8 @@ Every feature must reduce user effort, not add configuration burden. Derive what
 ## Brief commands intro:
 
 ```bash
-mdtask list                  # list open tasks
+mdtask list                  # list open, unblocked tasks
+mdtask list --blocked        # include open blocked tasks
 mdtask list --all            # all tasks including done
 mdtask list '#backend'       # filter by tag (quote: # is a shell comment)
 mdtask list '!high'          # filter by priority

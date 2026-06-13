@@ -435,6 +435,135 @@ describe('mdtask list', () => {
 		});
 	});
 
+	describe('blocked task filtering', () => {
+		it('hides open tasks with unresolved blockers by default', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Free task\n- [ ] TSK-002 Blocked task @blocked_by:TSK-999\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Free task');
+			expect(output).not.toContain('TSK-002');
+			expect(output).not.toContain('Blocked task');
+			expect(output).toContain(
+				'Note: 1 blocked task hidden. Use mdtask list --blocked to show them.',
+			);
+		});
+
+		it('shows blocked tasks with --blocked', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Blocked task @blocked_by:TSK-999\n',
+			);
+
+			const code = await run(['list', '--blocked']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Blocked task');
+			expect(output).toContain('@blocked_by:TSK-999');
+			expect(output).not.toContain('blocked task hidden');
+		});
+
+		it('keeps tasks with only resolved blockers visible', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Ready task @blocked_by:TSK-002\n- [x] TSK-002 Done blocker\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).toContain('Ready task');
+			expect(output).not.toContain('@blocked_by:TSK-002');
+			expect(output).not.toContain('blocked task hidden');
+		});
+
+		it('shows done blocked tasks with --all while hiding open blocked tasks', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Open blocked @blocked_by:TSK-999\n- [x] TSK-002 Done blocked @blocked_by:TSK-999\n',
+			);
+
+			const code = await run(['list', '--all']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).not.toContain('TSK-001');
+			expect(output).toContain('TSK-002');
+			expect(output).toContain('Done blocked');
+			expect(output).toContain('@blocked_by:TSK-999');
+			expect(output).toContain(
+				'Note: 1 blocked task hidden. Use mdtask list --blocked to show them.',
+			);
+		});
+
+		it('counts hidden blocked tasks after tag and priority filters', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				`${[
+					'- [ ] TSK-001 Backend blocked !high #backend @blocked_by:TSK-999',
+					'- [ ] TSK-002 Frontend blocked !high #frontend @blocked_by:TSK-999',
+					'- [ ] TSK-003 Backend blocked !low #backend @blocked_by:TSK-999',
+					'- [ ] TSK-004 Backend visible !high #backend',
+				].join('\n')}\n`,
+			);
+
+			const code = await run([
+				'list',
+				'--tag',
+				'backend',
+				'--priority',
+				'high',
+			]);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-004');
+			expect(output).not.toContain('TSK-001');
+			expect(output).not.toContain('TSK-002');
+			expect(output).not.toContain('TSK-003');
+			expect(output).toContain(
+				'Note: 1 blocked task hidden. Use mdtask list --blocked to show them.',
+			);
+		});
+
+		it('does not print hidden note when no blocked tasks are hidden', async () => {
+			writeFileSync(join(tempDir, 'tasks.md'), '- [ ] TSK-001 Free task\n');
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('TSK-001');
+			expect(output).not.toContain('blocked task hidden');
+		});
+
+		it('prints the hidden note when every matching task is blocked', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				'- [ ] TSK-001 Blocked task @blocked_by:TSK-999\n',
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).not.toContain('TSK-001');
+			expect(output).toContain(
+				'Note: 1 blocked task hidden. Use mdtask list --blocked to show them.',
+			);
+		});
+	});
+
 	describe('blocked_by display', () => {
 		it('shows single @blocked_by property', async () => {
 			writeFileSync(
@@ -442,7 +571,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n',
 			);
 
-			const code = await run(['list']);
+			const code = await run(['list', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -472,7 +601,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Mixed blockers @blocked_by:TSK-002 @blocked_by:TSK-003\n- [x] TSK-002 Done blocker\n- [ ] TSK-003 Open blocker\n',
 			);
 
-			const code = await run(['list']);
+			const code = await run(['list', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -492,7 +621,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Blocked task @blocked_by:TSK-002\n- [ ] TSK-002 Open blocker\n',
 			);
 
-			const code = await run(['list']);
+			const code = await run(['list', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -512,7 +641,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Blocked task @blocked_by:NONEXISTENT\n',
 			);
 
-			const code = await run(['list']);
+			const code = await run(['list', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -526,7 +655,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Multi-blocked @blocked_by:TSK-002 @blocked_by:FLS-001\n',
 			);
 
-			const code = await run(['list']);
+			const code = await run(['list', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -540,7 +669,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Urgent blocked !high @blocked_by:TSK-002\n',
 			);
 
-			const code = await run(['list']);
+			const code = await run(['list', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -692,7 +821,7 @@ describe('mdtask list', () => {
 				'- [ ] TSK-001 Full metadata !high @blocked_by:TSK-002 @iter:mvp\n',
 			);
 
-			const code = await run(['list']);
+			const code = await run(['list', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
@@ -1087,7 +1216,7 @@ describe('mdtask list', () => {
 				].join('\n')}\n`,
 			);
 
-			const code = await run(['list', '--all']);
+			const code = await run(['list', '--all', '--blocked']);
 			expect(code).toBe(0);
 
 			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');

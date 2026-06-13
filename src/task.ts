@@ -273,6 +273,24 @@ export function resolveTaskId(input: string, tasks: Task[]): Task {
 
 export const VALID_PRIORITIES = new Set(['crit', 'high', 'low']);
 
+export function unresolvedBlockerIds(
+	task: Task,
+	statusMap: Map<string, TaskStatus>,
+): string[] {
+	return (task.properties.blocked_by ?? []).filter(
+		(id) => statusMap.get(id) !== 'done',
+	);
+}
+
+export function hasUnresolvedBlockers(
+	task: Task,
+	statusMap: Map<string, TaskStatus>,
+): boolean {
+	return (
+		task.status === 'open' && unresolvedBlockerIds(task, statusMap).length > 0
+	);
+}
+
 // Used by `validate`: the values of all whole priority tokens in raw metadata.
 // Token-based so a `!word` inside a property value (e.g. a URL) is not flagged.
 export function extractPriorityTokens(rawMetadata: string): string[] {

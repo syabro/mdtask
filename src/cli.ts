@@ -30,6 +30,7 @@ import {
 	extractNumericPart,
 	extractPriorityTokens,
 	findTaskBlockRange,
+	hasUnresolvedBlockers,
 	parseMetadata,
 	parseTaskHeader,
 	parseUnidentifiedTaskLine,
@@ -37,6 +38,7 @@ import {
 	TASK_ID_REGEX,
 	type Task,
 	type UnidentifiedTask,
+	unresolvedBlockerIds,
 	VALID_PRIORITIES,
 } from './task.js';
 
@@ -200,10 +202,7 @@ function formatTaskLine(
 		task.priority,
 		task.status === 'done' ? false : isTTY,
 	);
-	const blockedByIds = (task.properties.blocked_by ?? []).filter(
-		(id) => statusMap.get(id) !== 'done',
-	);
-	const blockedByStr = blockedByIds
+	const blockedByStr = unresolvedBlockerIds(task, statusMap)
 		.map((id) => formatBlocker(id, isTTY))
 		.join(' ');
 	const blockedBySuffix = blockedByStr ? ` ${blockedByStr}` : '';
@@ -699,6 +698,7 @@ function handleList(
 	filters: string[],
 	options: {
 		all?: boolean;
+		blocked?: boolean;
 		sort?: string;
 		path?: string;
 		tag?: string | string[];
@@ -747,12 +747,26 @@ function handleList(
 		filteredTasks = sortByPriority(filteredTasks);
 	}
 
+	const hiddenBlockedTasks = options.blocked
+		? []
+		: filteredTasks.filter((t) => hasUnresolvedBlockers(t, statusMap));
+	const visibleTasks = options.blocked
+		? filteredTasks
+		: filteredTasks.filter((t) => !hasUnresolvedBlockers(t, statusMap));
+
 	if (isTTY) {
-		process.stdout.write(formatTable(filteredTasks, statusMap, isTTY));
+		process.stdout.write(formatTable(visibleTasks, statusMap, isTTY));
 	} else {
-		for (const task of filteredTasks) {
+		for (const task of visibleTasks) {
 			process.stdout.write(`${formatTaskLine(task, statusMap, isTTY)}\n`);
 		}
+	}
+
+	if (hiddenBlockedTasks.length > 0) {
+		const noun = hiddenBlockedTasks.length === 1 ? 'task' : 'tasks';
+		process.stdout.write(
+			`Note: ${hiddenBlockedTasks.length} blocked ${noun} hidden. Use mdtask list --blocked to show them.\n`,
+		);
 	}
 
 	// Show unidentified tasks warning (not affected by tag/priority filters)
@@ -1210,9 +1224,10 @@ export async function run(args: string[]): Promise<number> {
 	cli
 		.command(
 			'list [...filters]',
-			'List tasks. Filter by tag/priority: --tag backend --priority high (no quoting needed), or positional "#backend" "!high"',
+			'List workable tasks. Use --blocked to include blocked tasks. Filter by tag/priority: --tag backend --priority high (no quoting needed), or positional "#backend" "!high"',
 		)
 		.option('--all', 'Show all tasks including done')
+		.option('--blocked', 'Show tasks with unresolved @blocked_by dependencies')
 		.option('--sort <field>', 'Sort tasks (e.g. --sort=priority)')
 		.option(
 			'--tag <tag>',

@@ -8,7 +8,7 @@ disable-model-invocation: false
 
 ## How to use
 
-Use `mdtask` CLI to work with tasks. Example: `mdtask list`.
+Use `mdtask` CLI to work with tasks. `mdtask list` shows open, unblocked tasks. Use `mdtask list --blocked` when you need to include open tasks blocked by unresolved dependencies.
 
 ## Task Structure
 
@@ -46,7 +46,9 @@ Tags must start with a letter (`#[A-Za-z]…`), so an issue reference like `#123
 ### `@blocked_by` — the one built-in property
 
 `@blocked_by:ID` is the only property mdtask treats specially:
-- Unresolved blockers are shown in red in `mdtask list`.
+- Open tasks with unresolved blockers are hidden from default `mdtask list` output.
+- Use `mdtask list --blocked` to include blocked open tasks.
+- When blocked tasks are shown, unresolved blockers are red in terminal output.
 - Resolved (done) blockers are hidden from list output.
 - Full blocker info stays in the file and is visible via `mdtask view`.
 

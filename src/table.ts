@@ -1,5 +1,5 @@
 import p from 'picocolors';
-import type { Task, TaskStatus } from './task.js';
+import { type Task, type TaskStatus, unresolvedBlockerIds } from './task.js';
 
 // Strip ANSI escape codes for visual width calculation
 const ESC = String.fromCharCode(0x1b);
@@ -77,10 +77,7 @@ const COLUMNS: ColumnDef[] = [
 		header: 'PROPS',
 		alwaysShow: false,
 		getValue: (task, statusMap, isTTY) => {
-			const blockerIds = (task.properties.blocked_by ?? []).filter(
-				(id) => statusMap.get(id) !== 'done',
-			);
-			const blockerTokens = blockerIds.map((id) => {
+			const blockerTokens = unresolvedBlockerIds(task, statusMap).map((id) => {
 				const text = `@blocked_by:${id}`;
 				return isTTY ? p.red(text) : text;
 			});
