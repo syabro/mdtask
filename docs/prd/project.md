@@ -98,3 +98,11 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   After the four per-skill reviews, review them together: do they hand off cleanly, share
   terms, and judge repeated conventions the same way — any gaps or overlaps between create
   and do? Output cross-skill findings with a recommendation each.
+
+- [ ] PRJ-078 Fix formatting settings: 2-space indent, 120-col, via .editorconfig
+  Biome formats with tabs (explicit `indentStyle: "tab"` in biome.json) and 80-col
+  (Biome's default, unset). Switch to 2-space indent and 120-col, with `.editorconfig`
+  as the source of truth: create `.editorconfig` (indent_style=space, indent_size=2,
+  max_line_length=120, plus a sensible end_of_line/charset), and remove `indentStyle`
+  from biome.json so it stops overriding editorconfig — Biome reads editorconfig via
+  useEditorconfig, on by default. Reformat the whole codebase in the same change.
