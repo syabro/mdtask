@@ -30,9 +30,12 @@ the hero, and agents are mentioned softly.
 
 ### 1.4 Audience
 
-Developers — solo and small teams — with a project in a repo. Agents mentioned softly,
-not agent-first (Hacker News audience, allergic to AI hype). Skills are SKILL.md, loaded
+Developers — solo and small teams — with a project in a repo. Skills are SKILL.md, loaded
 by any agent harness — no Claude Code lock-in.
+
+Mentioning agents is fine, even prominently. What we avoid is being **agent-first** — copy
+written strictly for agents throughout. The line: mention is fine, "strictly for agents
+everywhere" is not (the Hacker News audience is allergic to AI hype).
 
 ---
 
