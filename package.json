@@ -1,7 +1,7 @@
 {
 	"name": "mdtask",
 	"version": "0.1.17",
-	"description": "File-first markdown task system",
+	"description": "The spec-driven development system where specs and tasks live in your repo and never drift from the code.",
 	"type": "module",
 	"license": "PolyForm-Shield-1.0.0",
 	"author": "Max Syabro <maxim@syabro.com>",
@@ -10,11 +10,12 @@
 		"url": "git+https://github.com/syabro/mdtask.git"
 	},
 	"keywords": [
-		"markdown",
+		"spec-driven-development",
+		"sdd",
+		"specs",
 		"tasks",
-		"cli",
-		"todo",
-		"file-first"
+		"markdown",
+		"cli"
 	],
 	"files": [
 		"dist",
