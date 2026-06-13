@@ -74,11 +74,16 @@ A spec starts with prose sections that explain the feature from the user's side.
   and closes it. Rename it to mdtask-do so the name matches what it does and pairs with
   mdtask-create. Update the skill and every reference to the new name.
 
-- [ ] PRJ-073 Review the sdd skill for over-fit and over-engineering
+- [x] PRJ-073 Review the sdd skill for over-fit and over-engineering
   Review the sdd skill in isolation for what won't generalize to other users and harnesses:
   over-engineered steps, assumptions baked in from this repo, and personal preferences
   treated as universal rules. Output flagged spots with a recommendation each — keep,
   make optional, or drop. Fixing is separate tasks.
+
+  **Findings:**
+  - DROP — the word "PRD" and the hardcoded `docs/prd/*.md` spec path (frontmatter, Cycle, "PRD structure"). Both assume this repo's vocabulary and folder layout; a stranger's spec lives elsewhere and isn't called a PRD. Already tracked by PRJ-069 (rename `docs/prd/` → `docs/specs/`) and PRJ-070 (replace "PRD" → "spec" in the skills) — no new task needed.
+  - KEEP — everything else: spec-before-code cycle, spec-doubles-as-manual premise, the `**Implemented:**` journaling, new-section-vs-update rule, the `# Tasks` boundary, the kettle example. That is the method itself, not over-fit, and assumes no specific repo or harness.
+  - No over-engineering in sdd itself — the heavy multi-step machinery lives in the mdtask-next skill, out of scope here.
 
 - [ ] PRJ-074 Review the mdtask skill for over-fit and over-engineering
   Same review, applied to the mdtask skill (the task-format reference).
