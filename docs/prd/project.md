@@ -72,3 +72,9 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   describe the three layers (CLI / skills / macro-loop); give an accurate command reference
   including `archive`, `install-skills`, blockers, and `.mdtaskrc`; use "spec" / `docs/specs/`
   terminology. Takes the README out of PRJ-070's scope.
+
+- [ ] PRJ-072 Rename the mdtask-next skill to mdtask-do
+  "next" reads as "show the next task" — selection. The skill actually runs a task
+  through the whole cycle (plan, review, code with tests, review, spec update, commit)
+  and closes it. Rename it to mdtask-do so the name matches what it does and pairs with
+  mdtask-create. Update the skill and every reference to the new name.
