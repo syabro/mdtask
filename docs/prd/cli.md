@@ -295,6 +295,13 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
 - [ ] CLI-067 Remove the `done` command
   The agent edits the file directly anyway; a separate toggle command is not needed.
 
+- [ ] CLI-068 Hide blocked tasks from `list` by default
+  `mdtask list` already shows only open tasks. Extend the default to also hide tasks
+  with an unresolved `@blocked_by`, so the list shows only what's workable right now.
+  After the list, print a note that N blocked tasks are hidden, with the flag to reveal
+  them (e.g. `mdtask list --blocked` shows them too).
+  This moves the "skip blocked tasks" logic out of the mdtask-next skill and into the CLI.
+
 ## Blocker display in list
 
 `mdtask list` only shows **unresolved** blockers — if a blocker task is done, it is hidden from the output:
