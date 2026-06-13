@@ -78,3 +78,23 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
   through the whole cycle (plan, review, code with tests, review, spec update, commit)
   and closes it. Rename it to mdtask-do so the name matches what it does and pairs with
   mdtask-create. Update the skill and every reference to the new name.
+
+- [ ] PRJ-073 Review the sdd skill for over-fit and over-engineering
+  Review the sdd skill in isolation for what won't generalize to other users and harnesses:
+  over-engineered steps, assumptions baked in from this repo, and personal preferences
+  treated as universal rules. Output flagged spots with a recommendation each — keep,
+  make optional, or drop. Fixing is separate tasks.
+
+- [ ] PRJ-074 Review the mdtask skill for over-fit and over-engineering
+  Same review, applied to the mdtask skill (the task-format reference).
+
+- [ ] PRJ-075 Review the mdtask-create skill for over-fit and over-engineering
+  Same review, applied to the mdtask-create skill.
+
+- [ ] PRJ-076 Review the mdtask-do skill for over-fit and over-engineering
+  Same review, applied to the mdtask-do skill (after PRJ-072 renames it from mdtask-next).
+
+- [ ] PRJ-077 Review the four skills as a system		@blocked_by:PRJ-073 @blocked_by:PRJ-074 @blocked_by:PRJ-075 @blocked_by:PRJ-076
+  After the four per-skill reviews, review them together: do they hand off cleanly, share
+  terms, and judge repeated conventions the same way — any gaps or overlaps between create
+  and do? Output cross-skill findings with a recommendation each.
