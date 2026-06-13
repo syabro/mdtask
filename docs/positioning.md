@@ -26,7 +26,7 @@ critical: the agent reads the stale spec as truth and builds on top of it.
 
 mdtask is a **spec-driven development system**. Not a framework, OS, toolkit, tracker, or
 utility. Comparison set: Spec Kit and OpenSpec. Consequence for the copy: the CLI is not
-the hero, and agents are mentioned softly.
+the hero, and the copy is not agent-first (see 1.4).
 
 ### 1.4 Audience
 
