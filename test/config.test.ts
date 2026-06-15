@@ -25,7 +25,7 @@ describe('loadConfig', () => {
 				join(tempDir, '.mdtaskrc'),
 				JSON.stringify({
 					files: {
-						include: ['docs/prd/**'],
+						include: ['docs/specs/**'],
 						exclude: ['docs/skills/**'],
 					},
 				}),
@@ -33,7 +33,7 @@ describe('loadConfig', () => {
 
 			const config = loadConfig();
 			expect(config?.files).toEqual({
-				include: ['docs/prd/**'],
+				include: ['docs/specs/**'],
 				exclude: ['docs/skills/**'],
 			});
 		});

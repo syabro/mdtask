@@ -391,7 +391,7 @@
 
 - [x] CLI-046 Show file location in `mdtask view` output
   Display file path and line number in `mdtask view` output header.
-  Example: `docs/prd/cli.md:191`
+  Example: `docs/specs/cli.md:191`
   Users can see where the task lives without running `mdtask open`.
 
   **Implemented:**
@@ -716,7 +716,7 @@
   **Implemented:**
   - Added `#noqa` callout at top of Flow section in next-task SKILL.md
   - Steps 3, 5, and 8 each have "Skip if task has `#noqa` tag" note
-  - Feature description added to docs/prd/project.md
+  - Feature description added to docs/specs/project.md
 
 - [x] PRJ-035 Migrate to globally unique numeric IDs		@iter:new-ids
   Renumber all existing tasks so NNN is unique across all prefixes.

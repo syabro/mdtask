@@ -18,7 +18,11 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
 
 ## Spec authoring convention
 
-A spec starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `sdd` skill for the full PRD structure.
+A spec starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `sdd` skill for the full spec structure.
+
+## Specs directory
+
+Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask list`, `mdtask view`, `mdtask validate`, and other commands scan the specs by default.
 
 # Tasks
 
@@ -45,17 +49,23 @@ A spec starts with prose sections that explain the feature from the user's side.
   Discuss and agree on a commit message convention with the user.
   Document the format in CLAUDE.md so it's followed in all future commits.
 
-- [ ] PRJ-069 Rename docs/prd/ to docs/specs/ and update config
+- [x] PRJ-069 Move task specs to docs/specs/ and update config
   Positioning standardizes on "spec" / `docs/specs/` (see docs/positioning.md).
-  Move all task files from `docs/prd/` to `docs/specs/`, change `.mdtaskrc` `path`
-  from `docs/prd` to `docs/specs`, and fix any other reference to the old path.
+  Move all task files to `docs/specs/`, change `.mdtaskrc` `path` to `docs/specs`,
+  and fix any other reference to the old path.
   After the move, `mdtask list` must still find every task.
+
+  **Implemented:**
+  - Task/spec files now live under `docs/specs/`.
+  - `.mdtaskrc` scans `docs/specs` by default.
+  - Documentation, shipped skill examples, and tests now use `docs/specs` paths.
+  - Task discovery was checked before and after the move.
 
 - [ ] PRJ-070 Replace "PRD" with "spec" in skills		@blocked_by:PRJ-069
   Positioning standardizes on "spec", not "PRD" (see docs/positioning.md).
   Update the four shipped skills (sdd, mdtask, mdtask-create, mdtask-next):
-  replace "PRD" wording with "spec", and `docs/prd/` with `docs/specs/` in examples.
-  Do this after the folder rename so examples point at the real path.
+  replace "PRD" wording with "spec" in frontmatter, headings, workflow text, and examples.
+  Do this after the folder rename so examples point at the real spec path.
   README is handled separately.
 
 - [ ] PRJ-071 Rewrite README from docs/positioning.md		@blocked_by:PRJ-069
@@ -81,7 +91,7 @@ A spec starts with prose sections that explain the feature from the user's side.
   make optional, or drop. Fixing is separate tasks.
 
   **Findings:**
-  - DROP — the word "PRD" and the hardcoded `docs/prd/*.md` spec path (frontmatter, Cycle, "PRD structure"). Both assume this repo's vocabulary and folder layout; a stranger's spec lives elsewhere and isn't called a PRD. Already tracked by PRJ-069 (rename `docs/prd/` → `docs/specs/`) and PRJ-070 (replace "PRD" → "spec" in the skills) — no new task needed.
+  - DROP — the word "PRD" and the hardcoded spec path (frontmatter, Cycle, "PRD structure"). Both assume this repo's vocabulary and folder layout; a stranger's spec lives elsewhere and isn't called a PRD. Already tracked by PRJ-069 (spec directory rename) and PRJ-070 (replace "PRD" → "spec" in the skills) — no new task needed.
   - KEEP — everything else: spec-before-code cycle, spec-doubles-as-manual premise, the `**Implemented:**` journaling, new-section-vs-update rule, the `# Tasks` boundary, the kettle example. That is the method itself, not over-fit, and assumes no specific repo or harness.
   - No over-engineering in sdd itself — the heavy multi-step machinery lives in the mdtask-next skill, out of scope here.
 

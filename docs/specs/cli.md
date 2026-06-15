@@ -114,7 +114,7 @@ mdtask show EXMPL-001    # same thing
 
 Output:
 ```
-docs/prd/cli.md:42
+docs/specs/cli.md:42
 - [ ] EXMPL-001 Fix the bug		@blocked_by:EXMPL-002 !high
       Description line 1.
       Description line 2.
@@ -157,7 +157,7 @@ Errors cause exit code 1. Warnings are reported but don't affect exit code. Clea
 `mdtask move <ID> <file>` moves a task (header + body) from its current file to another file:
 
 ```bash
-mdtask move TSK-038 docs/prd/other.md
+mdtask move TSK-038 docs/specs/other.md
 ```
 
 The entire task block (header line and indented body) is removed from the source file and appended to the target file. If the target file does not exist, it is created (including parent directories). If the source file becomes empty after the move, it is kept. Moving a task to the same file it already lives in is a no-op (symlink-aware).
@@ -169,12 +169,12 @@ Errors (exit code 1):
 
 ## Archiving done tasks
 
-`mdtask archive` moves done tasks into an archive file so active PRDs stay focused:
+`mdtask archive` moves done tasks into an archive file so active specs stay focused:
 
 ```bash
 mdtask archive                    # archive all done tasks in the base
 mdtask archive TSK-038 TSK-039    # archive specific done tasks
-mdtask archive --path docs/prd/cli.md  # archive done tasks from one file
+mdtask archive --path docs/specs/cli.md  # archive done tasks from one file
 ```
 
 The default archive is `<basePath>/_archive.md`. Set `.mdtaskrc` `archivePath` to use another file inside the scanned base. The archive file is skipped during archiving, so already archived tasks are not moved again. `--path <file>` scopes both bulk archiving and explicit ID lookup to that file.
@@ -216,8 +216,8 @@ Metadata is appended after `\t\t` separator. If no metadata exists, `\t\t` is ad
 
 ```bash
 mdtask ids                                  # assign IDs to all unidentified tasks
-mdtask ids --path docs/prd/cli.md           # assign IDs only in one file
-mdtask ids --path docs/prd/notes.md --prefix NTS
+mdtask ids --path docs/specs/cli.md         # assign IDs only in one file
+mdtask ids --path docs/specs/notes.md --prefix NTS
 ```
 
 When `--path` points to a file, only that file is changed. Existing IDs from the normal base are still read so NNN stays globally unique.
@@ -288,7 +288,7 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   **Implemented:**
   - `mdtask done` command and `handleDone` function removed from `src/cli.ts`
   - `test/done.test.ts` deleted
-  - All documentation references removed from `README.md`, `docs/prd/cli.md`, and `docs/mdtask.md`
+  - All documentation references removed from `README.md`, `docs/specs/cli.md`, and `docs/mdtask.md`
 
 - [x] CLI-068 Hide blocked tasks from `list` by default
   `mdtask list` already shows only open tasks. Extend the default to also hide tasks

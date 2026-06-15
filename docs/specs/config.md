@@ -19,7 +19,7 @@ Control which files are scanned for tasks using `files.include` and `files.exclu
 
 ```json
 {
-  "path": "docs/prd",
+  "path": "docs/specs",
   "files": {
     "include": ["**/*.md"],
     "exclude": ["archive/**"]
@@ -29,7 +29,7 @@ Control which files are scanned for tasks using `files.include` and `files.exclu
 
 - **include** — only scan files matching these glob patterns (default: all `.md` files)
 - **exclude** — skip files matching these patterns (overrides include)
-- Patterns are relative to the base directory (`path`), not the project root. If `path` is `docs/prd`, use `["**/*.md"]`, not `["docs/prd/**"]`.
+- Patterns are relative to the base directory (`path`), not the project root. If `path` is `docs/specs`, use `["**/*.md"]`, not `["docs/specs/**"]`.
 - Uses ripgrep's native `-g` flag for matching
 
 ## Excluded Directories

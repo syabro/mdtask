@@ -89,7 +89,7 @@ Add it when you need to set the default task directory, filter scanned files, or
 
 ```json
 {
-  "path": "docs/prd",
+  "path": "docs/specs",
   "files": {
     "include": ["**/*.md"],
     "exclude": ["archive/**"]
@@ -103,7 +103,7 @@ Add it when you need to set the default task directory, filter scanned files, or
 - `files.exclude`: glob patterns to skip, relative to `path`
 - `excludePrefixes`: ID prefixes hidden from all commands
 
-If `path` is `docs/prd`, use `files.include: ["**/*.md"]`, not `["docs/prd/**"]`.
+If `path` is `docs/specs`, use `files.include: ["**/*.md"]`, not `["docs/specs/**"]`.
 
 ## Examples
 

@@ -10,7 +10,7 @@ No code without a spec. PRD is both the spec and the manual.
 
 ## Cycle
 
-1. **Spec** — describe what needs to be built as a task in a PRD (`docs/prd/*.md`)
+1. **Spec** — describe what needs to be built as a task in a PRD (`docs/specs/*.md`)
 2. **Build** — implement the task
 3. **Document** — after the task is done:
    - Mark the task `[x]` and add `**Implemented:**` bullets inside the task body

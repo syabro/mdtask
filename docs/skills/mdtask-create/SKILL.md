@@ -27,7 +27,7 @@ If anything is unclear, ask before proposing — where it belongs (CLI vs task v
 Decide whether the task(s) fit an existing PRD or need a new one.
 
 - Fits an existing PRD (cli / task / files / config / project / test) → use it.
-- New feature, subsystem, or cross-cutting concern that doesn't fit → propose a new PRD: filename `docs/prd/<name>.md` and an ID prefix `<NAME>` (uppercase, short). Confirm both with the user.
+- New feature, subsystem, or cross-cutting concern that doesn't fit → propose a new PRD: filename `docs/specs/<name>.md` and an ID prefix `<NAME>` (uppercase, short). Confirm both with the user.
 - Before creating a new PRD, check the file doesn't already exist and the prefix isn't already in use — unless reusing it is intended.
 
 If unsure, ask: **"Does this fit an existing PRD or do we need a new one?"**
@@ -50,7 +50,7 @@ Show what you'll save, then ask in the user's language: **"Save?"** For a batch,
 
 ```
 --- PROPOSED ---
-File: docs/prd/cli.md
+File: docs/specs/cli.md
 - [ ] Short title
   Description line 1.
   Description line 2.
@@ -97,12 +97,12 @@ Agent: Go ahead, I'm listening.
 User: I want to export tasks to JSON and CSV, and import them back.
 
 Agent: This is a separate export/import feature — doesn't fit the existing PRDs.
-Proposing a new PRD: docs/prd/export.md, prefix EXP. Checked: no such file, EXP unused. OK?
+Proposing a new PRD: docs/specs/export.md, prefix EXP. Checked: no such file, EXP unused. OK?
 
 User: yes
 
 Agent: --- PROPOSED ---
-File: docs/prd/export.md (NEW)
+File: docs/specs/export.md (NEW)
 - [ ] EXP- Export tasks to JSON
   Export all tasks to JSON via `mdtask export json`.
 - [ ] EXP- Export tasks to CSV
@@ -114,6 +114,6 @@ Save?
 
 User: yes
 
-Agent: Creating docs/prd/export.md, running `mdtask ids --path docs/prd/export.md --prefix EXP`.
+Agent: Creating docs/specs/export.md, running `mdtask ids --path docs/specs/export.md --prefix EXP`.
 Assigned: EXP-050, EXP-051, EXP-052. Commit?
 ```

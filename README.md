@@ -87,7 +87,7 @@ Node.js + TypeScript. Minimal dependencies.
 
 - **Task format** — `docs/skills/mdtask/SKILL.md`
 - **Goals, architecture** — `docs/mdtask.md`
-- **PRDs** — `docs/prd/`
+- **Specs** — `docs/specs/`
 
 When changing one — check the others for consistency.
 

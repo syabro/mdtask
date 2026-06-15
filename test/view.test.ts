@@ -98,7 +98,7 @@ describe('mdtask view', () => {
 	});
 
 	it('shows relative path for tasks in subdirectories', async () => {
-		const subDir = join(tempDir, 'docs', 'prd');
+		const subDir = join(tempDir, 'docs', 'specs');
 		mkdirSync(subDir, { recursive: true });
 		writeFileSync(
 			join(subDir, 'cli.md'),
@@ -108,7 +108,7 @@ describe('mdtask view', () => {
 		await run(['view', 'TSK-001']);
 
 		const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
-		expect(output).toMatch(/^docs\/prd\/cli\.md:1\n/);
+		expect(output).toMatch(/^docs\/specs\/cli\.md:1\n/);
 	});
 
 	it('outputs full task block (header + body)', async () => {
@@ -215,7 +215,7 @@ describe('mdtask view', () => {
 	});
 
 	it('finds task in subdirectory', async () => {
-		const subDir = join(tempDir, 'docs', 'prd');
+		const subDir = join(tempDir, 'docs', 'specs');
 		mkdirSync(subDir, { recursive: true });
 		writeFileSync(
 			join(subDir, 'tasks.md'),

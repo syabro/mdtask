@@ -19,11 +19,11 @@ Never cite a task by its bare ID. Whenever you mention a task (`CLI-059`, `TSK-0
 
 ## Development Workflow
 
-read @docs/skills/sdd/SKILL.md — spec-driven development, PRD structure, examples.
+read @docs/skills/sdd/SKILL.md — spec-driven development, spec structure, examples.
 
 ## Project Structure
 
-- `docs/prd/` — PRDs (task, files, cli, config, project, test)
+- `docs/specs/` — specs (task, files, cli, config, project, test)
 - `docs/skills/` — shippable dev skills (sdd, mdtask-create, mdtask-next, mdtask), symlinked into `.claude/skills/`
 - `.claude/skills/check/` — project-local `check` skill (real file, not shipped)
 - `docs/mdtask.md` — goals, architecture
@@ -32,7 +32,7 @@ read @docs/skills/sdd/SKILL.md — spec-driven development, PRD structure, examp
 
 ## Example IDs in docs
 
-Use `EXMPL-` prefix for example task IDs in documentation and PRD task bodies. Never use real task IDs (CLI-001, TSK-003, etc.) in examples — they get picked up by `mdtask list`. The `EXMPL` prefix is excluded via `.mdtaskrc` `excludePrefixes`.
+Use `EXMPL-` prefix for example task IDs in documentation and spec task bodies. Never use real task IDs (CLI-001, TSK-003, etc.) in examples — they get picked up by `mdtask list`. The `EXMPL` prefix is excluded via `.mdtaskrc` `excludePrefixes`.
 
 ## Before Committing
 
@@ -45,7 +45,7 @@ The skill is the single source of truth for task format; mdtask.md covers everyt
   - Describe WHAT needs to be done, not HOW
   - Never write code for the agent
   - Never provide ready-made solutions
-  - Point to specs (docs/prd/) — agent reads them
+  - Point to specs (`docs/specs/`) — agent reads them
   - Agent writes the code themselves
 
 ## File Paths in Prompts

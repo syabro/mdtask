@@ -190,9 +190,9 @@ describe('findMarkdownFiles', () => {
 	describe('include/exclude patterns', () => {
 		it('excludes files matching excludePatterns', () => {
 			mkdirSync(join(tempDir, 'docs'), { recursive: true });
-			mkdirSync(join(tempDir, 'docs', 'prd'), { recursive: true });
+			mkdirSync(join(tempDir, 'docs', 'specs'), { recursive: true });
 			mkdirSync(join(tempDir, 'docs', 'skills'), { recursive: true });
-			writeFileSync(join(tempDir, 'docs', 'prd', 'cli.md'), '# CLI');
+			writeFileSync(join(tempDir, 'docs', 'specs', 'cli.md'), '# CLI');
 			writeFileSync(join(tempDir, 'docs', 'skills', 'example.md'), '# Example');
 
 			const result = findMarkdownFiles({
@@ -200,33 +200,33 @@ describe('findMarkdownFiles', () => {
 				excludePatterns: ['docs/skills/**'],
 			});
 
-			expect(result).toContain(join(tempDir, 'docs', 'prd', 'cli.md'));
+			expect(result).toContain(join(tempDir, 'docs', 'specs', 'cli.md'));
 			expect(result).not.toContain(
 				join(tempDir, 'docs', 'skills', 'example.md'),
 			);
 		});
 
 		it('includes only files matching includePatterns', () => {
-			mkdirSync(join(tempDir, 'docs', 'prd'), { recursive: true });
+			mkdirSync(join(tempDir, 'docs', 'specs'), { recursive: true });
 			mkdirSync(join(tempDir, 'other'), { recursive: true });
-			writeFileSync(join(tempDir, 'docs', 'prd', 'cli.md'), '# CLI');
+			writeFileSync(join(tempDir, 'docs', 'specs', 'cli.md'), '# CLI');
 			writeFileSync(join(tempDir, 'other', 'notes.md'), '# Notes');
 			writeFileSync(join(tempDir, 'root.md'), '# Root');
 
 			const result = findMarkdownFiles({
 				basePath: tempDir,
-				includePatterns: ['docs/prd/**'],
+				includePatterns: ['docs/specs/**'],
 			});
 
-			expect(result).toContain(join(tempDir, 'docs', 'prd', 'cli.md'));
+			expect(result).toContain(join(tempDir, 'docs', 'specs', 'cli.md'));
 			expect(result).not.toContain(join(tempDir, 'other', 'notes.md'));
 			expect(result).not.toContain(join(tempDir, 'root.md'));
 		});
 
 		it('combines include and exclude patterns', () => {
-			mkdirSync(join(tempDir, 'docs', 'prd'), { recursive: true });
+			mkdirSync(join(tempDir, 'docs', 'specs'), { recursive: true });
 			mkdirSync(join(tempDir, 'docs', 'drafts'), { recursive: true });
-			writeFileSync(join(tempDir, 'docs', 'prd', 'cli.md'), '# CLI');
+			writeFileSync(join(tempDir, 'docs', 'specs', 'cli.md'), '# CLI');
 			writeFileSync(join(tempDir, 'docs', 'drafts', 'wip.md'), '# WIP');
 
 			const result = findMarkdownFiles({
@@ -235,7 +235,7 @@ describe('findMarkdownFiles', () => {
 				excludePatterns: ['docs/drafts/**'],
 			});
 
-			expect(result).toContain(join(tempDir, 'docs', 'prd', 'cli.md'));
+			expect(result).toContain(join(tempDir, 'docs', 'specs', 'cli.md'));
 			expect(result).not.toContain(join(tempDir, 'docs', 'drafts', 'wip.md'));
 		});
 
@@ -250,9 +250,9 @@ describe('findMarkdownFiles', () => {
 		});
 
 		it('exclude overrides include when both match', () => {
-			mkdirSync(join(tempDir, 'docs', 'prd'), { recursive: true });
-			writeFileSync(join(tempDir, 'docs', 'prd', 'secret.md'), '# Secret');
-			writeFileSync(join(tempDir, 'docs', 'prd', 'public.md'), '# Public');
+			mkdirSync(join(tempDir, 'docs', 'specs'), { recursive: true });
+			writeFileSync(join(tempDir, 'docs', 'specs', 'secret.md'), '# Secret');
+			writeFileSync(join(tempDir, 'docs', 'specs', 'public.md'), '# Public');
 
 			const result = findMarkdownFiles({
 				basePath: tempDir,
@@ -260,8 +260,8 @@ describe('findMarkdownFiles', () => {
 				excludePatterns: ['**/secret.md'],
 			});
 
-			expect(result).toContain(join(tempDir, 'docs', 'prd', 'public.md'));
-			expect(result).not.toContain(join(tempDir, 'docs', 'prd', 'secret.md'));
+			expect(result).toContain(join(tempDir, 'docs', 'specs', 'public.md'));
+			expect(result).not.toContain(join(tempDir, 'docs', 'specs', 'secret.md'));
 		});
 	});
 

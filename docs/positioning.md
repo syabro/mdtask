@@ -166,8 +166,8 @@ Parallel edits are resolved as ordinary text conflicts in git.
 
 - The unit is a **spec** — a single Markdown file under **`docs/specs/`**.
 - A **task** is a checkbox line inside a spec.
-- We do not use "PRD" or `docs/prd/`. "spec" fits spec-driven development and reads better.
+- We use "spec" because it fits spec-driven development and reads better.
 
-Migration note (not landing copy): "PRD" / `docs/prd/` are still wired into the shipped
-skills, the README, and the `.mdtaskrc` default path. This decision requires migrating them
-to "spec" / `docs/specs/` — tracked as separate mdtask tasks, not part of this document.
+Migration note (not landing copy): the specs directory now uses `docs/specs/`. Remaining
+"PRD" wording in shipped skills and the README is tracked as separate mdtask tasks, not
+part of this document.
