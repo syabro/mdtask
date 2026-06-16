@@ -16,7 +16,7 @@ Add the steps below as todo items, then work through them.
 
 ### Step 1 — Listen
 
-Say: **"Go ahead, I'm listening."** Wait for the user to describe their idea, problem, or feature.
+If the user has not described the task yet, ask them to describe the idea, problem, or feature. If they already gave enough context, continue.
 
 ### Step 2 — Clarify
 
@@ -26,8 +26,8 @@ If anything is unclear, ask before proposing — where it belongs (CLI vs task v
 
 Decide whether the task(s) fit an existing spec or need a new one.
 
-- Fits an existing spec (cli / task / files / config / project / test) → use it.
-- New feature, subsystem, or cross-cutting concern that doesn't fit → propose a new spec: filename `docs/specs/<name>.md` and an ID prefix `<NAME>` (uppercase, short). Confirm both with the user.
+- Fits an existing spec in the project → use it.
+- New feature, subsystem, or cross-cutting concern that doesn't fit → propose a new spec in the project's configured spec directory (`.mdtaskrc` `path`, or wherever existing specs live) and an ID prefix `<NAME>` (uppercase, short). Confirm both with the user.
 - Before creating a new spec, check the file doesn't already exist and the prefix isn't already in use — unless reusing it is intended.
 
 If unsure, ask: **"Does this fit an existing spec or do we need a new one?"**
@@ -63,16 +63,16 @@ Wait for an explicit yes before Step 5. The user can cancel at any time — just
 
 **Existing spec:**
 1. Append the task(s) after the existing tasks.
-2. `pnpm mdtask ids --path <file>` (add `--prefix <PREFIX>` if the file has no prefix source).
+2. `mdtask ids --path <file>` (add `--prefix <PREFIX>` if the file has no prefix source).
 3. Show the assigned ID(s) and where they landed.
-4. Ask: **"Commit?"**
+4. If the project commits task changes, ask whether to commit.
 
 **New spec:**
-1. Create the file: `# <NAME> — mdtask`, blank line, `# Tasks`, blank line.
+1. Create the file with a project-appropriate heading, then a `# Tasks` section.
 2. Append the task(s) after `# Tasks`.
-3. `pnpm mdtask ids --path <file> --prefix <PREFIX>`.
+3. `mdtask ids --path <file> --prefix <PREFIX>`.
 4. Show the file path and assigned ID(s).
-5. Ask: **"Commit?"**
+5. If the project commits task changes, ask whether to commit.
 
 If the user wants changes, edit the proposal, show it again, and repeat until they approve.
 
@@ -115,5 +115,5 @@ Save?
 User: yes
 
 Agent: Creating docs/specs/export.md, running `mdtask ids --path docs/specs/export.md --prefix EXP`.
-Assigned: EXP-050, EXP-051, EXP-052. Commit?
+Assigned: EXP-050, EXP-051, EXP-052. Commit? (if the project commits task changes)
 ```

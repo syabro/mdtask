@@ -24,6 +24,10 @@ One spec is one spec file. It starts with prose sections that explain the featur
 
 Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask list`, `mdtask view`, `mdtask validate`, and other commands scan the specs by default.
 
+## Task creation skill
+
+`mdtask-create` guides agents through creating tasks: clarify the user's intent, choose an existing spec or propose a new one in the project's configured spec directory, show the exact task proposal before saving, assign IDs with `mdtask ids`, and ask about committing only when the project workflow commits task changes.
+
 # Tasks
 
 - [ ] PRJ-034 Define layered architecture
@@ -117,8 +121,14 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   - Task-body guidance now separates lightweight TODOs from agent handoff/spec work and allows accepted implementation constraints.
   - Parsing hints are now framed as advanced tooling reference with CLI-first guidance.
 
-- [ ] PRJ-075 Review the mdtask-create skill for over-fit and over-engineering
+- [x] PRJ-075 Review the mdtask-create skill for over-fit and over-engineering
   Same review, applied to the mdtask-create skill.
+
+  **Implemented:**
+  - Reviewed `mdtask-create` with DeepSeek, Mimo, Minimax, and Claude.
+  - Removed repo-specific spec names, dev-only `pnpm mdtask` commands, and the hardcoded `— mdtask` new-spec title.
+  - New spec guidance now follows the project's configured spec directory.
+  - Commit prompting is now conditional on the project's task-change workflow.
 
 - [ ] PRJ-076 Review the mdtask-do skill for over-fit and over-engineering
   Same review, applied to the mdtask-do skill.
