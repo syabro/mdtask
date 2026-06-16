@@ -169,5 +169,5 @@ Parallel edits are resolved as ordinary text conflicts in git.
 - We use "spec" because it fits spec-driven development and reads better.
 
 Migration note (not landing copy): the specs directory now uses `docs/specs/`. Remaining
-"PRD" wording in shipped skills and the README is tracked as separate mdtask tasks, not
-part of this document.
+"PRD" wording in the README is tracked as a separate mdtask task, not part of this
+document.

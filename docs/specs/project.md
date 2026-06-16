@@ -18,7 +18,7 @@ License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0
 
 ## Spec authoring convention
 
-A spec starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `sdd` skill for the full spec structure.
+One spec is one spec file. It starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `sdd` skill for the full spec structure.
 
 ## Specs directory
 
@@ -61,12 +61,18 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   - Documentation, shipped skill examples, and tests now use `docs/specs` paths.
   - Task discovery was checked before and after the move.
 
-- [ ] PRJ-070 Replace "PRD" with "spec" in skills		@blocked_by:PRJ-069
+- [x] PRJ-070 Replace "PRD" with "spec" in skills		@blocked_by:PRJ-069
   Positioning standardizes on "spec", not "PRD" (see docs/positioning.md).
   Update the four shipped skills (sdd, mdtask, mdtask-create, mdtask-next):
   replace "PRD" wording with "spec" in frontmatter, headings, workflow text, and examples.
   Do this after the folder rename so examples point at the real spec path.
   README is handled separately.
+
+  **Implemented:**
+  - Shipped skills now use `spec` / `spec file` terminology instead of PRD wording.
+  - `mdtask-create` now asks agents to choose or create a spec.
+  - `mdtask-next` now tells agents to update the task and spec when closing work.
+  - `sdd` now describes spec files as the source of work and the manual.
 
 - [ ] PRJ-071 Rewrite README from docs/positioning.md		@blocked_by:PRJ-069
   The README diverges from docs/positioning.md: it leads with the old pitch ("CLI task

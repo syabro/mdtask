@@ -1,24 +1,24 @@
 ---
 name: sdd
-description: Spec-driven development workflow for projects that use PRD files as both product spec and manual. Use when writing PRDs, implementing tasks from PRDs, or updating docs after code changes.
+description: Spec-driven development workflow for projects that use spec files as both product spec and manual. Use when writing specs, implementing tasks from specs, or updating docs after code changes.
 disable-model-invocation: false
 ---
 
 # Spec-Driven Development
 
-No code without a spec. PRD is both the spec and the manual.
+No code without a spec. The spec is both the blueprint for the work and the manual for the result.
 
 ## Cycle
 
-1. **Spec** — describe what needs to be built as a task in a PRD (`docs/specs/*.md`)
+1. **Spec** — describe what needs to be built as a task in a spec file (`docs/specs/*.md`)
 2. **Build** — implement the task
 3. **Document** — after the task is done:
    - Mark the task `[x]` and add `**Implemented:**` bullets inside the task body
    - Update the feature description above `# Tasks` based on what was implemented
 
-## PRD structure
+## Spec structure
 
-Each PRD file has two parts:
+Each spec file has two parts:
 
 1. **Feature description** (top) — what the product does, how to use it
 2. **Task journal** (bottom) — starts with `# Tasks`; story groups under it use `##` headings
@@ -32,7 +32,7 @@ Imagine building a smart kettle app.
 
 ### Step 1 — Spec
 
-We start by creating a PRD with tasks. No code yet, just the spec:
+We start by creating a spec file with tasks. No code yet, just the spec:
 
 ```markdown
 # Brewing — Smart Kettle

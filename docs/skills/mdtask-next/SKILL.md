@@ -14,7 +14,7 @@ Start by creating a todo checklist (the `todowrite` tool in Claude; a `./tmp` ma
 
 **Modes**
 - **normal** (default) — full cycle, autonomous: pick the most logical task and approve your own plan.
-- **fast** (`fast`, `--fast`, `-f`) — skip planning, both review steps, test-first work, and final validation. Still pick the task with the CLI, make the change, update the task/PRD, and commit unless told not to.
+- **fast** (`fast`, `--fast`, `-f`) — skip planning, both review steps, test-first work, and final validation. Still pick the task with the CLI, make the change, update the task and spec, and commit unless told not to.
 
 **`#noqa` tag** — if the picked task carries `#noqa`, skip the two review steps (Step 3 and Step 5). Everything else, including the commit, still runs.
 
@@ -68,11 +68,11 @@ Resolve the reviewer the same way as Step 3 (named tool → subagent fallback wi
 
 Run all tests again to confirm nothing broke after review fixes, and lint/typecheck if configured.
 
-### Step 7 — Update the PRD (TWO places — both required)
+### Step 7 — Update the spec (TWO places — both required)
 
 > Full workflow with examples: the `sdd` skill.
 
-**Place 1 — feature description (above `# Tasks`):** in the PRD file where the task lives, add a new `## Section` for a new feature, or update the existing section if the task extends one. Match the section to the feature, not to the task. Describe it from the user's side — what to run, what config to use — concise, how-to-use, not implementation detail.
+**Place 1 — feature description (above `# Tasks`):** in the spec file where the task lives, add a new `## Section` for a new feature, or update the existing section if the task extends one. Match the section to the feature, not to the task. Describe it from the user's side — what to run, what config to use — concise, how-to-use, not implementation detail.
 
 **Place 2 — the task body:** mark it `[x]` and add an `**Implemented:**` block (2–5 bullets, outcomes only — no code, no internals). **Only touch the task you worked on — never modify other tasks or their Implemented blocks.**
 

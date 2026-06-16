@@ -12,7 +12,7 @@ The parser recognizes task headers in format `- [ ] ID-123 Title` and extracts:
 
 Metadata is the trailing run of `#tag` / `!priority` / `@key:value` tokens at the end of the line. Scanning from the right stops at the first word that isn't one of these, so a `#`, `!`, or `@` earlier in the line stays in the title (e.g. `Fix #123 in parser` keeps `#123` as title text). An explicit double tab (`\t\t`) overrides this and splits title from metadata at the tabs. The parser returns null for non-task lines.
 
-Checkbox lines inside fenced code blocks (` ``` ` or `~~~`, indented 0–3 spaces) are documentation examples, never tasks — every command that scans files (`list`, `view`, `validate`, `ids`, …) skips them. So a PRD can show example tasks in a code block without them leaking into the task list or getting IDs assigned by `mdtask ids`.
+Checkbox lines inside fenced code blocks (` ``` ` or `~~~`, indented 0–3 spaces) are documentation examples, never tasks — every command that scans files (`list`, `view`, `validate`, `ids`, …) skips them. So a spec can show example tasks in a code block without them leaking into the task list or getting IDs assigned by `mdtask ids`.
 
 ## Metadata format
 
