@@ -107,7 +107,7 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   **Implemented:**
   - Reviewed the `mdtask` skill with GPT, DeepSeek V4, and GLM-5.1 reviewers.
   - `mdtask` now uses neutral `EXMPL-*` ID examples instead of project prefixes.
-  - The `.mdtaskrc` example now uses a neutral `tasks` path and only hides the example prefix.
+  - The `.mdtaskrc` example keeps the project-standard `docs/specs` path and hides example prefixes.
   - Task-body guidance now separates lightweight TODOs from agent handoff/spec work and allows accepted implementation constraints.
   - Parsing hints are now framed as advanced tooling reference with CLI-first guidance.
 
