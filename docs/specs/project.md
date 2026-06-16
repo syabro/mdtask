@@ -101,8 +101,15 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   - KEEP — everything else: spec-before-code cycle, spec-doubles-as-manual premise, the `**Implemented:**` journaling, new-section-vs-update rule, the `# Tasks` boundary, the kettle example. That is the method itself, not over-fit, and assumes no specific repo or harness.
   - No over-engineering in sdd itself — the heavy multi-step machinery lives in the mdtask-next skill, out of scope here.
 
-- [ ] PRJ-074 Review the mdtask skill for over-fit and over-engineering
+- [x] PRJ-074 Review the mdtask skill for over-fit and over-engineering
   Same review, applied to the mdtask skill (the task-format reference).
+
+  **Implemented:**
+  - Reviewed the `mdtask` skill with GPT, DeepSeek V4, and GLM-5.1 reviewers.
+  - `mdtask` now uses neutral `EXMPL-*` ID examples instead of project prefixes.
+  - The `.mdtaskrc` example now uses a neutral `tasks` path and only hides the example prefix.
+  - Task-body guidance now separates lightweight TODOs from agent handoff/spec work and allows accepted implementation constraints.
+  - Parsing hints are now framed as advanced tooling reference with CLI-first guidance.
 
 - [ ] PRJ-075 Review the mdtask-create skill for over-fit and over-engineering
   Same review, applied to the mdtask-create skill.

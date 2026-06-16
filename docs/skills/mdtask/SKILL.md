@@ -27,7 +27,7 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 ```
 
 - Checkbox: `[ ]` (open) or `[x]` (done)
-- ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `CLI-022`, `TSK-038`). Auto-assigned by `mdtask ids`; use `mdtask ids --path <file> --prefix PREFIX` when a file has no prefix source. Short numeric lookup: `mdtask view 22`.
+- ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `EXMPL-022`, `EXMPL-038`). Auto-assigned by `mdtask ids`; use `mdtask ids --path <file> --prefix PREFIX` when a file has no prefix source. Short numeric lookup: `mdtask view 22`.
 - Title: free text; metadata is the trailing run of tokens at the end of the line, so a `#`/`!`/`@` earlier in the title stays in the title
 - ` ` (space) or `\t\t` (double tab): optional separator before metadata
 
@@ -56,16 +56,14 @@ All other properties (`@status`, `@iter`, …) are per-project conventions with 
 
 ## Task Body
 
-The body captures information that future implementers, reviewers, or maintainers would still need after implementation begins.
-
-Include:
+The body captures information that future implementers, reviewers, or maintainers would still need after implementation begins. For lightweight personal TODOs, a short title or one-line body is enough. For agent handoff or spec work, include the parts that affect the result:
 
 - Context — the problem, bug, request, or opportunity behind the task.
 - Outcome — what becomes true once it's done.
 - Constraints — decisions and rules that must hold, including APIs or contracts that must remain compatible, product decisions that have already been made, accepted architectural choices, and performance, security, reliability, or UX requirements.
 - Acceptance Criteria — observable conditions that determine whether the task is complete.
 
-Leave out anything that represents only one possible implementation approach, including step-by-step plans (create class X, add method Y, refactor Z, split A into B), personal implementation preferences, temporary debugging notes, and speculation about solutions that have not been decided.
+Leave out invented implementation steps unless the approach is already an accepted constraint. Avoid step-by-step plans (create class X, add method Y, refactor Z, split A into B), personal implementation preferences, temporary debugging notes, and speculation about solutions that have not been decided.
 
 A detail belongs in the task if a future implementer would make a different decision without it.
 
@@ -89,12 +87,12 @@ Add it when you need to set the default task directory, filter scanned files, or
 
 ```json
 {
-  "path": "docs/specs",
+  "path": "tasks",
   "files": {
     "include": ["**/*.md"],
     "exclude": ["archive/**"]
   },
-  "excludePrefixes": ["EXMPL", "KTL"]
+  "excludePrefixes": ["EXMPL"]
 }
 ```
 
@@ -103,7 +101,7 @@ Add it when you need to set the default task directory, filter scanned files, or
 - `files.exclude`: glob patterns to skip, relative to `path`
 - `excludePrefixes`: ID prefixes hidden from all commands
 
-If `path` is `docs/specs`, use `files.include: ["**/*.md"]`, not `["docs/specs/**"]`.
+If `path` is `tasks`, use `files.include: ["**/*.md"]`, not `["tasks/**"]`.
 
 ## Examples
 
@@ -126,7 +124,9 @@ Done task:
 - [x] EXMPL-100 Implement header regex		#parser
 ```
 
-## Parsing Hints
+## Advanced Parsing Reference
+
+Use the CLI for task work. These hints are for compatible tooling or tests, not for agents to reimplement task discovery when an `mdtask` command exists.
 
 - Header regex: `^- \[[ x]\] [A-Z]+-\d+ `
 - Metadata from header: peel the trailing run of `#tag`/`!priority`/`@key:value` tokens from the right (or split at `\t\t`)
