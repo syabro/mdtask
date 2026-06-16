@@ -16,12 +16,7 @@ import { dirname, join, sep } from 'node:path';
 
 // Skills bundled in the npm package and installable into an agent's skill
 // directory. The project-local `check` skill is intentionally not shipped.
-export const SHIPPABLE_SKILLS = [
-	'sdd',
-	'mdtask',
-	'mdtask-create',
-	'mdtask-next',
-];
+export const SHIPPABLE_SKILLS = ['sdd', 'mdtask', 'mdtask-create', 'mdtask-do'];
 
 const STAMP_FILE = '.version';
 

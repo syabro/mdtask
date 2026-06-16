@@ -24,7 +24,7 @@ read @docs/skills/sdd/SKILL.md — spec-driven development, spec structure, exam
 ## Project Structure
 
 - `docs/specs/` — specs (task, files, cli, config, project, test)
-- `docs/skills/` — shippable dev skills (sdd, mdtask-create, mdtask-next, mdtask), symlinked into `.claude/skills/`
+- `docs/skills/` — shippable dev skills (sdd, mdtask-create, mdtask-do, mdtask), symlinked into `.claude/skills/`
 - `.claude/skills/check/` — project-local `check` skill (real file, not shipped)
 - `docs/mdtask.md` — goals, architecture
 - `docs/skills/sdd/SKILL.md` — spec-driven development workflow
@@ -58,4 +58,4 @@ Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Cla
 
 Shippable skills live in `docs/skills/` and are symlinked into `.claude/skills/`. The project-local `check` skill is the exception — its real file lives in `.claude/skills/check/`.
 
-Task loop: the `mdtask-next` skill (run `/mdtask-next`). It loads on demand — no need to read it into every session.
+Task runner: the `mdtask-do` skill (run `/mdtask-do`). It loads on demand — no need to read it into every session.

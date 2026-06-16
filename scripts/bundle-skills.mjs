@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SHIPPABLE = ['sdd', 'mdtask', 'mdtask-create', 'mdtask-next'];
+const SHIPPABLE = ['sdd', 'mdtask', 'mdtask-create', 'mdtask-do'];
 const srcBase = join(root, 'docs', 'skills');
 const outBase = join(root, 'skills');
 

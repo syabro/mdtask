@@ -21,7 +21,7 @@ dev:
     pnpm dev
 
 # Install all project skills to ~/.agents/skills
-install-skills: install-skill-sdd install-skill-mdtask install-skill-mdtask-create install-skill-mdtask-next
+install-skills: install-skill-sdd install-skill-mdtask install-skill-mdtask-create install-skill-mdtask-do
     @echo "All skills installed"
 
 # Install sdd skill to ~/.agents/skills
@@ -45,12 +45,12 @@ install-skill-mdtask-create:
     cp docs/skills/mdtask-create/* ~/.agents/skills/mdtask-create/
     @echo "Installed mdtask-create skill"
 
-# Install mdtask-next skill to ~/.agents/skills
-install-skill-mdtask-next:
-    rm -rf ~/.agents/skills/mdtask-next
-    mkdir -p ~/.agents/skills/mdtask-next
-    cp docs/skills/mdtask-next/* ~/.agents/skills/mdtask-next/
-    @echo "Installed mdtask-next skill"
+# Install mdtask-do skill to ~/.agents/skills
+install-skill-mdtask-do:
+    rm -rf ~/.agents/skills/mdtask-do
+    mkdir -p ~/.agents/skills/mdtask-do
+    cp docs/skills/mdtask-do/* ~/.agents/skills/mdtask-do/
+    @echo "Installed mdtask-do skill"
 
 # Release to npm (just release patch/minor/major)
 release bump="patch":

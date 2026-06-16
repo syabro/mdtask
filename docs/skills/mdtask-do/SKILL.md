@@ -1,10 +1,10 @@
 ---
-name: mdtask-next
-description: Work on the next task from the project — pick, plan, review, execute, review code, commit
+name: mdtask-do
+description: Work one project task end to end — pick, plan, review, execute, review code, update the spec, commit
 disable-model-invocation: false
 ---
 
-# /mdtask-next — Task workflow
+# /mdtask-do — Task workflow
 
 > **Always use the `mdtask` CLI to work with tasks — never read or parse the markdown task files by hand.** In this repo that's `pnpm mdtask <command>`; with a global install it's `mdtask <command>`.
 

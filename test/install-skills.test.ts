@@ -31,7 +31,7 @@ const REPO_ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)), '..');
 const REPO_VERSION = JSON.parse(
 	readFileSync(join(REPO_ROOT, 'package.json'), 'utf-8'),
 ).version as string;
-const SKILLS = ['sdd', 'mdtask', 'mdtask-create', 'mdtask-next'];
+const SKILLS = ['sdd', 'mdtask', 'mdtask-create', 'mdtask-do'];
 
 describe('mdtask install-skills', () => {
 	let configHome: string; // XDG_CONFIG_HOME
@@ -117,7 +117,7 @@ describe('mdtask install-skills', () => {
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('skipped sdd');
 		// The others still got linked.
-		for (const name of ['mdtask', 'mdtask-create', 'mdtask-next']) {
+		for (const name of ['mdtask', 'mdtask-create', 'mdtask-do']) {
 			expect(lstatSync(join(agentDir, name)).isSymbolicLink()).toBe(true);
 		}
 		// A partial install is a failure — automation must not see success.
@@ -133,7 +133,7 @@ describe('mdtask install-skills', () => {
 		expect(readlinkSync(join(agentDir, 'mdtask'))).toBe(foreign);
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('skipped mdtask');
-		for (const name of ['sdd', 'mdtask-create', 'mdtask-next']) {
+		for (const name of ['sdd', 'mdtask-create', 'mdtask-do']) {
 			expect(lstatSync(join(agentDir, name)).isSymbolicLink()).toBe(true);
 		}
 		expect(exitSpy).toHaveBeenCalledWith(1);

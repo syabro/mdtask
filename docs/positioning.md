@@ -139,7 +139,7 @@ assigns them IDs, so migrating is quick.
 
 ### 3.6 Alongside agent loops
 
-mdtask runs the micro-loop: the `mdtask-next` skill takes one task from picked to built to
+mdtask runs the micro-loop: the `mdtask-do` skill takes one task from picked to built to
 closed, with the code and the spec update in the same commit. Macro-loops — Ralph, GOAL-style
 harness workflows — drive the whole backlog by repeating that step until it's empty. The
 macro-loop calls mdtask's per-task loop; mdtask doesn't replace it.

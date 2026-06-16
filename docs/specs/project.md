@@ -4,7 +4,7 @@ Project structure and entry point.
 
 ## Task tag: #noqa
 
-Tasks tagged `#noqa` get a lighter `/mdtask-next` run — the two review steps (plan review at Step 3, code review at Step 5) are skipped. The change is still implemented, validated, documented, and committed. Use for small, low-risk changes where external review is overkill.
+Tasks tagged `#noqa` get a lighter `/mdtask-do` run — the two review steps (plan review at Step 3, code review at Step 5) are skipped. The change is still implemented, validated, documented, and committed. Use for small, low-risk changes where external review is overkill.
 
 ## Publishing to npm
 
@@ -63,7 +63,7 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
 
 - [x] PRJ-070 Replace "PRD" with "spec" in skills		@blocked_by:PRJ-069
   Positioning standardizes on "spec", not "PRD" (see docs/positioning.md).
-  Update the four shipped skills (sdd, mdtask, mdtask-create, mdtask-next):
+  Update the four shipped skills (sdd, mdtask, mdtask-create, mdtask-do):
   replace "PRD" wording with "spec" in frontmatter, headings, workflow text, and examples.
   Do this after the folder rename so examples point at the real spec path.
   README is handled separately.
@@ -71,7 +71,7 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   **Implemented:**
   - Shipped skills now use `spec` / `spec file` terminology instead of PRD wording.
   - `mdtask-create` now asks agents to choose or create a spec.
-  - `mdtask-next` now tells agents to update the task and spec when closing work.
+  - `mdtask-do` now tells agents to update the task and spec when closing work.
   - `sdd` now describes spec files as the source of work and the manual.
 
 - [ ] PRJ-071 Rewrite README from docs/positioning.md		@blocked_by:PRJ-069
@@ -84,11 +84,17 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   including `archive`, `install-skills`, blockers, and `.mdtaskrc`; use "spec" / `docs/specs/`
   terminology. Takes the README out of PRJ-070's scope.
 
-- [ ] PRJ-072 Rename the mdtask-next skill to mdtask-do
+- [x] PRJ-072 Rename the mdtask-next skill to mdtask-do
   "next" reads as "show the next task" — selection. The skill actually runs a task
   through the whole cycle (plan, review, code with tests, review, spec update, commit)
   and closes it. Rename it to mdtask-do so the name matches what it does and pairs with
   mdtask-create. Update the skill and every reference to the new name.
+
+  **Implemented:**
+  - The task-running skill now lives at `docs/skills/mdtask-do/` with `name: mdtask-do`.
+  - Shipped skill lists, install recipes, package tests, and bundle generation now use `mdtask-do`.
+  - Active docs now refer to `/mdtask-do` and `mdtask-do` for the per-task workflow.
+  - Archived task history was left unchanged.
 
 - [x] PRJ-073 Review the sdd skill for over-fit and over-engineering
   Review the sdd skill in isolation for what won't generalize to other users and harnesses:
@@ -99,7 +105,7 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   **Findings:**
   - DROP — the word "PRD" and the hardcoded spec path (frontmatter, Cycle, "PRD structure"). Both assume this repo's vocabulary and folder layout; a stranger's spec lives elsewhere and isn't called a PRD. Already tracked by PRJ-069 (spec directory rename) and PRJ-070 (replace "PRD" → "spec" in the skills) — no new task needed.
   - KEEP — everything else: spec-before-code cycle, spec-doubles-as-manual premise, the `**Implemented:**` journaling, new-section-vs-update rule, the `# Tasks` boundary, the kettle example. That is the method itself, not over-fit, and assumes no specific repo or harness.
-  - No over-engineering in sdd itself — the heavy multi-step machinery lives in the mdtask-next skill, out of scope here.
+  - No over-engineering in sdd itself — the heavy multi-step machinery lives in the mdtask-do skill, out of scope here.
 
 - [x] PRJ-074 Review the mdtask skill for over-fit and over-engineering
   Same review, applied to the mdtask skill (the task-format reference).
@@ -115,7 +121,7 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   Same review, applied to the mdtask-create skill.
 
 - [ ] PRJ-076 Review the mdtask-do skill for over-fit and over-engineering
-  Same review, applied to the mdtask-do skill (after PRJ-072 renames it from mdtask-next).
+  Same review, applied to the mdtask-do skill.
 
 - [ ] PRJ-077 Review the four skills as a system		@blocked_by:PRJ-073 @blocked_by:PRJ-074 @blocked_by:PRJ-075 @blocked_by:PRJ-076
   After the four per-skill reviews, review them together: do they hand off cleanly, share

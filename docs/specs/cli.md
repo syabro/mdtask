@@ -262,7 +262,7 @@ Only matches the pattern `[A-Z]+-\d+` or a plain number. If the argument is not 
 
 ## Installing skills
 
-mdtask ships its dev skills (`sdd`, `mdtask`, `mdtask-create`, `mdtask-next`) inside the npm package. A skill auto-invokes only when its `SKILL.md` lives in the agent's own skill-discovery folder, which differs per agent — so the agent passes that folder in:
+mdtask ships its dev skills (`sdd`, `mdtask`, `mdtask-create`, `mdtask-do`) inside the npm package. A skill auto-invokes only when its `SKILL.md` lives in the agent's own skill-discovery folder, which differs per agent — so the agent passes that folder in:
 
 ```bash
 mdtask install-skills <dir>   # e.g. mdtask install-skills ~/.claude/skills
@@ -295,7 +295,7 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   with an unresolved `@blocked_by`, so the list shows only what's workable right now.
   After the list, print a note that N blocked tasks are hidden, with the flag to reveal
   them (e.g. `mdtask list --blocked` shows them too).
-  This moves the "skip blocked tasks" logic out of the mdtask-next skill and into the CLI.
+  This moves the "skip blocked tasks" logic out of the mdtask-do skill and into the CLI.
 
   **Implemented:**
   - `mdtask list` hides open tasks with unresolved blockers by default
