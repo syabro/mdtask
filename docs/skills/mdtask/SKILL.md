@@ -1,6 +1,6 @@
 ---
 name: mdtask
-description: Load this skill when user asks to list, find, filter, summarize, or check status of tasks in .md files, or how to write one. Defines the task format and what goes in a task body.
+description: You MUST load this skill for ANY interaction with tasks in .md files — read, write, create, edit, rewrite, list, find, filter, summarize, or check status. Defines the task format and what goes in a task body.
 disable-model-invocation: false
 ---
 
