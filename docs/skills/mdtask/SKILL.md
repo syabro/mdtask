@@ -8,11 +8,26 @@ disable-model-invocation: false
 
 ## How to use
 
-Use `mdtask` CLI to work with tasks. `mdtask list` shows open, unblocked tasks. Use `mdtask list --blocked` when you need to include open tasks blocked by unresolved dependencies.
+Use the CLI for task work. In this repo, run `pnpm mdtask <command>`; with a global install, run `mdtask <command>`.
+
+Key commands:
+- `list` — open, unblocked tasks
+- `list --blocked` — include open tasks with unresolved blockers
+- `list --all` — include done tasks
+- `list --tag backend` / `list --priority high` — filter without shell quoting
+- `view <ID>` — print the full task block; `view 22` works because numeric IDs are globally unique
+- `open <ID>` — open the task in `$EDITOR`
+- `move <ID> <file>` — move a task
+- `archive [...ids]` — move done tasks to the archive
+- `set <ID...> <tokens...>` — add metadata
+- `ids` — assign missing IDs
+- `validate` — check task integrity
+
+Full command list: `pnpm mdtask --help` or `mdtask --help`.
 
 ## Task Structure
 
-Every task is a markdown checkbox item with ID and optional metadata on the header line:
+Every task is a markdown checkbox item. It normally has an ID and may have metadata on the header line; a new task may omit the ID until `mdtask ids` fills it in:
 
 ```md
 - [ ] EXMPL-123 Short task title		#tag1 #tag2 !high @status:blocked
@@ -22,26 +37,28 @@ Every task is a markdown checkbox item with ID and optional metadata on the head
 
 ## Header Line
 
-```
-- [<space or x>] <ID> <Title> [<\t\t> <metadata>]
+```md
+- [ ] EXMPL-123 Title #tag
+- [x] EXMPL-123 Title		#tag
+- [ ] Title without an ID yet
 ```
 
 - Checkbox: `[ ]` (open) or `[x]` (done)
-- ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `EXMPL-022`, `EXMPL-038`). Auto-assigned by `mdtask ids`; use `mdtask ids --path <file> --prefix PREFIX` when a file has no prefix source. Short numeric lookup: `mdtask view 22`.
-- Title: free text; metadata is the trailing run of tokens at the end of the line, so a `#`/`!`/`@` earlier in the title stays in the title
-- ` ` (space) or `\t\t` (double tab): optional separator before metadata
+- ID: `PREFIX-NNN` where NNN is globally unique across all prefixes (e.g. `EXMPL-022`, `EXMPL-038`). New tasks may omit it until `mdtask ids` assigns one; use `mdtask ids --path <file> --prefix PREFIX` when a file has no prefix source.
+- Title: free text
+- Metadata separator: a space or explicit double tab (`\t\t`)
 
 ## Metadata Tokens
 
-Appear at the **end** of the header line. Metadata is the trailing run of `#tag` / `!priority` / `@key:value` tokens; scanning from the right stops at the first word that isn't one of these. So `Fix #123 in parser` keeps `#123` in the title, while `Refactor parser !high #cleanup` parses `!high #cleanup` as metadata. A `\t\t` separator, when present, splits title from metadata explicitly.
+Appear at the **end** of the header line. If a `\t\t` separator is present, it splits title from metadata explicitly. Otherwise metadata is the trailing run of `#tag` / `!priority` / `@key:value` tokens; scanning from the right stops at the first word that isn't one of these. So `Fix #123 in parser` keeps `#123` in the title, while `Refactor parser !high #cleanup` parses `!high #cleanup` as metadata.
 
-| Token    | Format                 | Example            | Purpose                   |
-|----------|------------------------|--------------------|---------------------------|
-| Tag      | `#name`                | `#backend #v2`     | Categories / filters      |
-| Priority | `!crit` `!high` `!low` | `!high`            | Sorting (no tag = medium) |
-| Property | `@key:value`           | `@status:blocked`  | Extended key:value        |
+| Token | Format | Example | Purpose |
+|---|---|---|---|
+| Tag | `#name` | `#backend #v2` | Categories / filters |
+| Priority | `!crit` `!high` `!low` | `!high` | Sorting (no priority = medium) |
+| Property | `@key:value` | `@status:in-progress` | Extended key:value |
 
-Tags must start with a letter (`#[A-Za-z]…`), so an issue reference like `#123` is title text, not a tag.
+Tags start with a letter and may contain letters, digits, hyphens, and underscores, so an issue reference like `#123` is title text, not a tag.
 
 ### `@blocked_by` — the one built-in property
 
@@ -67,16 +84,16 @@ Leave out invented implementation steps unless the approach is already an accept
 
 A detail belongs in the task if a future implementer would make a different decision without it.
 
-The goal is not to avoid implementation details. The goal is to preserve decisions and requirements while leaving implementation choices open unless those choices have already been made.
-
 - All lines indented by ≥1 space after header
 - Empty lines within the body are allowed
+- Nested content is allowed; the parser strips the common leading indent and preserves relative indentation
 - The body ends at the first non-indented non-empty line
 
 ## File Organization
 
 - Tasks live in `*.md` files anywhere in the project
-- Files are scanned recursively (including hidden dirs)
+- Files are scanned recursively, including hidden dirs except `.git/`
+- `node_modules/` is also excluded by default
 - Tasks can be grouped under markdown headings for organization
 - No indexes, no database — files are the source of truth
 
@@ -101,7 +118,7 @@ Add it when you need to set the default task directory, filter scanned files, or
 - `files.exclude`: glob patterns to skip, relative to `path`
 - `excludePrefixes`: ID prefixes hidden from all commands
 
-If `path` is `docs/specs`, use `files.include: ["**/*.md"]`, not `["docs/specs/**"]`.
+If `path` is `docs/specs`, use `files.include: ["**/*.md"]`, not `["docs/specs/**"]`; patterns are relative to `path`, not the project root.
 
 ## Examples
 
@@ -124,10 +141,10 @@ Done task:
 - [x] EXMPL-100 Implement header regex		#parser
 ```
 
-## Advanced Parsing Reference
+## Parser reference (contributors)
 
 Use the CLI for task work. These hints are for compatible tooling or tests, not for agents to reimplement task discovery when an `mdtask` command exists.
 
-- Header regex: `^- \[[ x]\] [A-Z]+-\d+ `
-- Metadata from header: peel the trailing run of `#tag`/`!priority`/`@key:value` tokens from the right (or split at `\t\t`)
+- Identified header regex: `^- \[[ x]\] [A-Z]+-\d+ `
+- Metadata from header: split at `\t\t` if present; otherwise peel the trailing run of `#tag`/`!priority`/`@key:value` tokens from the right
 - Body: collect indented lines after header until dedent
