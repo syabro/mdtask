@@ -179,3 +179,21 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   - Story groups under the task journal stay available as `##` headings
   - The SDD, task creation, and task execution skills now use the new boundary
   - Excess blank lines around affected task journals were removed
+
+- [ ] PRJ-082 Require behavior check in mdtask-do
+  `mdtask-do` now lets agents finish with tests, lint, and `mdtask validate`.
+  That is not enough when the task changes real behavior: tests can pass while
+  the CLI command, UI flow, API call, or integration still fails for the user.
+
+  Result wanted: every normal `mdtask-do` run plans and runs a real behavior check
+  for the change: local command, stage flow, API call, UI path, or another realistic
+  use case.
+
+  Acceptance:
+  - The plan says how the behavior will be checked.
+  - Plan review checks whether that proof matches the requested result.
+  - After all tests pass, the agent runs the behavior check and reports the result.
+  - If the check fails, the agent fixes the issue and re-checks before proceeding.
+  - If it cannot run one, the plan says why and what evidence replaces it.
+  - #noqa skips the plan review of the behavior check but not the check itself.
+  - Fast mode skips the behavior check (no plan, no review).
