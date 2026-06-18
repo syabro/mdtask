@@ -47,7 +47,15 @@ A task is a handoff. The title names the work. The body gives an implementer eno
 Write the body in this order:
 
 1. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
-2. **`User decision: ...`** — a decision the user stated independently, even if phrased casually. Use one line or a short bullet list. Skip this part when there is no real user decision to preserve.
+2. **`User decision: ...`**
+
+   `User decision:` records user-stated choices or constraints that must survive later rewrites of the task body.
+
+   Include every explicit user decision that is not merely the task's main requested change.
+
+   Skip `User decision:` only when the user statement is just the task request itself and there is no separate choice or constraint to preserve.
+
+   Non-user decisions and inferred implementation consequences go in the prose or `DoD`.
 3. **`DoD: ...`** — the observable state or result that means the task is done. Use one sentence for a single condition; use bullets when several conditions must all hold.
 
 Write in ELI18 style: clear enough for a tired programmer to understand on the first read. Remove vague, clever, and bureaucratic wording.
