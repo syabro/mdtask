@@ -40,5 +40,49 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 
 → `"Body line 1\nBody line 2\n\nMore body after empty line"`
 
+## Task writing conventions
+
+A task is a handoff. The title names the work. The body gives an implementer enough context to start without rereading the chat.
+
+Write the body in this order:
+
+1. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
+2. **`User decision: ...`** — a decision the user stated independently, even if phrased casually. Use one line or a short bullet list. Skip this part when there is no real user decision to preserve.
+3. **`DoD: ...`** — the observable state or result that means the task is done. Use one sentence for a single condition; use bullets when several conditions must all hold.
+
+Write in ELI18 style: clear enough for a tired programmer to understand on the first read. Remove vague, clever, and bureaucratic wording.
+
+Use backticks where Markdown expects backticks.
+
+Keep tasks compact. A detail belongs only if an implementer would decide differently without it. Implementation steps belong in the task only when the approach is already decided and must be preserved.
+
+```markdown
+- [ ] EXMPL-100 Fix `parseHeader` on BOM input
+  DoD: files with a BOM marker parse the same as regular input.
+
+- [ ] EXMPL-101 Archive completed story groups
+  `mdtask archive` currently moves completed tasks one by one into a flat `_archive.md`. Closed story groups lose their heading and surrounding context. Groups should be archived as whole units instead.
+
+  User decision: archive whole story groups, not individual done tasks.
+
+  DoD: archiving a completed story group moves the heading, tasks, and task bodies together into the archive, removes the group from the live spec, and preserves the grouped structure.
+
+- [ ] EXMPL-102 Add read-only `git diff` access for review agents
+  Read-only inner agents can inspect files, but they cannot inspect the working-tree diff unless it is pasted into the prompt. A code review can silently review the current snapshot instead of the actual change.
+
+  Add a read-only tool that returns `git diff HEAD` for the agent's current working directory. It exposes only the diff operation and truncates large output like other read tools.
+
+  User decisions:
+  - implement as a custom SDK tool through `customTools`
+  - include in the read-only default tool set, not behind `--unsafe`
+  - expose only `git diff [ref]`, defaulting to `HEAD`
+  - run git directly by argv, not through a shell
+
+  DoD:
+  - a read-only inner agent can fetch `git diff HEAD` for its current working directory
+  - fusion code review no longer depends on the diff being pasted into the prompt
+  - the tool does not expose arbitrary shell or git subcommands
+```
+
 # Tasks
 
