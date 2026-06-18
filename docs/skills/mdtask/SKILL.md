@@ -71,18 +71,68 @@ Tags start with a letter and may contain letters, digits, hyphens, and underscor
 
 All other properties (`@status`, `@iter`, …) are per-project conventions with no built-in behavior.
 
-## Task Body
+## Task body
 
-The body captures information that future implementers, reviewers, or maintainers would still need after implementation begins. For lightweight personal TODOs, a short title or one-line body is enough. For agent handoff or spec work, include the parts that affect the result:
+A task is a handoff. The title names the work. The body gives an implementer enough context to start without rereading the chat.
 
-- Context — the problem, bug, request, or opportunity behind the task.
-- Outcome — what becomes true once it's done.
-- Constraints — decisions and rules that must hold, including APIs or contracts that must remain compatible, product decisions that have already been made, accepted architectural choices, and performance, security, reliability, or UX requirements.
-- Acceptance Criteria — observable conditions that determine whether the task is complete.
+Write the body in this order:
 
-Leave out invented implementation steps unless the approach is already an accepted constraint. Avoid step-by-step plans (create class X, add method Y, refactor Z, split A into B), personal implementation preferences, temporary debugging notes, and speculation about solutions that have not been decided.
+1. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
+2. **`User decision: ...`**
 
-A detail belongs in the task if a future implementer would make a different decision without it.
+   `User decision:` records user-stated choices or constraints that must survive later rewrites of the task body.
+
+   Include every explicit user decision that is not merely the task's main requested change.
+
+   Skip `User decision:` only when the user statement is just the task request itself and there is no separate choice or constraint to preserve.
+
+   Non-user decisions and inferred implementation consequences go in the prose or `DoD`.
+3. **`DoD: ...`** — the observable state or result that means the task is done. Use one sentence for a single condition; use bullets when several conditions must all hold.
+
+Write in ELI18 style: clear enough for a tired programmer to understand on the first read. Remove vague, clever, and bureaucratic wording.
+
+Use backticks where Markdown expects backticks.
+
+Keep tasks compact. A detail belongs only if an implementer would decide differently without it. Implementation steps belong in the task only when the approach is already decided and must be preserved.
+
+**Examples:**
+
+DoD-only — title + DoD is enough for straightforward work:
+```md
+- [ ] EXMPL-100 Fix `parseHeader` on BOM input
+  DoD: files with a BOM marker parse the same as regular input.
+```
+
+Prose with one user decision and a multi-condition DoD:
+```md
+- [ ] EXMPL-101 Archive completed story groups
+  `mdtask archive` currently moves completed tasks one by one into a flat `_archive.md`. Closed story groups lose their heading and surrounding context. Groups should be archived as whole units instead.
+
+  User decision: archive whole story groups, not individual done tasks.
+
+  DoD: archiving a completed story group moves the heading, tasks, and task bodies together into the archive, removes the group from the live spec, and preserves the grouped structure.
+```
+
+Prose with multiple user decisions and a bullet DoD:
+```md
+- [ ] EXMPL-102 Add read-only `git diff` access for review agents
+  Read-only inner agents can inspect files, but they cannot inspect the working-tree diff unless it is pasted into the prompt. A code review can silently review the current snapshot instead of the actual change.
+
+  Add a read-only tool that returns `git diff HEAD` for the agent's current working directory. It exposes only the diff operation and truncates large output like other read tools.
+
+  User decisions:
+  - implement as a custom SDK tool through `customTools`
+  - include in the read-only default tool set, not behind `--unsafe`
+  - expose only `git diff [ref]`, defaulting to `HEAD`
+  - run git directly by argv, not through a shell
+
+  DoD:
+  - a read-only inner agent can fetch `git diff HEAD` for its current working directory
+  - fusion code review no longer depends on the diff being pasted into the prompt
+  - the tool does not expose arbitrary shell or git subcommands
+```
+
+**Body syntax:**
 
 - All lines indented by ≥1 space after header
 - Empty lines within the body are allowed
@@ -119,27 +169,6 @@ Add it when you need to set the default task directory, filter scanned files, or
 - `excludePrefixes`: ID prefixes hidden from all commands
 
 If `path` is `docs/specs`, use `files.include: ["**/*.md"]`, not `["docs/specs/**"]`; patterns are relative to `path`, not the project root.
-
-## Examples
-
-Minimal task:
-```md
-- [ ] EXMPL-042 Fix null pointer in parser
-```
-
-Full task with metadata and body:
-```md
-- [ ] EXMPL-007 Add export command		#cli #export !low @status:in-progress
-  Export tasks to JSON format.
-  Should support:
-  - filtering by tag
-  - output to stdout or file
-```
-
-Done task:
-```md
-- [x] EXMPL-100 Implement header regex		#parser
-```
 
 ## Parser reference (contributors)
 
