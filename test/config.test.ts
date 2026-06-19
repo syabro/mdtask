@@ -26,7 +26,7 @@ describe('loadConfig', () => {
 				JSON.stringify({
 					files: {
 						include: ['docs/specs/**'],
-						exclude: ['docs/skills/**'],
+						exclude: ['skills/**'],
 					},
 				}),
 			);
@@ -34,7 +34,7 @@ describe('loadConfig', () => {
 			const config = loadConfig();
 			expect(config?.files).toEqual({
 				include: ['docs/specs/**'],
-				exclude: ['docs/skills/**'],
+				exclude: ['skills/**'],
 			});
 		});
 

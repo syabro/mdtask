@@ -191,19 +191,17 @@ describe('findMarkdownFiles', () => {
 		it('excludes files matching excludePatterns', () => {
 			mkdirSync(join(tempDir, 'docs'), { recursive: true });
 			mkdirSync(join(tempDir, 'docs', 'specs'), { recursive: true });
-			mkdirSync(join(tempDir, 'docs', 'skills'), { recursive: true });
+			mkdirSync(join(tempDir, 'skills'), { recursive: true });
 			writeFileSync(join(tempDir, 'docs', 'specs', 'cli.md'), '# CLI');
-			writeFileSync(join(tempDir, 'docs', 'skills', 'example.md'), '# Example');
+			writeFileSync(join(tempDir, 'skills', 'example.md'), '# Example');
 
 			const result = findMarkdownFiles({
 				basePath: tempDir,
-				excludePatterns: ['docs/skills/**'],
+				excludePatterns: ['skills/**'],
 			});
 
 			expect(result).toContain(join(tempDir, 'docs', 'specs', 'cli.md'));
-			expect(result).not.toContain(
-				join(tempDir, 'docs', 'skills', 'example.md'),
-			);
+			expect(result).not.toContain(join(tempDir, 'skills', 'example.md'));
 		});
 
 		it('includes only files matching includePatterns', () => {

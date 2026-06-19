@@ -72,7 +72,7 @@ mdtask validate              # check task integrity
 mdtask is three layers, kept deliberately separate:
 
 1. **The CLI (`mdtask`)** — the task *format*. It reads and edits Markdown checkbox tasks and knows nothing about methodology: a small, fast interpreter over your files.
-2. **The skills** (`docs/skills/`) — the *method*. `sdd` is the spec-driven workflow; `mdtask-create` writes new tasks; `mdtask-do` takes one task end to end (pick → plan → build → document → commit).
+2. **The skills** (`skills/`) — the *method*. `sdd` is the spec-driven workflow; `mdtask-create` writes new tasks; `mdtask-do` takes one task end to end (pick → plan → build → document → commit).
 3. **The loop** — driving a whole *scope* of tasks. That's your coding agent's job, not mdtask's: point the agent at `mdtask-do` and have it repeat until the backlog is empty. mdtask ships no loop or orchestrator.
 
 ## Stack
@@ -85,7 +85,7 @@ Node.js + TypeScript. Minimal dependencies.
 
 ## Sources of Truth
 
-- **Task format** — `docs/skills/mdtask/SKILL.md`
+- **Task format** — `skills/mdtask/SKILL.md`
 - **Goals, architecture** — `docs/mdtask.md`
 - **Specs** — `docs/specs/`
 
@@ -95,7 +95,7 @@ When changing one — check the others for consistency.
 
 Spec-driven development. PRD is both the spec and the manual.
 
-See [docs/skills/sdd/SKILL.md](docs/skills/sdd/SKILL.md) for the full workflow with examples.
+See [skills/sdd/SKILL.md](skills/sdd/SKILL.md) for the full workflow with examples.
 
 ## Project Structure
 
@@ -103,6 +103,7 @@ See [docs/skills/sdd/SKILL.md](docs/skills/sdd/SKILL.md) for the full workflow w
 src/             — source code
 test/            — tests (vitest)
 docs/            — documentation
+skills/          — shipped agent skills
 ```
 
 ## Sync

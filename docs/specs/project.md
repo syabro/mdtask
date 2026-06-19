@@ -10,7 +10,7 @@ Tasks tagged `#noqa` get a lighter `/mdtask-do` run — the two review steps (pl
 
 Install globally: `npm install -g mdtask`
 
-Package includes only `dist/cli.js`, `README.md`, and `LICENSE`.
+Package includes `dist/cli.js`, root `skills/`, `README.md`, and `LICENSE`.
 
 Release workflow: `just release` (default: patch) or `just release minor` / `just release major`. The recipe checks for clean git state, runs tests, builds, bumps version, publishes to npm, commits, tags, and pushes.
 
@@ -23,6 +23,10 @@ One spec is one spec file. It starts with prose sections that explain the featur
 ## Specs directory
 
 Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask list`, `mdtask view`, `mdtask validate`, and other commands scan the specs by default.
+
+## Skills directory
+
+Shippable agent skills live in root `skills/`. The same directory is committed as the source of truth and shipped in the npm package.
 
 ## Task creation skill
 

@@ -28,28 +28,28 @@ install-skills: install-skill-sdd install-skill-mdtask install-skill-mdtask-crea
 install-skill-sdd:
     rm -rf ~/.agents/skills/sdd
     mkdir -p ~/.agents/skills/sdd
-    cp docs/skills/sdd/* ~/.agents/skills/sdd/
+    cp skills/sdd/* ~/.agents/skills/sdd/
     @echo "Installed sdd skill"
 
 # Install mdtask skill to ~/.agents/skills
 install-skill-mdtask:
     rm -rf ~/.agents/skills/mdtask
     mkdir -p ~/.agents/skills/mdtask
-    cp docs/skills/mdtask/* ~/.agents/skills/mdtask/
+    cp skills/mdtask/* ~/.agents/skills/mdtask/
     @echo "Installed mdtask skill"
 
 # Install mdtask-create skill to ~/.agents/skills
 install-skill-mdtask-create:
     rm -rf ~/.agents/skills/mdtask-create
     mkdir -p ~/.agents/skills/mdtask-create
-    cp docs/skills/mdtask-create/* ~/.agents/skills/mdtask-create/
+    cp skills/mdtask-create/* ~/.agents/skills/mdtask-create/
     @echo "Installed mdtask-create skill"
 
 # Install mdtask-do skill to ~/.agents/skills
 install-skill-mdtask-do:
     rm -rf ~/.agents/skills/mdtask-do
     mkdir -p ~/.agents/skills/mdtask-do
-    cp docs/skills/mdtask-do/* ~/.agents/skills/mdtask-do/
+    cp skills/mdtask-do/* ~/.agents/skills/mdtask-do/
     @echo "Installed mdtask-do skill"
 
 # Release to npm (just release patch/minor/major)

@@ -6,5 +6,4 @@ export default defineConfig({
 	target: 'node18',
 	clean: true,
 	banner: { js: '#!/usr/bin/env node' },
-	onSuccess: 'node scripts/bundle-skills.mjs',
 });

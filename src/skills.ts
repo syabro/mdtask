@@ -43,13 +43,11 @@ export function runningVersion(root: string): string {
 	}
 }
 
-// Source of bundled skills. Prefer the canonical docs/skills (source checkout /
-// dev), then the generated skills/ shipped in the npm package. Null if neither.
+// Source of bundled skills. Root skills/ is the canonical source in a checkout
+// and the shipped directory in the npm package. Null if it is missing.
 export function bundledSkillsDir(root: string): string | null {
-	for (const dir of [join(root, 'docs', 'skills'), join(root, 'skills')]) {
-		if (existsSync(dir)) return dir;
-	}
-	return null;
+	const dir = join(root, 'skills');
+	return existsSync(dir) ? dir : null;
 }
 
 export function userCacheSkillsDir(): string {
@@ -97,7 +95,7 @@ function writeCache(bundled: string, version: string): void {
 	const missing = missingSkills(bundled);
 	if (missing.length > 0) {
 		throw new Error(
-			`bundled skills incomplete (missing: ${missing.join(', ')}) — run \`pnpm build\``,
+			`bundled skills incomplete (missing: ${missing.join(', ')}) — check skills/`,
 		);
 	}
 	const cacheDir = userCacheSkillsDir();
@@ -191,16 +189,14 @@ export function installSkills(
 	const version = runningVersion(root);
 	const ctx = resolveInstallContext(root, cwd, version);
 	if (!ctx) {
-		throw new Error(
-			'no bundled skills found (run `pnpm build` to generate them)',
-		);
+		throw new Error('no bundled skills found (check skills/)');
 	}
 
 	// All shippable skills must be present — never install a partial set.
 	const missing = missingSkills(ctx.source);
 	if (missing.length > 0) {
 		throw new Error(
-			`bundled skills incomplete (missing: ${missing.join(', ')}) — run \`pnpm build\``,
+			`bundled skills incomplete (missing: ${missing.join(', ')}) — check skills/`,
 		);
 	}
 

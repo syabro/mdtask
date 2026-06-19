@@ -26,7 +26,7 @@ Minimal dependencies: Node.js (required), rg (recommended, falls back to `find`)
 
 ## 4. Data Model (Canonical Format)
 
-See `docs/skills/mdtask/SKILL.md` — canonical reference for task format, metadata tokens, and parsing rules.
+See `skills/mdtask/SKILL.md` — canonical reference for task format, metadata tokens, and parsing rules.
 
 ## 5. File Organization
 

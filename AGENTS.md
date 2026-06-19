@@ -19,15 +19,14 @@ Never cite a task by its bare ID. Whenever you mention a task (`CLI-059`, `TSK-0
 
 ## Development Workflow
 
-read @docs/skills/sdd/SKILL.md — spec-driven development, spec structure, examples.
+read @skills/sdd/SKILL.md — spec-driven development, spec structure, examples.
 
 ## Project Structure
 
 - `docs/specs/` — specs (task, files, cli, config, project, test)
-- `docs/skills/` — shippable dev skills (sdd, mdtask-create, mdtask-do, mdtask), symlinked into `.claude/skills/`
-- `.claude/skills/check/` — project-local `check` skill (real file, not shipped)
+- `skills/` — shippable dev skills (sdd, mdtask-create, mdtask-do, mdtask)
 - `docs/mdtask.md` — goals, architecture
-- `docs/skills/sdd/SKILL.md` — spec-driven development workflow
+- `skills/sdd/SKILL.md` — spec-driven development workflow
 - `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `cd ../website && just deploy` (wrangler → Cloudflare Pages)
 
 ## Example IDs in docs
@@ -36,7 +35,7 @@ Use `EXMPL-` prefix for example task IDs in documentation and spec task bodies. 
 
 ## Before Committing
 
-If `docs/mdtask.md` changed — check if `docs/skills/mdtask/SKILL.md` needs updating (and vice versa).
+If `docs/mdtask.md` changed — check if `skills/mdtask/SKILL.md` needs updating (and vice versa).
 The skill is the single source of truth for task format; mdtask.md covers everything else.
 
 ## Task Delegation
@@ -56,6 +55,6 @@ Use `@` prefix for file paths in skill prompts (e.g., `@README.md`). This is Cla
 
 `CLAUDE.md` is `ln -s AGENTS.md` — Claude Code only reads `CLAUDE.md`, not `AGENTS.md`.
 
-Shippable skills live in `docs/skills/` and are symlinked into `.claude/skills/`. The project-local `check` skill is the exception — its real file lives in `.claude/skills/check/`.
+Shippable skills live in `skills/`.
 
 Task runner: the `mdtask-do` skill (run `/mdtask-do`). It loads on demand — no need to read it into every session.
