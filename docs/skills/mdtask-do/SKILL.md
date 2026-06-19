@@ -10,7 +10,9 @@ disable-model-invocation: false
 
 ## Flow
 
-Start by creating a todo checklist (the `todowrite` tool in Claude; a `./tmp` markdown checklist in Pi). Then run the steps below in order, continuing straight into Step 1 — don't stop to announce the steps first.
+**Gate — do this before reading any further.** Your first action in this skill is to materialize the steps below as a live, checkable task list, and you tick items off it as you go (you'll be asked to confirm against it before the commit in Step 8). In Claude that's the task tools — `ToolSearch` for `select:TaskCreate,TaskUpdate` to load them, then `TaskCreate` one item per step (Pick, Plan, Review plan, Execute, Review code, Final validation, Update spec, Commit); in Pi, a `./tmp` markdown checklist. If a task tool genuinely isn't available, write the same checklist into your visible reply — the artifact is mandatory, the specific tool is not. Don't announce or summarize the steps in prose as a substitute; create the tracked list, then go straight into Step 1.
+
+**One checklist per run.** Before creating this run's items, check (`TaskList`) for a checklist left by a previous task in this session. If there is none, or every item in it is closed, clear it and start fresh. If it still has open (unfinished) items, the rule depends on how you're running: **interactively** (the user is present and hasn't told you to act independently, here or in standing instructions) → STOP and ask the user what to do with them — never wipe someone's in-progress work; **autonomously** (the user set independent / loop operation in instructions or chat) → there's no one to ask, so just clear all of them and start fresh, don't block the loop.
 
 **Modes**
 - **normal** (default) — full cycle, autonomous: pick the most logical task and approve your own plan.
@@ -78,7 +80,7 @@ Run all tests again to confirm nothing broke after review fixes, and lint/typech
 
 ### Step 8 — Commit
 
-Commit with a message describing what was built.
+First confirm against the checklist from the Flow gate: every step done or consciously skipped (fast/`#noqa`), nothing silently dropped. Then commit with a message describing what was built.
 
 ## When you can't decide — park it
 
