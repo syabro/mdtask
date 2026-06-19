@@ -95,6 +95,10 @@ Use backticks where Markdown expects backticks.
 
 Keep tasks compact. A detail belongs only if an implementer would decide differently without it. Implementation steps belong in the task only when the approach is already decided and must be preserved.
 
+The goal is not to avoid implementation details. The goal is to preserve decisions and requirements while leaving implementation choices open unless those choices have already been made.
+
+Avoid step-by-step plans (create class X, add method Y, refactor Z, split A into B), personal implementation preferences, temporary debugging notes, and speculation about solutions that have not been decided.
+
 **Examples:**
 
 DoD-only — title + DoD is enough for straightforward work:
