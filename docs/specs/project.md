@@ -197,3 +197,15 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
   - If it cannot run one, the plan says why and what evidence replaces it.
   - #noqa skips the plan review of the behavior check but not the check itself.
   - Fast mode skips the behavior check (no plan, no review).
+
+- [ ] PRJ-083 Rename `mdtask-create` to `mdtask-add`
+  The task-creation workflow currently lives in `mdtask-create`. `mdtask-add` reads closer to the user action: adding a task to the project backlog, and pairs with `mdtask-do`.
+
+  Keep the three-skill split: `mdtask` stays the format/CLI reference, `mdtask-add` is the add-task workflow, and `mdtask-do` is the execute-task workflow. This task is a rename and trigger cleanup, not a merge into one large `mdtask` skill.
+
+  DoD:
+  - the skill directory and frontmatter use `mdtask-add` as the primary name
+  - `mdtask` no longer claims add/create-task triggers that belong to `mdtask-add`
+  - install paths, package scripts, tests, README, AGENTS, active specs/docs, and website references point users at the new name
+  - users no longer see `mdtask-create` as the preferred skill name
+  - historical implemented notes may keep the old name when they describe past work
