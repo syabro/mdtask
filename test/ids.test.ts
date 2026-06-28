@@ -1,4 +1,5 @@
 import {
+	mkdirSync,
 	mkdtempSync,
 	readdirSync,
 	readFileSync,
@@ -366,6 +367,66 @@ describe('mdtask ids', () => {
 		const content = readFileSync(target, 'utf-8');
 		expect(content).toContain('- [ ] DLY-011 Needs explicit prefix');
 		expect(exitSpy).not.toHaveBeenCalled();
+	});
+
+	it('uses project IDs when --path file is launched outside the project', async () => {
+		const projectDir = join(tempDir, 'project');
+		const specsDir = join(projectDir, 'docs', 'specs');
+		const outsideDir = join(tempDir, 'outside');
+		mkdirSync(specsDir, { recursive: true });
+		mkdirSync(outsideDir);
+		writeFileSync(
+			join(projectDir, '.mdtaskrc'),
+			JSON.stringify({ path: 'docs/specs' }),
+		);
+		const target = join(specsDir, 'target.md');
+		const existing = join(specsDir, 'existing.md');
+		writeFileSync(target, '- [ ] Needs explicit prefix\n');
+		writeFileSync(existing, '- [ ] CLI-010 Existing task\n');
+		process.chdir(outsideDir);
+
+		await run(['ids', '--path', target, '--prefix', 'DLY']);
+
+		const content = readFileSync(target, 'utf-8');
+		expect(content).toContain('- [ ] DLY-011 Needs explicit prefix');
+		expect(readFileSync(existing, 'utf-8')).toBe(
+			'- [ ] CLI-010 Existing task\n',
+		);
+		expect(exitSpy).not.toHaveBeenCalled();
+	});
+
+	it('does not let MDTASK_PATH override project IDs for --path file', async () => {
+		const projectDir = join(tempDir, 'project');
+		const specsDir = join(projectDir, 'docs', 'specs');
+		const outsideDir = join(tempDir, 'outside');
+		const oldMdtaskPath = process.env.MDTASK_PATH;
+		mkdirSync(specsDir, { recursive: true });
+		mkdirSync(outsideDir);
+		writeFileSync(
+			join(projectDir, '.mdtaskrc'),
+			JSON.stringify({ path: 'docs/specs' }),
+		);
+		const target = join(specsDir, 'target.md');
+		const existing = join(specsDir, 'existing.md');
+		writeFileSync(target, '- [ ] Needs explicit prefix\n');
+		writeFileSync(existing, '- [ ] CLI-010 Existing task\n');
+		writeFileSync(join(outsideDir, 'tasks.md'), '- [ ] OUT-099 Outside task\n');
+		process.chdir(outsideDir);
+		process.env.MDTASK_PATH = outsideDir;
+
+		try {
+			await run(['ids', '--path', target, '--prefix', 'DLY']);
+
+			const content = readFileSync(target, 'utf-8');
+			expect(content).toContain('- [ ] DLY-011 Needs explicit prefix');
+			expect(exitSpy).not.toHaveBeenCalled();
+		} finally {
+			if (oldMdtaskPath === undefined) {
+				delete process.env.MDTASK_PATH;
+			} else {
+				process.env.MDTASK_PATH = oldMdtaskPath;
+			}
+		}
 	});
 
 	it('does not let --prefix override a file prefix', async () => {

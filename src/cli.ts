@@ -14,7 +14,14 @@ import * as rl from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { CAC } from 'cac';
 import p from 'picocolors';
-import { type FilesConfig, loadConfig, resolveBasePath } from './config.js';
+import {
+	type Config,
+	type FilesConfig,
+	loadConfig,
+	loadProjectConfig,
+	resolveBasePath,
+	resolveProjectBasePath,
+} from './config.js';
 import { findMarkdownFiles } from './files.js';
 import {
 	installSkills,
@@ -99,6 +106,45 @@ function collectTasks(
 	}
 
 	return tasks;
+}
+
+function existingPathFile(pathOption: string | undefined): string | null {
+	if (pathOption === undefined || pathOption === '') return null;
+
+	const resolvedPath = resolve(pathOption);
+	try {
+		return statSync(resolvedPath).isFile() ? realpathSync(resolvedPath) : null;
+	} catch {
+		return null;
+	}
+}
+
+function pathConfigContext(pathOption: string | undefined): {
+	config: Config | null;
+	root?: string;
+} {
+	const filePath = existingPathFile(pathOption);
+	if (!filePath) return { config: loadConfig() };
+
+	const project = loadProjectConfig(dirname(filePath));
+	return { config: project.config, root: project.root };
+}
+
+function taskSearchContext(pathOption: string | undefined): {
+	config: Config | null;
+	basePath: string;
+} {
+	const filePath = existingPathFile(pathOption);
+	if (!filePath) {
+		const config = loadConfig();
+		return { config, basePath: resolveBasePath(pathOption, config) };
+	}
+
+	const project = loadProjectConfig(dirname(filePath));
+	return {
+		config: project.config,
+		basePath: resolveProjectBasePath(project.config, project.root),
+	};
 }
 
 type UnidentifiedTaskLocation = {
@@ -222,8 +268,7 @@ function formatTaskLine(
 }
 
 function handleView(id: string, options: { path?: string }): void {
-	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
+	const { config, basePath } = taskSearchContext(options.path);
 	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let task: Task;
@@ -259,8 +304,7 @@ function handleMove(
 	targetFile: string,
 	options: { path?: string },
 ): void {
-	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
+	const { config, basePath } = taskSearchContext(options.path);
 	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let task: Task;
@@ -370,8 +414,9 @@ function isInsideBase(targetPath: string, basePath: string): boolean {
 function archiveBaseAndFiles(
 	pathOption: string | undefined,
 	config: ReturnType<typeof loadConfig>,
+	root?: string,
 ): { basePath: string; files: string[] } {
-	const rawPath = resolveBasePath(pathOption, config);
+	const rawPath = resolveBasePath(pathOption, config, root);
 	const resolvedPath = resolve(rawPath);
 	try {
 		const stats = statSync(resolvedPath);
@@ -389,8 +434,8 @@ function archiveBaseAndFiles(
 }
 
 function handleArchive(ids: string[], options: { path?: string }): void {
-	const config = loadConfig();
-	const { basePath, files } = archiveBaseAndFiles(options.path, config);
+	const { config, root } = pathConfigContext(options.path);
+	const { basePath, files } = archiveBaseAndFiles(options.path, config, root);
 	const archivePath = resolve(basePath, config?.archivePath ?? '_archive.md');
 
 	if (!isInsideBase(archivePath, basePath)) {
@@ -529,8 +574,7 @@ function handleOpen(id: string, options: { path?: string }): void {
 		return;
 	}
 
-	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
+	const { config, basePath } = taskSearchContext(options.path);
 	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let task: Task;
@@ -553,8 +597,7 @@ const EMPTY_TAG_REGEX = /(?:^|\s)#(?:\s|$)/;
 const MALFORMED_PROPERTY_REGEX = /(?:^|\s)@([\w-]+)(?![:\w])/;
 
 function handleValidate(options: { path?: string }): void {
-	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
+	const { config, basePath } = taskSearchContext(options.path);
 	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	let hasErrors = false;
@@ -669,8 +712,7 @@ function handleList(
 		priority?: string | string[];
 	},
 ): void {
-	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
+	const { config, basePath } = taskSearchContext(options.path);
 	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 	const statusMap = new Map(tasks.map((t) => [t.id, t.status]));
 	const isTTY = process.stdout.isTTY ?? false;
@@ -784,8 +826,7 @@ function handleSet(args: string[], options: { path?: string }): void {
 		return;
 	}
 
-	const config = loadConfig();
-	const basePath = resolveBasePath(options.path, config);
+	const { config, basePath } = taskSearchContext(options.path);
 	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
 	// Validate all IDs first
@@ -926,7 +967,6 @@ function hasTaskFromFile(tasks: Task[], filePath: string): boolean {
 type IdsOptions = { path?: string; prefix?: string };
 
 async function handleIds(options: IdsOptions): Promise<void> {
-	const config = loadConfig();
 	const explicitPrefix = normalizeIdsPrefix(options.prefix);
 	if (options.prefix !== undefined && !explicitPrefix) {
 		process.stderr.write(
@@ -936,8 +976,6 @@ async function handleIds(options: IdsOptions): Promise<void> {
 		return;
 	}
 
-	const filesConfig = config?.files;
-	const excludePrefixes = config?.excludePrefixes;
 	const idsPath = resolveIdsPath(options.path);
 	if (idsPath.error) {
 		process.stderr.write(
@@ -947,8 +985,20 @@ async function handleIds(options: IdsOptions): Promise<void> {
 		return;
 	}
 
+	let config: Config | null;
+	let basePath: string;
+	if (idsPath.file) {
+		const project = loadProjectConfig(dirname(idsPath.file));
+		config = project.config;
+		basePath = resolveProjectBasePath(config, project.root);
+	} else {
+		config = loadConfig();
+		basePath = resolveBasePath(idsPath.base, config);
+	}
+	const filesConfig = config?.files;
+	const excludePrefixes = config?.excludePrefixes;
+
 	const targetFile = idsPath.file;
-	const basePath = resolveBasePath(idsPath.base, config);
 	const existingTasks = collectTasks(basePath, filesConfig, excludePrefixes);
 	if (targetFile && !hasTaskFromFile(existingTasks, targetFile)) {
 		try {

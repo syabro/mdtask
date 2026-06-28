@@ -3,6 +3,7 @@ import {
 	mkdtempSync,
 	readdirSync,
 	rmdirSync,
+	symlinkSync,
 	unlinkSync,
 	writeFileSync,
 } from 'node:fs';
@@ -1248,6 +1249,99 @@ describe('mdtask list', () => {
 			expect(output).not.toContain('EXMPL-001');
 			expect(output).not.toContain('EXMPL-002');
 			expect(output).not.toContain('TEST-001');
+		});
+	});
+
+	describe('--path file project context', () => {
+		it('uses the file project config when launched outside the project', async () => {
+			const projectDir = join(tempDir, 'project');
+			const specsDir = join(projectDir, 'docs', 'specs');
+			const outsideDir = join(tempDir, 'outside');
+			mkdirSync(specsDir, { recursive: true });
+			mkdirSync(outsideDir);
+			writeFileSync(
+				join(projectDir, '.mdtaskrc'),
+				JSON.stringify({ path: 'docs/specs' }),
+			);
+			const target = join(specsDir, 'config.md');
+			writeFileSync(target, '- [ ] CFG-001 Target task\n');
+			writeFileSync(join(specsDir, 'cli.md'), '- [ ] CLI-002 Sibling task\n');
+			writeFileSync(
+				join(outsideDir, 'tasks.md'),
+				'- [ ] OUT-003 Outside task\n',
+			);
+			process.chdir(outsideDir);
+
+			const code = await run(['list', '--path', target]);
+
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('CFG-001');
+			expect(output).toContain('CLI-002');
+			expect(output).not.toContain('OUT-003');
+		});
+
+		it('does not let MDTASK_PATH override the file project context', async () => {
+			const projectDir = join(tempDir, 'project');
+			const specsDir = join(projectDir, 'docs', 'specs');
+			const outsideDir = join(tempDir, 'outside');
+			const oldMdtaskPath = process.env.MDTASK_PATH;
+			mkdirSync(specsDir, { recursive: true });
+			mkdirSync(outsideDir);
+			writeFileSync(
+				join(projectDir, '.mdtaskrc'),
+				JSON.stringify({ path: 'docs/specs' }),
+			);
+			const target = join(specsDir, 'config.md');
+			writeFileSync(target, '- [ ] CFG-001 Target task\n');
+			writeFileSync(join(specsDir, 'cli.md'), '- [ ] CLI-002 Sibling task\n');
+			writeFileSync(
+				join(outsideDir, 'tasks.md'),
+				'- [ ] OUT-003 Outside task\n',
+			);
+			process.chdir(outsideDir);
+			process.env.MDTASK_PATH = outsideDir;
+
+			try {
+				const code = await run(['list', '--path', target]);
+
+				expect(code).toBe(0);
+				const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+				expect(output).toContain('CFG-001');
+				expect(output).toContain('CLI-002');
+				expect(output).not.toContain('OUT-003');
+			} finally {
+				if (oldMdtaskPath === undefined) {
+					delete process.env.MDTASK_PATH;
+				} else {
+					process.env.MDTASK_PATH = oldMdtaskPath;
+				}
+			}
+		});
+
+		it('derives project context from a symlink target file', async () => {
+			const projectDir = join(tempDir, 'project');
+			const specsDir = join(projectDir, 'docs', 'specs');
+			const outsideDir = join(tempDir, 'outside');
+			mkdirSync(specsDir, { recursive: true });
+			mkdirSync(outsideDir);
+			writeFileSync(
+				join(projectDir, '.mdtaskrc'),
+				JSON.stringify({ path: 'docs/specs' }),
+			);
+			const target = join(specsDir, 'config.md');
+			const link = join(outsideDir, 'linked.md');
+			writeFileSync(target, '- [ ] CFG-001 Target task\n');
+			writeFileSync(join(specsDir, 'cli.md'), '- [ ] CLI-002 Sibling task\n');
+			symlinkSync(target, link);
+			process.chdir(outsideDir);
+
+			const code = await run(['list', '--path', link]);
+
+			expect(code).toBe(0);
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain('CFG-001');
+			expect(output).toContain('CLI-002');
 		});
 	});
 
