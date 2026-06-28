@@ -54,3 +54,10 @@ Tasks with matching prefixes are skipped during collection — they won't appear
 
 # Tasks
 
+- [ ] CFG-084 Detect project root from file path arguments
+  When the CLI is launched outside the project and receives a path to a task/spec file, project root is currently resolved from the current working directory. That can make commands scan the wrong tree and assign IDs using the wrong project context.
+
+  If a CLI path argument points to a file, resolve `project.root` from that file's parent directories. The root is the nearest parent containing `.mdtaskrc`; if no config is found, use the nearest parent containing `.git`.
+
+  DoD: running the CLI from outside the project with a file path uses that file's project root for task discovery, config lookup, and ID assignment.
+
