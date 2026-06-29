@@ -213,3 +213,14 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - install paths, package scripts, tests, README, AGENTS, active specs/docs, and website references point users at the new name
   - users no longer see `mdtask-create` as the preferred skill name
   - historical implemented notes may keep the old name when they describe past work
+
+- [ ] PRJ-085 Merge sdd skill into mdtask skill
+  The sdd skill defines a three-step cycle (spec → build → document) and spec file structure
+  (feature description above `# Tasks`). It is separate from the mdtask skill, which defines
+  task format. Three skills for task work (mdtask, mdtask-create, sdd) causes agents to skip
+  cross-references.
+
+  DoD:
+  - mdtask skill includes the sdd cycle and spec structure
+  - sdd skill is removed
+  - all references to sdd skill updated to point to mdtask
