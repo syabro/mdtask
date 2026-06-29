@@ -52,8 +52,7 @@ Show what you'll save, then ask in the user's language: **"Save?"** For a batch,
 --- PROPOSED ---
 File: docs/specs/cli.md
 - [ ] Short title
-  Description line 1.
-  Description line 2.
+  <body per mdtask skill>
 --- END ---
 ```
 
@@ -80,7 +79,7 @@ One feature can become several tasks in one new spec — propose them together. 
 
 ## How to write a task
 
-How to write a task — the format (header, metadata tokens, body) and what belongs in the body — is defined in the `mdtask` skill, the single source. Follow it; don't restate it here.
+MUST load the `mdtask` skill for task format. It is the single source. Follow it; don't restate it here.
 
 ## Metadata guidance
 
