@@ -94,3 +94,13 @@ Keep tasks compact. A detail belongs only if an implementer would decide differe
 
 # Tasks
 
+- [ ] TSK-086 Require a business value line in task bodies
+  Every task body should start with one short sentence that explains why the task matters. Technical titles like `Define layered architecture` are hard to prioritize without that context.
+
+  User decision: write the business value as the first body line without a field label.
+
+  DoD:
+  - task format docs require the first body line to be a short business value sentence
+  - task examples show the value line before longer context
+  - existing open tasks are migrated, or the migration path is documented
+
