@@ -32,13 +32,15 @@ Lines indented with ≥1 space after the header form the task body. Empty lines 
 
 ```markdown
 - [ ] EXMPL-001 Title
+  Short business value sentence.
+
   Body line 1
   Body line 2
 
   More body after empty line
 ```
 
-→ `"Body line 1\nBody line 2\n\nMore body after empty line"`
+→ `"Short business value sentence.\n\nBody line 1\nBody line 2\n\nMore body after empty line"`
 
 ## Task writing conventions
 
@@ -46,8 +48,9 @@ A task is a handoff. The title names the work. The body gives an implementer eno
 
 Write the body in this order:
 
-1. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
-2. **`User decision: ...`**
+1. **Business value sentence** — one short, unlabeled first line that explains why the task matters. It should help a reader prioritize the task without guessing from a technical title. Put a blank line after it before any longer description.
+2. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
+3. **`User decision: ...`**
 
    `User decision:` records user-stated choices or constraints that must survive later rewrites of the task body.
 
@@ -56,7 +59,13 @@ Write the body in this order:
    Skip `User decision:` only when the user statement is just the task request itself and there is no separate choice or constraint to preserve.
 
    Non-user decisions and inferred implementation consequences go in the prose or `DoD`.
-3. **`DoD: ...`** — the observable state or result that means the task is done. Use one sentence for a single condition; use bullets when several conditions must all hold.
+4. **`DoD: ...`** — the observable state or result that means the task is done. Use one sentence for a single condition; use bullets when several conditions must all hold.
+
+`mdtask list` shows this first line on its own indented line below the task title. Long values are truncated to 120 characters with an ellipsis.
+
+When a task needs no extra context, it can go straight from the value sentence to `DoD`, with the same blank line between them.
+
+Existing open tasks created before this rule can be migrated when touched or in a dedicated cleanup pass: add the value sentence as the first body line, insert a blank line after it, keep existing context below it, and leave `User decision` and `DoD` in the same order.
 
 Write in ELI18 style: clear enough for a tired programmer to understand on the first read. Remove vague, clever, and bureaucratic wording.
 
@@ -66,9 +75,13 @@ Keep tasks compact. A detail belongs only if an implementer would decide differe
 
 ```markdown
 - [ ] EXMPL-100 Fix `parseHeader` on BOM input
+  Files with BOM markers should not fail because of an invisible encoding prefix.
+
   DoD: files with a BOM marker parse the same as regular input.
 
 - [ ] EXMPL-101 Archive completed story groups
+  Archiving should keep completed story context, not just individual checkboxes.
+
   `mdtask archive` currently moves completed tasks one by one into a flat `_archive.md`. Closed story groups lose their heading and surrounding context. Groups should be archived as whole units instead.
 
   User decision: archive whole story groups, not individual done tasks.
@@ -76,6 +89,8 @@ Keep tasks compact. A detail belongs only if an implementer would decide differe
   DoD: archiving a completed story group moves the heading, tasks, and task bodies together into the archive, removes the group from the live spec, and preserves the grouped structure.
 
 - [ ] EXMPL-102 Add read-only `git diff` access for review agents
+  Review agents need the actual working-tree change to catch regressions.
+
   Read-only inner agents can inspect files, but they cannot inspect the working-tree diff unless it is pasted into the prompt. A code review can silently review the current snapshot instead of the actual change.
 
   Add a read-only tool that returns `git diff HEAD` for the agent's current working directory. It exposes only the diff operation and truncates large output like other read tools.
@@ -94,13 +109,28 @@ Keep tasks compact. A detail belongs only if an implementer would decide differe
 
 # Tasks
 
-- [ ] TSK-086 Require a business value line in task bodies
+- [x] TSK-086 Require a business value line in task bodies
+  Tasks show their value up front, so agents can prioritize technical work without guessing.
+
   Every task body should start with one short sentence that explains why the task matters. Technical titles like `Define layered architecture` are hard to prioritize without that context.
 
-  User decision: write the business value as the first body line without a field label.
+  User decisions:
+  - write the business value as the first body line without a field label
+  - separate the business value from the rest of the body with a blank line
+  - show the business value in `mdtask list` on a separate line
+  - truncate long listed values to 120 characters with an ellipsis
 
   DoD:
   - task format docs require the first body line to be a short business value sentence
   - task examples show the value line before longer context
   - existing open tasks are migrated, or the migration path is documented
+  - `mdtask list` shows the business value on a separate line
+  - long listed values are truncated to 120 characters with an ellipsis
+
+  **Implemented:**
+  - Task body docs now require an unlabeled first-line business value sentence separated from the rest of the body by a blank line.
+  - Task examples put the value line before context, decisions, and DoD.
+  - Existing open tasks have a documented migration path for cleanup or when touched.
+  - `mdtask list` now shows the business value on an indented line below each task.
+  - Long listed values are truncated to 120 characters with an ellipsis.
 

@@ -42,15 +42,21 @@ Wi-Fi kettle with app control.
 # Tasks
 
 - [ ] KTL-001 Basic boiling with auto shut-off
+  Basic boiling makes the kettle useful before advanced presets exist.
+
   Heat to 100°C, beep on completion.
   Physical button and app trigger.
   Auto shut-off after timeout.
 
 - [ ] KTL-002 Tea presets
+  Tea presets save users from remembering common brewing temperatures.
+
   Predefined temperature + steep time for common tea types.
   Allow user-created custom presets.
 
 - [ ] KTL-003 Schedule boiling
+  Scheduling makes hot water ready for planned routines.
+
   Set a time for the kettle to start automatically.
   Morning routine: wake up to ready water.
 ```
@@ -76,6 +82,8 @@ beeps when done. Auto shut-off after 5 minutes.
 # Tasks
 
 - [x] KTL-001 Basic boiling with auto shut-off
+  Basic boiling makes the kettle useful before advanced presets exist.
+
   Heat to 100°C, beep on completion.
   Physical button and app trigger.
   Auto shut-off after timeout.
@@ -86,9 +94,13 @@ beeps when done. Auto shut-off after 5 minutes.
   - Auto shut-off after 5 minutes of inactivity
 
 - [ ] KTL-002 Tea presets
+  Tea presets save users from remembering common brewing temperatures.
+
   ...
 
 - [ ] KTL-003 Schedule boiling
+  Scheduling makes hot water ready for planned routines.
+
   ...
 ```
 
@@ -119,9 +131,13 @@ and steep time (1–15 min).
 # Tasks
 
 - [x] KTL-001 Basic boiling with auto shut-off
+  Basic boiling makes the kettle useful before advanced presets exist.
+
   ...
 
 - [x] KTL-002 Tea presets
+  Tea presets save users from remembering common brewing temperatures.
+
   Predefined temperature + steep time for common tea types.
   Allow user-created custom presets.
 
@@ -131,6 +147,8 @@ and steep time (1–15 min).
   - Temperature range 40–100°C, steep time 1–15 min
 
 - [ ] KTL-003 Schedule boiling
+  Scheduling makes hot water ready for planned routines.
+
   ...
 ```
 

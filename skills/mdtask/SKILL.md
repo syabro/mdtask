@@ -31,6 +31,8 @@ Every task is a markdown checkbox item. It normally has an ID and may have metad
 
 ```md
 - [ ] EXMPL-123 Short task title		#tag1 #tag2 !high @status:blocked
+  Short reason this task matters.
+
   Description body goes here.
   Can be multi-line.
 ```
@@ -77,8 +79,9 @@ A task is a handoff. The title names the work. The body gives an implementer eno
 
 Write the body in this order:
 
-1. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
-2. **`User decision: ...`**
+1. **Business value sentence** — one short, unlabeled first line that explains why the task matters. It should help a reader prioritize the task without guessing from a technical title. Put a blank line after it before any longer description.
+2. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
+3. **`User decision: ...`**
 
    `User decision:` records user-stated choices or constraints that must survive later rewrites of the task body.
 
@@ -87,7 +90,13 @@ Write the body in this order:
    Skip `User decision:` only when the user statement is just the task request itself and there is no separate choice or constraint to preserve.
 
    Non-user decisions and inferred implementation consequences go in the prose or `DoD`.
-3. **`DoD: ...`** — the observable state or result that means the task is done. Use one sentence for a single condition; use bullets when several conditions must all hold.
+4. **`DoD: ...`** — the observable state or result that means the task is done. Use one sentence for a single condition; use bullets when several conditions must all hold.
+
+`mdtask list` shows this first line on its own indented line below the task title. Long values are truncated to 120 characters with an ellipsis.
+
+When a task needs no extra context, it can go straight from the value sentence to `DoD`, with the same blank line between them.
+
+Existing open tasks created before this rule can be migrated when touched or in a dedicated cleanup pass: add the value sentence as the first body line, insert a blank line after it, keep existing context below it, and leave `User decision` and `DoD` in the same order.
 
 Write in ELI18 style: clear enough for a tired programmer to understand on the first read. Remove vague, clever, and bureaucratic wording.
 
@@ -101,15 +110,19 @@ Avoid step-by-step plans (create class X, add method Y, refactor Z, split A into
 
 **Examples:**
 
-DoD-only — title + DoD is enough for straightforward work:
+Value + DoD is enough for straightforward work:
 ```md
 - [ ] EXMPL-100 Fix `parseHeader` on BOM input
+  Files with BOM markers should not fail because of an invisible encoding prefix.
+
   DoD: files with a BOM marker parse the same as regular input.
 ```
 
 Prose with one user decision and a multi-condition DoD:
 ```md
 - [ ] EXMPL-101 Archive completed story groups
+  Archiving should keep completed story context, not just individual checkboxes.
+
   `mdtask archive` currently moves completed tasks one by one into a flat `_archive.md`. Closed story groups lose their heading and surrounding context. Groups should be archived as whole units instead.
 
   User decision: archive whole story groups, not individual done tasks.
@@ -120,6 +133,8 @@ Prose with one user decision and a multi-condition DoD:
 Prose with multiple user decisions and a bullet DoD:
 ```md
 - [ ] EXMPL-102 Add read-only `git diff` access for review agents
+  Review agents need the actual working-tree change to catch regressions.
+
   Read-only inner agents can inspect files, but they cannot inspect the working-tree diff unless it is pasted into the prompt. A code review can silently review the current snapshot instead of the actual change.
 
   Add a read-only tool that returns `git diff HEAD` for the agent's current working directory. It exposes only the diff operation and truncates large output like other read tools.

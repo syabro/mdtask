@@ -137,6 +137,44 @@ describe('mdtask list', () => {
 			expect(output).toContain('[ ] TSK-001 Priority task !high');
 			expect(output).toContain('[x] TSK-002 Done no priority');
 		});
+
+		it('shows the first body line as business value', async () => {
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				[
+					'- [ ] TSK-001 Export tasks',
+					'  Users can move their backlog to another tool.',
+					'',
+					'  Longer implementation context stays out of the list.',
+					'',
+				].join('\n'),
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			expect(output).toContain(
+				'[ ] TSK-001 Export tasks\n    Users can move their backlog to another tool.',
+			);
+			expect(output).not.toContain('Longer implementation context');
+		});
+
+		it('truncates long business values to 120 characters', async () => {
+			const longValue = 'x'.repeat(125);
+			writeFileSync(
+				join(tempDir, 'tasks.md'),
+				['- [ ] TSK-001 Export tasks', `  ${longValue}`, ''].join('\n'),
+			);
+
+			const code = await run(['list']);
+			expect(code).toBe(0);
+
+			const output = stdoutSpy.mock.calls.map((c) => String(c[0])).join('');
+			const valueLine = output.trimEnd().split('\n')[1].trimStart();
+			expect(valueLine).toBe(`${'x'.repeat(119)}…`);
+			expect(valueLine).toHaveLength(120);
+		});
 	});
 
 	describe('--tag and --priority flags', () => {

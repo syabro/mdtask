@@ -31,13 +31,16 @@ mdtask list --all        # Include done tasks
 
 By default, `mdtask list` hides open tasks with unresolved blockers. A blocker is unresolved when the referenced task is open or missing. If any matching tasks are hidden, the command prints a note with the hidden count and the `--blocked` flag to reveal them.
 
-When output is to a terminal (TTY), tasks are displayed as a compact table with aligned columns:
+When output is to a terminal (TTY), tasks are displayed as a compact table with aligned columns. If a task has a body, the first body line is shown on its own indented line below the title, truncated to 120 characters with an ellipsis when longer:
 ```
- ID            │ TITLE                          │ PRI   │ TAGS     │ PROPS
-───────────────┼────────────────────────────────┼───────┼──────────┼──────────────────
- [ ] EXMPL-001 │ Fix authentication bug         │ !high │          │
- [ ] EXMPL-002 │ Update documentation           │       │          │ @iter:mvp
- [x] EXMPL-003 │ Refactor utils                 │ !low  │ #backend │ @status:done
+ ID            │ TITLE                  │ PRI   │ TAGS     │ PROPS
+───────────────┼────────────────────────┼───────┼──────────┼──────────────────
+ [ ] EXMPL-001 │ Fix authentication bug │ !high │          │
+               │ Users can sign in again.
+ [ ] EXMPL-002 │ Update documentation   │       │          │ @iter:mvp
+               │ New users can follow the setup.
+ [x] EXMPL-003 │ Refactor utils         │ !low  │ #backend │ @status:done
+               │ Maintenance work is safer.
 ```
 
 Columns auto-sized to content width. Empty columns (Priority, Tags, Props) are hidden when no tasks have data for them.
@@ -48,11 +51,14 @@ Priorities are color-coded:
 - `!low` — green
 - Done tasks — gray
 
-When piped to another command, output uses flat format with no colors for clean parsing:
+When piped to another command, output uses flat format with no colors for clean parsing. The value still uses its own indented line and the same 120-character limit:
 ```
 [ ] EXMPL-001 Fix authentication bug !high
+    Users can sign in again.
 [ ] EXMPL-002 Update documentation @iter:mvp
+    New users can follow the setup.
 [x] EXMPL-003 Refactor utils !low @status:done
+    Maintenance work is safer.
 ```
 
 ### Blocked tasks
@@ -116,6 +122,8 @@ Output:
 ```
 docs/specs/cli.md:42
 - [ ] EXMPL-001 Fix the bug		@blocked_by:EXMPL-002 !high
+      Users can sign in again.
+
       Description line 1.
       Description line 2.
 ```

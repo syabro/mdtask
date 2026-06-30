@@ -18,6 +18,13 @@ function padEnd(str: string, width: number): string {
 	return padding > 0 ? str + ' '.repeat(padding) : str;
 }
 
+const TASK_VALUE_MAX_LENGTH = 120;
+
+export function formatTaskValue(value: string): string {
+	if (value.length <= TASK_VALUE_MAX_LENGTH) return value;
+	return `${value.slice(0, TASK_VALUE_MAX_LENGTH - 1)}…`;
+}
+
 type ColumnDef = {
 	header: string;
 	alwaysShow: boolean;
@@ -137,9 +144,22 @@ export function formatTable(
 	const separator = `─${widths.map((w) => '─'.repeat(w)).join('─┼─')}`;
 
 	// Render data rows
-	const rows = cellValues.map((row) => {
+	const titlePosition = activeIndices.indexOf(1);
+	const valuePrefix = ` ${activeIndices
+		.slice(0, titlePosition)
+		.map((_c, i) => ' '.repeat(widths[i]))
+		.join(' │ ')} │ `;
+	const rows = cellValues.flatMap((row, rowIndex) => {
 		const cells = activeIndices.map((c, i) => padEnd(row[c], widths[i]));
-		return ` ${cells.join(' │ ')}`;
+		const taskLine = ` ${cells.join(' │ ')}`;
+		const value = tasks[rowIndex].value;
+		if (!value) return [taskLine];
+		const displayValue = formatTaskValue(value);
+		const styledValue =
+			tasks[rowIndex].status === 'done' && isTTY
+				? p.gray(displayValue)
+				: displayValue;
+		return [taskLine, `${valuePrefix}${styledValue}`];
 	});
 
 	const lines = [header, separator, ...rows];

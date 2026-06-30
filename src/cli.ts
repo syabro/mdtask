@@ -30,7 +30,7 @@ import {
 	runningVersion,
 	userCacheSkillsDir,
 } from './skills.js';
-import { formatTable } from './table.js';
+import { formatTable, formatTaskValue } from './table.js';
 import {
 	collectTaskBody,
 	computeFenceMask,
@@ -64,11 +64,13 @@ function readFileTasks(file: string, excluded?: string[]): Task[] {
 				continue;
 			}
 			const metadata = parseMetadata(header.rawMetadata);
+			const body = collectTaskBody(lines, i);
 			tasks.push({
 				status: header.status,
 				id: header.id,
 				title: header.title,
 				rawMetadata: header.rawMetadata,
+				value: body.split('\n')[0]?.trim() ?? '',
 				tags: metadata.tags,
 				priority: metadata.priority,
 				properties: metadata.properties,
@@ -256,15 +258,16 @@ function formatTaskLine(
 	const propsSuffix = propsStr ? ` ${propsStr}` : '';
 
 	const basePart = `${statusStr} ${task.id} ${task.title}${priorityStr ? ` ${priorityStr}` : ''}`;
+	const valueLine = task.value ? `\n    ${formatTaskValue(task.value)}` : '';
 
 	if (task.status === 'done' && isTTY) {
 		// Apply gray to base parts, append colored blockers separately to avoid nesting issues,
 		// then append properties in gray
 		const grayProps = propsSuffix ? p.gray(propsSuffix) : '';
-		return p.gray(basePart) + blockedBySuffix + grayProps;
+		return p.gray(basePart) + blockedBySuffix + grayProps + valueLine;
 	}
 
-	return `${basePart}${blockedBySuffix}${propsSuffix}`;
+	return `${basePart}${blockedBySuffix}${propsSuffix}${valueLine}`;
 }
 
 function handleView(id: string, options: { path?: string }): void {

@@ -15,6 +15,7 @@ export type TaskMetadata = {
 
 export type Task = TaskHeader &
 	TaskMetadata & {
+		value?: string;
 		filePath: string;
 		lineNumber: number;
 	};

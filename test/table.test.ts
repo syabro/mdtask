@@ -105,6 +105,47 @@ describe('formatTable', () => {
 		expect(output).toContain('!high');
 	});
 
+	it('shows value on a separate line below the title', () => {
+		const tasks = [
+			makeTask({
+				id: 'TSK-001',
+				title: 'Has value',
+				value: 'Users can understand why it matters.',
+			}),
+			makeTask({ id: 'TSK-002', title: 'No value' }),
+		];
+		const statusMap = new Map<string, TaskStatus>(
+			tasks.map((t) => [t.id, t.status]),
+		);
+		const output = formatTable(tasks, statusMap, false);
+		const lines = output.trimEnd().split('\n');
+		expect(lines[0]).not.toContain('VALUE');
+		expect(output).toContain('│ Has value');
+		expect(output).toContain('│ Users can understand why it matters.');
+	});
+
+	it('truncates long values to 120 characters', () => {
+		const tasks = [
+			makeTask({
+				id: 'TSK-001',
+				title: 'Has value',
+				value: 'x'.repeat(125),
+			}),
+		];
+		const statusMap = new Map<string, TaskStatus>(
+			tasks.map((t) => [t.id, t.status]),
+		);
+		const output = formatTable(tasks, statusMap, false);
+		const valueText = output
+			.trimEnd()
+			.split('\n')[3]
+			.split('│')
+			.at(-1)
+			?.trimStart();
+		expect(valueText).toBe(`${'x'.repeat(119)}…`);
+		expect(valueText).toHaveLength(120);
+	});
+
 	it('hides tags column when no tasks have tags', () => {
 		const tasks = [makeTask({ id: 'TSK-001', title: 'No tags' })];
 		const statusMap = new Map<string, TaskStatus>(
