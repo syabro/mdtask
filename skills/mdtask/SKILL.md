@@ -79,7 +79,9 @@ A task is a handoff. The title names the work. The body gives an implementer eno
 
 Write the body in this order:
 
-1. **Business value sentence** — one short, unlabeled first line that explains why the task matters. It should help a reader prioritize the task without guessing from a technical title. Put a blank line after it before any longer description.
+1. **Business value sentence** — a short, unlabeled first line shown under the title in `mdtask list`. Its purpose is to help a reader quickly understand why this task matters in a way the title alone does not. The best value lines name a concrete risk, decision, confusion, or bottleneck: what becomes safer, easier to judge, less ambiguous, or less likely to be missed.
+
+   This line should feel specific to the task at hand. If it could fit many unrelated tasks, it is too generic. It should not restate the title, `DoD`, implementation, process, or acceptance criteria. Prefer concrete objects and situations over slogans like “better”, “clearer”, or “easier”. Put a blank line after it before any longer description.
 2. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
 3. **`User decision: ...`**
 
@@ -100,6 +102,25 @@ Existing open tasks created before this rule can be migrated when touched or in 
 
 Write in ELI18 style: clear enough for a tired programmer to understand on the first read. Remove vague, clever, and bureaucratic wording.
 
+Before saving a business value line, check it on three 0–10 scales. Aim for 8+ on all three:
+- **Specificity** — tied to this exact task, not reusable across many unrelated tasks.
+- **Value** — explains why the task matters, not what to do or how to verify it.
+- **Clarity** — short, concrete, and understandable on the first read.
+
+Business value examples:
+
+Bad: `Review fixes get checked before the task closes.`
+Why bad: it restates the process.
+
+Good: `Review regressions cannot slip in through follow-up fixes after the first review round.`
+Why good: it names the concrete risk and why the task matters.
+
+Bad: `Task workflow becomes clearer.`
+Why bad: it could fit many unrelated tasks.
+
+Good: `Create/do/review skills stop giving conflicting guidance for the same task handoff.`
+Why good: it names the concrete confusion this task removes.
+
 Use backticks where Markdown expects backticks.
 
 Keep tasks compact. A detail belongs only if an implementer would decide differently without it. Implementation steps belong in the task only when the approach is already decided and must be preserved.
@@ -113,7 +134,7 @@ Avoid step-by-step plans (create class X, add method Y, refactor Z, split A into
 Value + DoD is enough for straightforward work:
 ```md
 - [ ] EXMPL-100 Fix `parseHeader` on BOM input
-  Files with BOM markers should not fail because of an invisible encoding prefix.
+  BOM-prefixed files stop causing invisible parse failures.
 
   DoD: files with a BOM marker parse the same as regular input.
 ```
@@ -121,7 +142,7 @@ Value + DoD is enough for straightforward work:
 Prose with one user decision and a multi-condition DoD:
 ```md
 - [ ] EXMPL-101 Archive completed story groups
-  Archiving should keep completed story context, not just individual checkboxes.
+  Archived story groups preserve the heading and context needed to understand past work.
 
   `mdtask archive` currently moves completed tasks one by one into a flat `_archive.md`. Closed story groups lose their heading and surrounding context. Groups should be archived as whole units instead.
 
@@ -133,7 +154,7 @@ Prose with one user decision and a multi-condition DoD:
 Prose with multiple user decisions and a bullet DoD:
 ```md
 - [ ] EXMPL-102 Add read-only `git diff` access for review agents
-  Review agents need the actual working-tree change to catch regressions.
+  Code reviews inspect the actual working-tree diff instead of guessing from pasted context.
 
   Read-only inner agents can inspect files, but they cannot inspect the working-tree diff unless it is pasted into the prompt. A code review can silently review the current snapshot instead of the actual change.
 
