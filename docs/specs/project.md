@@ -151,10 +151,21 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - DROP — direct `sdd` skill cross-reference: it assumes a sibling skill exists for external users; portable guidance should inline or link only when the project ships that skill.
   - KEEP / MAKE OPTIONAL — park-it workflow: keep stopping on human decisions and preserving resume context, but make `#user-required`, note shape, commit requirement, and manual tag-removal details project policy.
 
-- [ ] PRJ-077 Review the four skills as a system		@blocked_by:PRJ-073 @blocked_by:PRJ-074 @blocked_by:PRJ-075 @blocked_by:PRJ-076
+- [x] PRJ-077 Review the four skills as a system		@blocked_by:PRJ-073 @blocked_by:PRJ-074 @blocked_by:PRJ-075 @blocked_by:PRJ-076
+  Cross-skill inconsistencies are classified so cleanup work can target shared rules instead of isolated skills.
+
   After the four per-skill reviews, review them together: do they hand off cleanly, share
   terms, and judge repeated conventions the same way — any gaps or overlaps between create
   and do? Output cross-skill findings with a recommendation each.
+
+  **Findings:**
+  - KEEP — the ownership model is clear: `mdtask` owns task format, `mdtask-create` owns task creation, `mdtask-do` owns execution, and `sdd` owns the spec rhythm until PRJ-085 merges it.
+  - FIX — spec location wording is inconsistent: `sdd` still names `docs/specs/*.md`, while `mdtask-create` uses the configured project spec directory.
+  - FIX — examples in `sdd` and `mdtask-create` do not consistently model the `mdtask` task-body structure, so agents can copy incomplete handoff examples.
+  - FIX — commit policy differs: `mdtask-create` makes task-change commits conditional, while `mdtask-do` commits unconditionally; the system should either align them or explain why execution always commits.
+  - FIX — spec-update rules are split between `sdd` and `mdtask-do`; PRJ-085 already tracks merging `sdd` into `mdtask` as the likely cleanup path.
+  - MAKE OPTIONAL — value-summary migration for touched old tasks is documented in `mdtask`, but not surfaced in `mdtask-do`; make it an optional reminder instead of a hard execution gate.
+  - MAKE OPTIONAL — `mdtask-do` checklist mechanics are more harness-specific than the other skills; keep the live checklist requirement, but move concrete tool details into harness guidance.
 
 - [ ] PRJ-078 Fix formatting settings: 2-space indent, 120-col, via .editorconfig
   Biome formats with tabs (explicit `indentStyle: "tab"` in biome.json) and 80-col
