@@ -32,6 +32,10 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
 
 `mdtask-create` guides agents through creating tasks: clarify the user's intent, choose an existing spec or propose a new one in the project's configured spec directory, show the exact task proposal before saving, assign IDs with `mdtask ids`, and ask about committing only when the project workflow commits task changes.
 
+## Task execution skill
+
+`mdtask-do` runs one task through selection, planning, review, implementation, validation, spec update, and commit. Normal runs must plan a realistic behavior check, run it after tests and lint pass, and report its result. If the check cannot run, the plan names the strongest replacement evidence. `#noqa` skips reviews only; fast mode skips planning, reviews, the behavior check, and final validation.
+
 # Tasks
 
 - [ ] PRJ-034 Define layered architecture
@@ -184,7 +188,9 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - The SDD, task creation, and task execution skills now use the new boundary
   - Excess blank lines around affected task journals were removed
 
-- [ ] PRJ-082 Require behavior check in mdtask-do
+- [x] PRJ-082 Require behavior check in mdtask-do
+  Normal `mdtask-do` runs prove the changed behavior before the task can close.
+
   `mdtask-do` now lets agents finish with tests, lint, and `mdtask validate`.
   That is not enough when the task changes real behavior: tests can pass while
   the CLI command, UI flow, API call, or integration still fails for the user.
@@ -201,6 +207,12 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - If it cannot run one, the plan says why and what evidence replaces it.
   - #noqa skips the plan review of the behavior check but not the check itself.
   - Fast mode skips the behavior check (no plan, no review).
+
+  **Implemented:**
+  - Normal runs now require the plan to name a realistic behavior check or replacement evidence.
+  - Plan review now checks whether the planned behavior proof matches the requested result.
+  - After tests and lint pass, normal runs execute the planned behavior check and re-run it after failures.
+  - `#noqa` still runs the behavior check, while fast mode skips it with the rest of the lightweight path.
 
 - [ ] PRJ-083 Rename `mdtask-create` to `mdtask-add`
   The task-creation workflow currently lives in `mdtask-create`. `mdtask-add` reads closer to the user action: adding a task to the project backlog, and pairs with `mdtask-do`.

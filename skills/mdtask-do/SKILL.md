@@ -10,15 +10,15 @@ disable-model-invocation: false
 
 ## Flow
 
-**Gate — do this before reading any further.** Your first action in this skill is to materialize the steps below as a live, checkable task list, and you tick items off it as you go (you'll be asked to confirm against it before the commit in Step 8). In Claude that's the task tools — `ToolSearch` for `select:TaskCreate,TaskUpdate` to load them, then `TaskCreate` one item per step (Pick, Plan, Review plan, Execute, Review code, Final validation, Update spec, Commit); in Pi, a `./tmp` markdown checklist. If a task tool genuinely isn't available, write the same checklist into your visible reply — the artifact is mandatory, the specific tool is not. Don't announce or summarize the steps in prose as a substitute; create the tracked list, then go straight into Step 1.
+**Gate — do this before reading any further.** Your first action in this skill is to materialize the steps below as a live, checkable task list, and you tick items off it as you go (you'll be asked to confirm against it before the commit in Step 8). In Claude that's the task tools — `ToolSearch` for `select:TaskCreate,TaskUpdate` to load them, then `TaskCreate` one item per step (Pick, Plan, Review plan, Execute, Behavior check, Review code, Final validation, Update spec, Commit); in Pi, a `./tmp` markdown checklist. If a task tool genuinely isn't available, write the same checklist into your visible reply — the artifact is mandatory, the specific tool is not. Don't announce or summarize the steps in prose as a substitute; create the tracked list, then go straight into Step 1.
 
 **One checklist per run.** Before creating this run's items, check (`TaskList`) for a checklist left by a previous task in this session. If there is none, or every item in it is closed, clear it and start fresh. If it still has open (unfinished) items, the rule depends on how you're running: **interactively** (the user is present and hasn't told you to act independently, here or in standing instructions) → STOP and ask the user what to do with them — never wipe someone's in-progress work; **autonomously** (the user set independent / loop operation in instructions or chat) → there's no one to ask, so just clear all of them and start fresh, don't block the loop.
 
 **Modes**
 - **normal** (default) — full cycle, autonomous: pick the most logical task and approve your own plan.
-- **fast** (`fast`, `--fast`, `-f`) — skip planning, both review steps, test-first work, and final validation. Still pick the task with the CLI, make the change, update the task and spec, and commit unless told not to.
+- **fast** (`fast`, `--fast`, `-f`) — skip planning, both review steps, test-first work, the behavior check, and final validation. Still pick the task with the CLI, make the change, update the task and spec, and commit unless told not to.
 
-**`#noqa` tag** — if the picked task carries `#noqa`, skip the two review steps (Step 3 and Step 5). Everything else, including the commit, still runs.
+**`#noqa` tag** — if the picked task carries `#noqa`, skip the two review steps (Step 3 and Step 5). Everything else, including the behavior check and commit, still runs.
 
 ### Step 1 — Pick a task
 
@@ -33,6 +33,7 @@ disable-model-invocation: false
 1. Read the task file for full details.
 2. Understand what to build — don't invent extra scope.
 3. Write a concrete plan: files to create/modify, functions/modules, how to structure the code.
+4. State the behavior check you will run after tests pass: a local command, CLI flow, API call, UI path, integration check, or another realistic use case that proves the requested result. If a direct behavior check cannot run, say why and name the strongest available replacement evidence; don't use ordinary tests, lint, code reading, or `mdtask validate` as the replacement when a realistic check is possible.
 
 ### Step 3 — Review the plan
 
@@ -41,12 +42,12 @@ disable-model-invocation: false
 A different model catches more than self-review, so send the plan to an external reviewer:
 
 1. Check `AGENTS.md` / `CLAUDE.md` for a configured review tool and when to use it.
-   - **Named** → use it. Send plan + task spec + relevant files; ask: is it correct? missing pieces? better approach?
+   - **Named** → use it. Send plan + task spec + relevant files; ask: is it correct? missing pieces? better approach? does the planned behavior check prove the requested result?
    - **Not configured** → ⚠️ warn the user ("no review tool configured in AGENTS.md/CLAUDE.md — falling back to a subagent, which is weaker because it's the same model checking itself"), then launch a subagent for the review.
    - **No subagent tool available either** → ⚠️ warn and review the plan yourself. Don't skip silently.
 2. Fold the feedback into a refined plan.
 
-### Step 4 — Execute with risk-based validation
+### Step 4 — Execute with risk-based validation and behavior check
 
 > Fast mode: implement directly — no test-first, no validation unless the user asks.
 
@@ -58,17 +59,19 @@ Pick the smallest useful validation for the change:
 
 Then implement, run the relevant existing tests, and run lint/typecheck if configured. If you added no test, say in one line why existing validation is enough. Skip shallow snapshot tests and tests that only restate static data.
 
+After tests and lint/typecheck pass, run the planned behavior check. Report the exact check and result. If it fails, fix the issue and re-run the behavior check before review or final validation. If the behavior check cannot run, record why and report the replacement evidence named in the plan. `#noqa` skips reviews only; it still runs this behavior check. Fast mode skips this whole step's behavior check because it has no plan.
+
 ### Step 5 — Review the code
 
 > Skip if the task has `#noqa`, or in fast mode.
 
-Resolve the reviewer the same way as Step 3 (named tool → subagent fallback with a warning → self-review with a warning). Send the current diff + task context; ask about correctness, edge cases, style, security. Review it yourself too, then fix what's found. If a decision genuinely needs a human — ambiguous business logic, a product call you can't make — don't guess: park the task (see "When you can't decide" below).
+Resolve the reviewer the same way as Step 3 (named tool → subagent fallback with a warning → self-review with a warning). Send the current diff + task context; ask about correctness, edge cases, style, security. Review it yourself too, then fix what's found. If review fixes can affect the requested behavior or its proof, re-run the behavior check before proceeding. If a decision genuinely needs a human — ambiguous business logic, a product call you can't make — don't guess: park the task (see "When you can't decide" below).
 
 ### Step 6 — Final validation
 
 > Skip in fast mode unless the user asks for it.
 
-Run all tests again to confirm nothing broke after review fixes, and lint/typecheck if configured.
+Run all tests again to confirm nothing broke after review fixes, and lint/typecheck if configured. Confirm the final report has an explicit behavior-check status: passed, skipped by fast mode, or replaced with the reason and evidence from the plan.
 
 ### Step 7 — Update the spec (TWO places — both required)
 
@@ -80,7 +83,7 @@ Run all tests again to confirm nothing broke after review fixes, and lint/typech
 
 ### Step 8 — Commit
 
-First confirm against the checklist from the Flow gate: every step done or consciously skipped (fast/`#noqa`), nothing silently dropped. Then commit with a message describing what was built.
+First confirm against the checklist from the Flow gate: every step done or consciously skipped (fast/`#noqa`), the behavior-check status is recorded, and nothing was silently dropped. Then commit with a message describing what was built.
 
 ## When you can't decide — park it
 
