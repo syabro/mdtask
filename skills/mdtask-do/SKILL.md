@@ -65,7 +65,7 @@ After tests and lint/typecheck pass, run the planned behavior check. Report the 
 
 > Skip if the task has `#noqa`, or in fast mode.
 
-Resolve the reviewer the same way as Step 3 (named tool → subagent fallback with a warning → self-review with a warning). Send the current diff + task context; ask about correctness, edge cases, style, security. Review it yourself too, then fix what's found. If review fixes can affect the requested behavior or its proof, re-run the behavior check before proceeding. If a decision genuinely needs a human — ambiguous business logic, a product call you can't make — don't guess: park the task (see "When you can't decide" below).
+Resolve the reviewer the same way as Step 3 (named tool → subagent fallback with a warning → self-review with a warning). Send the current implementation diff + task context; ask about correctness, edge cases, style, security. Review it yourself too. Fix all safe actionable technical findings. If fixes change the implementation diff, run relevant validation and behavior checks as needed, then run code review again on the updated diff. Repeat until the latest review has no remaining actionable findings on the current implementation diff; optional nits or subjective suggestions do not keep the loop open unless they affect the requested result. If a later implementation change happens after a clean review, return to this step before committing. If a decision genuinely needs a human — ambiguous business logic, a product call you can't make, a finding you cannot safely accept or reject — don't guess: park the task (see "When you can't decide" below).
 
 ### Step 6 — Final validation
 
@@ -83,7 +83,7 @@ Run all tests again to confirm nothing broke after review fixes, and lint/typech
 
 ### Step 8 — Commit
 
-First confirm against the checklist from the Flow gate: every step done or consciously skipped (fast/`#noqa`), the behavior-check status is recorded, and nothing was silently dropped. Then commit with a message describing what was built.
+First confirm against the checklist from the Flow gate: every step done or consciously skipped (fast/`#noqa`), the behavior-check status is recorded, the last implementation diff was reviewed cleanly or review was validly skipped, and nothing was silently dropped. Then commit with a message describing what was built.
 
 ## When you can't decide — park it
 

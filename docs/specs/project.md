@@ -34,7 +34,7 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
 
 ## Task execution skill
 
-`mdtask-do` runs one task through selection, planning, review, implementation, validation, spec update, and commit. Normal runs must plan a realistic behavior check, run it after tests and lint pass, and report its result. If the check cannot run, the plan names the strongest replacement evidence. `#noqa` skips reviews only; fast mode skips planning, reviews, the behavior check, and final validation.
+`mdtask-do` runs one task through selection, planning, review, implementation, validation, spec update, and commit. Normal runs must plan a realistic behavior check, run it after tests and lint pass, and report its result. If the check cannot run, the plan names the strongest replacement evidence. Code review repeats after implementation fixes until the latest reviewed diff has no remaining actionable findings. `#noqa` skips reviews only; fast mode skips planning, reviews, the behavior check, and final validation.
 
 # Tasks
 
@@ -154,11 +154,19 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   from biome.json so it stops overriding editorconfig — Biome reads editorconfig via
   useEditorconfig, on by default. Reformat the whole codebase in the same change.
 
-- [ ] PRJ-079 Re-run code review after review fixes, until it's clean
+- [x] PRJ-079 Re-run code review after review fixes, until it's clean
+  Final review coverage includes follow-up fixes, so the reviewed implementation diff matches what ships.
+
   When code review finds problems and they get fixed, the task is committed without running
   review again — so the fixed version is never reviewed. Result wanted: after each round of
   review fixes, code review runs again, and the task is committed only once review has no
   remaining issues.
+
+  **Implemented:**
+  - Code review now repeats when safe technical fixes change the implementation diff.
+  - Review-fix rounds rerun relevant validation and behavior checks before the next review.
+  - The loop stops only when the latest review has no remaining actionable findings.
+  - Commit now requires a clean latest implementation review or a valid fast/`#noqa` skip.
 
 - [x] PRJ-080 Skill should require tasks to state the result, not invented steps
   Nothing in the task-creation guidance separates a task's outcome from its implementation,
