@@ -79,9 +79,9 @@ A task is a handoff. The title names the work. The body gives an implementer eno
 
 Write the body in this order:
 
-1. **Business value sentence** — a short, unlabeled first line shown under the title in `mdtask list`. Its purpose is to help a reader quickly understand why this task matters in a way the title alone does not. The best value lines name a concrete risk, decision, confusion, or bottleneck: what becomes safer, easier to judge, less ambiguous, or less likely to be missed.
+1. **Value summary** — a short, unlabeled first line shown under the title in `mdtask list`. It tells the reader what the finished task changes: what becomes possible, trustworthy, clear, safe, reliable, easier, or consistent.
 
-   This line should feel specific to the task at hand. If it could fit many unrelated tasks, it is too generic. It should not restate the title, `DoD`, implementation, process, or acceptance criteria. Prefer concrete objects and situations over slogans like “better”, “clearer”, or “easier”. Put a blank line after it before any longer description.
+   Start from the task body and `DoD`, then ask what concrete artifact, command, workflow, user action, or project state changes for the better. If the task names a concrete file, command, error, workflow, or scenario, reuse those terms to anchor the outcome. The summary must name both the concrete artifact or situation and the effect it creates — not the artifact, mechanism, or workflow step alone. Phrase the effect as a positive result when possible. Put a blank line after it before any longer description.
 2. **Prose** — what is happening now and what should happen instead. Split by meaning into short paragraphs. Add constraints, examples, or edge cases only when they change the implementation or verification.
 3. **`User decision: ...`**
 
@@ -96,30 +96,48 @@ Write the body in this order:
 
 `mdtask list` shows this first line on its own indented line below the task title. Long values are truncated to 120 characters with an ellipsis.
 
-When a task needs no extra context, it can go straight from the value sentence to `DoD`, with the same blank line between them.
+When a task needs no extra context, it can go straight from the value summary to `DoD`, with the same blank line between them.
 
-Existing open tasks created before this rule can be migrated when touched or in a dedicated cleanup pass: add the value sentence as the first body line, insert a blank line after it, keep existing context below it, and leave `User decision` and `DoD` in the same order.
+Existing open tasks created before this rule can be migrated when touched or in a dedicated cleanup pass: add the value summary as the first body line, insert a blank line after it, keep existing context below it, and leave `User decision` and `DoD` in the same order.
 
 Write in ELI18 style: clear enough for a tired programmer to understand on the first read. Remove vague, clever, and bureaucratic wording.
 
-Before saving a business value line, check it on three 0–10 scales. Aim for 8+ on all three:
-- **Specificity** — tied to this exact task, not reusable across many unrelated tasks.
-- **Value** — explains why the task matters, not what to do or how to verify it.
-- **Clarity** — short, concrete, and understandable on the first read.
+Before saving a value summary, check it on five points:
+- **Outcome** — says what becomes possible, trustworthy, clear, safe, reliable, easier, or more consistent after completion.
+- **Concrete subject** — starts from the artifact, command, workflow, user action, or project state when that carries the meaning.
+- **Positive result** — names what the completed task gives, not mainly what it prevents or removes.
+- **Rooted** — uses the task body and `DoD` as the source.
+- **Specific** — tied to this exact artifact, workflow, error, or scenario.
 
-Business value examples:
+Weak summaries only restate the title, `DoD`, implementation, artifact, mechanism, or workflow step. If a draft mostly says “this file exists”, “this review has findings”, “this check runs”, or “this workflow publishes”, rewrite it one step further into the capability, confidence, clarity, safety, reliability, consistency, or time saved that the finished task creates.
+
+Avoid role-label openings when the artifact or workflow can carry the meaning. Repeated openings like `users`, `contributors`, `maintainers`, or `agents` create noise in `mdtask list`. Name a role only when it changes the meaning.
+
+Value summary examples:
+
+Bad: `Tag pushes publish mdtask to npm through trusted publishing, with manual fallback kept.`
+Why bad: it describes the publishing mechanism, not what that mechanism gives the project.
+
+Good: `Version tags create npm releases with no shared token to manage.`
+Why good: it starts from the concrete workflow and names the practical gain.
 
 Bad: `Review fixes get checked before the task closes.`
-Why bad: it restates the process.
+Why bad: it describes the workflow step.
 
-Good: `Review regressions cannot slip in through follow-up fixes after the first review round.`
-Why good: it names the concrete risk and why the task matters.
+Good: `Final review coverage includes follow-up fixes, so the reviewed diff matches what ships.`
+Why good: it names the concrete confidence gained.
 
 Bad: `Task workflow becomes clearer.`
-Why bad: it could fit many unrelated tasks.
+Why bad: it is a generic slogan.
 
-Good: `Create/do/review skills stop giving conflicting guidance for the same task handoff.`
-Why good: it names the concrete confusion this task removes.
+Bad: `Maintainers can archive a completed story group with its heading, so the live spec stays clean without losing context.`
+Why bad: it starts with a role label even though the archive workflow carries the meaning.
+
+Good: `Archived story groups keep their heading and context while the live spec stays focused on active work.`
+Why good: it starts from the concrete artifact and names the value without a repeated role label.
+
+Good: `A task created by one skill has the same required fields and handoff rules when another skill executes or reviews it.`
+Why good: it names the concrete consistency gained.
 
 Use backticks where Markdown expects backticks.
 
@@ -131,10 +149,10 @@ Avoid step-by-step plans (create class X, add method Y, refactor Z, split A into
 
 **Examples:**
 
-Value + DoD is enough for straightforward work:
+Value summary + DoD is enough for straightforward work:
 ```md
 - [ ] EXMPL-100 Fix `parseHeader` on BOM input
-  BOM-prefixed files stop causing invisible parse failures.
+  BOM-prefixed files parse like regular task files.
 
   DoD: files with a BOM marker parse the same as regular input.
 ```
@@ -154,7 +172,7 @@ Prose with one user decision and a multi-condition DoD:
 Prose with multiple user decisions and a bullet DoD:
 ```md
 - [ ] EXMPL-102 Add read-only `git diff` access for review agents
-  Code reviews inspect the actual working-tree diff instead of guessing from pasted context.
+  Code reviews use the actual working-tree diff from the task workspace.
 
   Read-only inner agents can inspect files, but they cannot inspect the working-tree diff unless it is pasted into the prompt. A code review can silently review the current snapshot instead of the actual change.
 
