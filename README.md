@@ -72,7 +72,7 @@ mdtask validate              # check task integrity
 mdtask is three layers, kept deliberately separate:
 
 1. **The CLI (`mdtask`)** — the task *format*. It reads and edits Markdown checkbox tasks and knows nothing about methodology: a small, fast interpreter over your files.
-2. **The skills** (`skills/`) — the *method*. `sdd` is the spec-driven workflow; `mdtask-create` writes new tasks; `mdtask-do` takes one task end to end (pick → plan → build → document → commit).
+2. **The skills** (`skills/`) — the *method*. `sdd` is the spec-driven workflow; `mdtask-add` adds new tasks; `mdtask-do` takes one task end to end (pick → plan → build → document → commit).
 3. **The loop** — driving a whole *scope* of tasks. That's your coding agent's job, not mdtask's: point the agent at `mdtask-do` and have it repeat until the backlog is empty. mdtask ships no loop or orchestrator.
 
 ## Stack

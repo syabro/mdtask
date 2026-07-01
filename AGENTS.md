@@ -24,7 +24,7 @@ read @skills/sdd/SKILL.md — spec-driven development, spec structure, examples.
 ## Project Structure
 
 - `docs/specs/` — specs (task, files, cli, config, project, test)
-- `skills/` — shippable dev skills (sdd, mdtask-create, mdtask-do, mdtask)
+- `skills/` — shippable dev skills (sdd, mdtask-add, mdtask-do, mdtask)
 - `docs/mdtask.md` — goals, architecture
 - `skills/sdd/SKILL.md` — spec-driven development workflow
 - `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `cd ../website && just deploy` (wrangler → Cloudflare Pages)

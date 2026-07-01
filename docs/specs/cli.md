@@ -270,7 +270,7 @@ Only matches the pattern `[A-Z]+-\d+` or a plain number. If the argument is not 
 
 ## Installing skills
 
-mdtask ships its dev skills (`sdd`, `mdtask`, `mdtask-create`, `mdtask-do`) inside the npm package. A skill auto-invokes only when its `SKILL.md` lives in the agent's own skill-discovery folder, which differs per agent — so the agent passes that folder in:
+mdtask ships its dev skills (`sdd`, `mdtask`, `mdtask-add`, `mdtask-do`) inside the npm package. A skill auto-invokes only when its `SKILL.md` lives in the agent's own skill-discovery folder, which differs per agent — so the agent passes that folder in:
 
 ```bash
 mdtask install-skills <dir>   # e.g. mdtask install-skills ~/.claude/skills

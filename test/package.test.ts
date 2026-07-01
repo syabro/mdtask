@@ -20,7 +20,7 @@ describe('package.json npm publishing config', () => {
 		// The skills the npm package must carry for `install-skills` to work.
 		expect(pkg.files).toContain('skills');
 		// Their canonical source must exist.
-		for (const name of ['sdd', 'mdtask', 'mdtask-create', 'mdtask-do']) {
+		for (const name of ['sdd', 'mdtask', 'mdtask-add', 'mdtask-do']) {
 			expect(existsSync(resolve(ROOT, 'skills', name, 'SKILL.md'))).toBe(true);
 		}
 	});

@@ -1,14 +1,14 @@
 ---
-name: mdtask-create
-description: ALWAYS invoke this skill when user asks to create, add, or track a task — including indirect requests like "make a task for X", "add a task for this", "we need a task to...". Never create tasks manually by editing spec files. Handles full workflow — collect requirements, pick or create the spec, propose text, get approval, save, assign ID, commit.
+name: mdtask-add
+description: ALWAYS invoke this skill when user asks to add, create, or track a task — including indirect requests like "make a task for X", "add a task for this", "we need a task to...". Never add tasks manually by editing spec files. Handles full workflow — collect requirements, pick or create the spec, propose text, get approval, save, assign ID, commit.
 disable-model-invocation: false
 ---
 
-# /mdtask-create — Task creation workflow
+# /mdtask-add — Add task workflow
 
 ## When to use
 
-User says "create a task", "add task", "new task", "I need a task for...", or describes a feature/bug/idea to track. Handles one task or a batch of tasks in a new spec.
+User says "add a task", "create a task", "new task", "I need a task for...", or describes a feature/bug/idea to track. Handles one task or a batch of tasks in a new spec.
 
 ## Flow
 

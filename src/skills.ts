@@ -16,8 +16,9 @@ import { dirname, join, sep } from 'node:path';
 
 // Skills bundled in the npm package and installable into an agent's skill
 // directory. The project-local `check` skill is intentionally not shipped.
-export const SHIPPABLE_SKILLS = ['sdd', 'mdtask', 'mdtask-create', 'mdtask-do'];
+export const SHIPPABLE_SKILLS = ['sdd', 'mdtask', 'mdtask-add', 'mdtask-do'];
 
+const LEGACY_SKILLS = ['mdtask-create'];
 const STAMP_FILE = '.version';
 
 // Compare dotted numeric versions (e.g. "0.1.13"). Returns -1 / 0 / 1.
@@ -114,13 +115,17 @@ function cacheStamp(): string | null {
 }
 
 // Called on every invocation (in cache mode): if the cache already exists and
-// its stamp is older than the running version, overwrite it. Only-if-older, so
-// an old run never downgrades a cache a newer run produced. Never throws.
+// its stamp is older than the running version or misses a bundled skill,
+// overwrite it. Complete newer-version caches stay untouched, so an old run
+// never downgrades a cache a newer run produced. Never throws.
 export function refreshCacheIfStale(root: string, version: string): void {
 	try {
-		if (!existsSync(userCacheSkillsDir())) return; // nothing points at it
+		const cacheDir = userCacheSkillsDir();
+		if (!existsSync(cacheDir)) return; // nothing points at it
 		const stamp = cacheStamp();
-		if (stamp && compareVersions(stamp, version) >= 0) return;
+		const cacheIncomplete = missingSkills(cacheDir).length > 0;
+		if (!cacheIncomplete && stamp && compareVersions(stamp, version) >= 0)
+			return;
 		const bundled = bundledSkillsDir(root);
 		if (!bundled) return;
 		writeCache(bundled, version);
@@ -150,7 +155,9 @@ export function resolveInstallContext(
 
 	const cacheDir = userCacheSkillsDir();
 	const stamp = cacheStamp();
-	if (!existsSync(cacheDir) || !stamp || compareVersions(stamp, version) < 0) {
+	const cacheIncomplete =
+		!existsSync(cacheDir) || missingSkills(cacheDir).length > 0;
+	if (cacheIncomplete || !stamp || compareVersions(stamp, version) < 0) {
 		writeCache(bundled, version);
 	}
 	return { mode: 'cache', source: cacheDir };
@@ -178,8 +185,51 @@ export type InstallResult = {
 	mode: 'local' | 'cache';
 	source: string;
 	linked: string[];
+	removedLegacy: string[];
 	skipped: { name: string; reason: string }[];
 };
+
+function isLegacySkillDir(target: string, name: string): boolean {
+	try {
+		const content = readFileSync(join(target, 'SKILL.md'), 'utf-8');
+		return new RegExp(`^name:\\s*${name}\\s*$`, 'm').test(content);
+	} catch {
+		return false;
+	}
+}
+
+function removeLegacySkill(
+	targetDir: string,
+	name: string,
+	source: string,
+): boolean {
+	const target = join(targetDir, name);
+	let existing: ReturnType<typeof lstatSync> | null = null;
+	try {
+		existing = lstatSync(target);
+	} catch {
+		return false;
+	}
+
+	if (existing.isSymbolicLink()) {
+		let current = '';
+		try {
+			current = readlinkSync(target);
+		} catch {
+			return false;
+		}
+		if (!isManagedLink(current, source)) return false;
+		unlinkSync(target);
+		return true;
+	}
+
+	if (existing.isDirectory() && isLegacySkillDir(target, name)) {
+		rmSync(target, { recursive: true, force: true });
+		return true;
+	}
+
+	return false;
+}
 
 export function installSkills(
 	targetDir: string,
@@ -203,7 +253,13 @@ export function installSkills(
 	mkdirSync(targetDir, { recursive: true });
 
 	const linked: string[] = [];
+	const removedLegacy: string[] = [];
 	const skipped: { name: string; reason: string }[] = [];
+
+	for (const name of LEGACY_SKILLS) {
+		if (removeLegacySkill(targetDir, name, ctx.source))
+			removedLegacy.push(name);
+	}
 
 	for (const name of SHIPPABLE_SKILLS) {
 		const target = join(targetDir, name);
@@ -244,5 +300,5 @@ export function installSkills(
 		linked.push(name);
 	}
 
-	return { mode: ctx.mode, source: ctx.source, linked, skipped };
+	return { mode: ctx.mode, source: ctx.source, linked, removedLegacy, skipped };
 }

@@ -1,6 +1,6 @@
 ---
 name: mdtask
-description: You MUST load this skill for ANY interaction with tasks in .md files — read, write, create, edit, rewrite, list, find, filter, summarize, or check status. Defines the task format and what goes in a task body.
+description: Use this skill for task format reference and existing-task interactions in .md files — read, edit, rewrite, list, find, filter, summarize, or check status. For adding, creating, or writing a new backlog task, use mdtask-add.
 disable-model-invocation: false
 ---
 

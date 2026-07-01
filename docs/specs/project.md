@@ -28,9 +28,9 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
 
 Shippable agent skills live in root `skills/`. The same directory is committed as the source of truth and shipped in the npm package.
 
-## Task creation skill
+## Task add skill
 
-`mdtask-create` guides agents through creating tasks: clarify the user's intent, choose an existing spec or propose a new one in the project's configured spec directory, show the exact task proposal before saving, assign IDs with `mdtask ids`, and ask about committing only when the project workflow commits task changes.
+`mdtask-add` guides agents through adding backlog tasks: clarify the user's intent, choose an existing spec or propose a new one in the project's configured spec directory, show the exact task proposal before saving, assign IDs with `mdtask ids`, and ask about committing only when the project workflow commits task changes.
 
 ## Task execution skill
 
@@ -243,7 +243,9 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - After tests and lint pass, normal runs execute the planned behavior check and re-run it after failures.
   - `#noqa` still runs the behavior check, while fast mode skips it with the rest of the lightweight path.
 
-- [ ] PRJ-083 Rename `mdtask-create` to `mdtask-add`
+- [x] PRJ-083 Rename `mdtask-create` to `mdtask-add`
+  The `mdtask-add` name matches the action people look for when adding a backlog item.
+
   The task-creation workflow currently lives in `mdtask-create`. `mdtask-add` reads closer to the user action: adding a task to the project backlog, and pairs with `mdtask-do`.
 
   Keep the three-skill split: `mdtask` stays the format/CLI reference, `mdtask-add` is the add-task workflow, and `mdtask-do` is the execute-task workflow. This task is a rename and trigger cleanup, not a merge into one large `mdtask` skill.
@@ -255,10 +257,16 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - users no longer see `mdtask-create` as the preferred skill name
   - historical implemented notes may keep the old name when they describe past work
 
+  **Implemented:**
+  - The add-task skill now lives under `skills/mdtask-add/` with `name: mdtask-add`.
+  - Bundled skill lists, install recipes, and tests now use `mdtask-add`.
+  - Active README, AGENTS, CLI spec, and project spec text point users at `mdtask-add`.
+  - The `mdtask` skill now delegates new backlog-task additions to `mdtask-add` instead of claiming those triggers.
+
 - [ ] PRJ-085 Merge sdd skill into mdtask skill
   The sdd skill defines a three-step cycle (spec → build → document) and spec file structure
   (feature description above `# Tasks`). It is separate from the mdtask skill, which defines
-  task format. Three skills for task work (mdtask, mdtask-create, sdd) causes agents to skip
+  task format. Three skills for task work (mdtask, mdtask-add, sdd) causes agents to skip
   cross-references.
 
   DoD:

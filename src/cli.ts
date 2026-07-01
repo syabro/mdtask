@@ -1223,9 +1223,10 @@ export async function run(args: string[]): Promise<number> {
 	const pkgVersion = runningVersion(root);
 
 	// Keep the shared skills cache current — global/npx installs symlink into it,
-	// so any run refreshes it after a version bump. Skip when mdtask is a local
-	// project dependency (those link directly into node_modules and must not
-	// mutate a global cache) and when no cache exists (nothing points at it).
+	// so any run refreshes it after a version bump or bundled-skill rename. Skip
+	// when mdtask is a local project dependency (those link directly into
+	// node_modules and must not mutate a global cache) and when no cache exists
+	// (nothing points at it).
 	if (existsSync(userCacheSkillsDir()) && !localDepDir(root, process.cwd())) {
 		refreshCacheIfStale(root, pkgVersion);
 	}
