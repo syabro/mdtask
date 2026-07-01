@@ -105,11 +105,13 @@ Write in ELI18 style: clear enough for a tired programmer to understand on the f
 Before saving a value summary, check it on five points:
 - **Outcome** — says what becomes possible, trustworthy, clear, safe, reliable, easier, or more consistent after completion.
 - **Concrete subject** — starts from the artifact, command, workflow, user action, or project state when that carries the meaning.
-- **Positive result** — names what the completed task gives, not mainly what it prevents or removes.
+- **Positive result** — names what the completed task gives. Prefer affirmative phrasing; if the main value says “no”, “not”, “cannot”, “stop”, “without”, or “miss”, rewrite it as what becomes available, present, reliable, or consistent.
 - **Rooted** — uses the task body and `DoD` as the source.
 - **Specific** — tied to this exact artifact, workflow, error, or scenario.
 
-Weak summaries only restate the title, `DoD`, implementation, artifact, mechanism, or workflow step. If a draft mostly says “this file exists”, “this review has findings”, “this check runs”, or “this workflow publishes”, rewrite it one step further into the capability, confidence, clarity, safety, reliability, consistency, or time saved that the finished task creates.
+Weak summaries only restate the title, `DoD`, implementation, artifact, mechanism, or workflow step. If a draft mostly says “this file exists”, “this review has findings”, “this check runs”, “this workflow publishes”, or “this name appears”, rewrite it one step further into the capability, confidence, clarity, safety, reliability, consistency, discoverability, or time saved that the finished task creates.
+
+For review or audit tasks, the value is not that findings exist or that items are classified, mapped, or catalogued. Name the decision, cleanup, risk reduction, or follow-up action those findings make possible. For rename and naming tasks, the value is not that the new name appears. Name the discoverability, mental model, or user action the name makes clearer.
 
 Avoid role-label openings when the artifact or workflow can carry the meaning. Repeated openings like `users`, `contributors`, `maintainers`, or `agents` create noise in `mdtask list`. Name a role only when it changes the meaning.
 
@@ -118,7 +120,7 @@ Value summary examples:
 Bad: `Tag pushes publish mdtask to npm through trusted publishing, with manual fallback kept.`
 Why bad: it describes the publishing mechanism, not what that mechanism gives the project.
 
-Good: `Version tags create npm releases with no shared token to manage.`
+Good: `Version tags create npm releases through the repository's trusted publishing workflow.`
 Why good: it starts from the concrete workflow and names the practical gain.
 
 Bad: `Review fixes get checked before the task closes.`
@@ -129,6 +131,18 @@ Why good: it names the concrete confidence gained.
 
 Bad: `Task workflow becomes clearer.`
 Why bad: it is a generic slogan.
+
+Bad: `The audit has findings for over-fit and over-engineered rules.`
+Why bad: it describes the review artifact, not what the findings enable.
+
+Good: `Over-fit workflow rules are separated from rules that generalize to ordinary projects.`
+Why good: it names the decision the review makes possible.
+
+Bad: `The new skill name appears in docs and install paths.`
+Why bad: it describes the rename result, not the value of the name.
+
+Good: `The skill name matches the action people look for when adding a backlog item.`
+Why good: it names the discoverability gained.
 
 Bad: `Maintainers can archive a completed story group with its heading, so the live spec stays clean without losing context.`
 Why bad: it starts with a role label even though the archive workflow carries the meaning.
