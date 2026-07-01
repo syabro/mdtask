@@ -138,8 +138,18 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - New spec guidance now follows the project's configured spec directory.
   - Commit prompting is now conditional on the project's task-change workflow.
 
-- [ ] PRJ-076 Review the mdtask-do skill for over-fit and over-engineering
+- [x] PRJ-076 Review the mdtask-do skill for over-fit and over-engineering
+  Over-fit execution workflow rules are separated from portable task-running behavior.
+
   Same review, applied to the mdtask-do skill.
+
+  **Findings:**
+  - MAKE OPTIONAL — harness-specific checklist tooling: keep the visible tracked checklist rule, but make `ToolSearch`, `TaskCreate`, `TaskList`, and `./tmp` storage harness-specific details.
+  - MAKE OPTIONAL — reviewer discovery and fallback mechanics: keep configured plan/code review, but treat `AGENTS.md` / `CLAUDE.md`, subagents, and warning wording as harness policy.
+  - MAKE OPTIONAL — validation policy: keep behavior-focused checks, but make test-first, anti-snapshot, repeated external review, and final full validation project-configurable.
+  - MAKE OPTIONAL — SDD-specific spec updates: keep recording task completion, but make the two-place feature prose plus task-body update apply only to projects using SDD specs.
+  - DROP — direct `sdd` skill cross-reference: it assumes a sibling skill exists for external users; portable guidance should inline or link only when the project ships that skill.
+  - KEEP / MAKE OPTIONAL — park-it workflow: keep stopping on human decisions and preserving resume context, but make `#user-required`, note shape, commit requirement, and manual tag-removal details project policy.
 
 - [ ] PRJ-077 Review the four skills as a system		@blocked_by:PRJ-073 @blocked_by:PRJ-074 @blocked_by:PRJ-075 @blocked_by:PRJ-076
   After the four per-skill reviews, review them together: do they hand off cleanly, share
