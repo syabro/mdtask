@@ -6,7 +6,7 @@
 TYPE: TASK-ID Description
 ```
 
-Use `TYPE: Description` only when the commit does not close a task. If the commit closes an mdtask task, `TASK-ID` is required.
+If the commit relates to an mdtask task in any way — closes it, advances it, adds it, or changes it — `TASK-ID` is required. Use `TYPE: Description` only when the commit is not tied to any task.
 
 The description must complete this sentence:
 
