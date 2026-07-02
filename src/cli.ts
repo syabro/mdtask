@@ -44,6 +44,7 @@ import {
 	resolveTaskId,
 	TASK_ID_REGEX,
 	type Task,
+	type TaskStatus,
 	type UnidentifiedTask,
 	unresolvedBlockerIds,
 	VALID_PRIORITIES,
@@ -270,7 +271,37 @@ function formatTaskLine(
 	return `${basePart}${blockedBySuffix}${propsSuffix}${valueLine}`;
 }
 
-function handleView(id: string, options: { path?: string }): void {
+type TaskJson = {
+	id: string;
+	status: TaskStatus;
+	title: string;
+	tags: string[];
+	priority: string | null;
+	properties: Record<string, string[]>;
+	file: string;
+	line: number;
+};
+
+// Stable machine-readable shape for --json. Tags drop the leading '#' so they
+// match priority (stored without '!') and property keys (without '@'); file is
+// cwd-relative, the same path shown in human output.
+function taskToJson(task: Task): TaskJson {
+	return {
+		id: task.id,
+		status: task.status,
+		title: task.title,
+		tags: task.tags.map((tag) => tag.replace(/^#/, '')),
+		priority: task.priority,
+		properties: task.properties,
+		file: relative(process.cwd(), task.filePath) || task.filePath,
+		line: task.lineNumber,
+	};
+}
+
+function handleView(
+	id: string,
+	options: { path?: string; json?: boolean },
+): void {
 	const { config, basePath } = taskSearchContext(options.path);
 	const tasks = collectTasks(basePath, config?.files, config?.excludePrefixes);
 
@@ -282,6 +313,15 @@ function handleView(id: string, options: { path?: string }): void {
 			`mdtask: ${err instanceof Error ? err.message : err}\n`,
 		);
 		process.exit(1);
+		return;
+	}
+
+	if (options.json) {
+		const lines = readFileSync(task.filePath, 'utf-8').split('\n');
+		const body = collectTaskBody(lines, task.lineNumber - 1);
+		process.stdout.write(
+			`${JSON.stringify({ ...taskToJson(task), body }, null, 2)}\n`,
+		);
 		return;
 	}
 
@@ -713,6 +753,7 @@ function handleList(
 		path?: string;
 		tag?: string | string[];
 		priority?: string | string[];
+		json?: boolean;
 	},
 ): void {
 	const { config, basePath } = taskSearchContext(options.path);
@@ -762,6 +803,16 @@ function handleList(
 	const visibleTasks = options.blocked
 		? filteredTasks
 		: filteredTasks.filter((t) => !hasUnresolvedBlockers(t, statusMap));
+
+	// JSON output is the machine contract: only the task array, no TTY table,
+	// no hidden-blocked note, no unidentified warning — all of which would break
+	// JSON.parse. Filters and sort above still apply.
+	if (options.json) {
+		process.stdout.write(
+			`${JSON.stringify(visibleTasks.map(taskToJson), null, 2)}\n`,
+		);
+		return;
+	}
 
 	if (isTTY) {
 		process.stdout.write(formatTable(visibleTasks, statusMap, isTTY));
@@ -1254,6 +1305,7 @@ export async function run(args: string[]): Promise<number> {
 			'--priority <priority>',
 			'Filter by priority: crit, high, or low (repeatable; priorities OR together)',
 		)
+		.option('--json', 'Output tasks as JSON (machine-readable, no colors)')
 		.action((filters: string[], options) => {
 			handleList(filters, options);
 		});
@@ -1261,6 +1313,10 @@ export async function run(args: string[]): Promise<number> {
 	cli
 		.command('view <id>', 'View task details')
 		.alias('show')
+		.option(
+			'--json',
+			'Output the task as JSON (machine-readable, includes body)',
+		)
 		.action((id, options) => {
 			handleView(id, options);
 		});

@@ -132,6 +132,37 @@ The first line shows the file path (relative to cwd) and line number. In a termi
 
 If the task is not found, exits with error code 1.
 
+## JSON output
+
+`--json` makes `list` and `view` emit machine-readable JSON instead of human text, so agents and scripts read a stable contract rather than parsing the display format:
+
+```bash
+mdtask list --json           # JSON array of the tasks list would show
+mdtask view EXMPL-001 --json  # single JSON object, including the body
+```
+
+Each task object has a fixed shape:
+
+```json
+{
+  "id": "EXMPL-001",
+  "status": "open",
+  "title": "Fix the bug",
+  "tags": ["backend", "auth"],
+  "priority": "high",
+  "properties": { "iter": ["mvp"], "blocked_by": ["EXMPL-002"] },
+  "file": "docs/specs/cli.md",
+  "line": 42
+}
+```
+
+- `status` is `open` or `done`.
+- `tags` drop the leading `#`, `priority` is the bare word (or `null`), and property keys drop the `@` — property values are always arrays. Absent metadata is `[]` / `null` / `{}`, never missing.
+- `file` is the path relative to the current directory; `line` is the header's line number.
+- `view --json` adds a `body` string (the dedented task body, `""` when there is none). `list --json` omits `body`.
+
+The output is plain JSON — no ANSI colors, no table, and none of `list`'s human extras (the hidden-blocked note and the unidentified-task warning are suppressed). `list --json` still honors `--all`, `--blocked`, `--tag`, `--priority`, and `--sort`. `view <ID> --json` on a missing ID still writes the error to stderr and exits 1 (no JSON is printed).
+
 ## Opening a task in editor
 
 `mdtask open <ID>` opens the file containing the task in `$EDITOR` at the task's line number:
@@ -311,7 +342,7 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   - The list prints a hidden-task note with the count and reveal flag
   - Docs and task-picking skill text now describe the new default
 
-- [ ] CLI-087 Add `--json` output to `list` and `view`
+- [x] CLI-087 Add `--json` output to `list` and `view`
   Agents and scripts read tasks through a stable JSON contract instead of parsing human-readable output.
 
   The CLI has no machine-readable output: the only "API" is the human-oriented
@@ -328,3 +359,9 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   - `mdtask list --json` prints a JSON array of tasks with parsed metadata and location
   - `mdtask view <ID> --json` prints one task object including the body
   - output is plain valid JSON: no ANSI colors, no decorations, parseable by `JSON.parse`
+
+  **Implemented:**
+  - `list --json` and `view --json` emit a fixed task shape (id, status, title, tags, priority, properties, file, line); `view` adds `body`.
+  - The shape is normalized for consumers: tags without `#`, priority as the bare word or `null`, property values always arrays, absent metadata as empty rather than missing.
+  - `list --json` applies all filters/sort and suppresses the TTY table, the hidden-blocked note, and the unidentified-task warning so the output is plain `JSON.parse`-able.
+  - `view <ID> --json` on a missing ID keeps the stderr error and exit code 1 with no JSON printed.
