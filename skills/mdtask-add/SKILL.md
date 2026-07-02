@@ -103,11 +103,17 @@ User: yes
 Agent: --- PROPOSED ---
 File: docs/specs/export.md (NEW)
 - [ ] EXP- Export tasks to JSON
-  Export all tasks to JSON via `mdtask export json`.
+  Every task is available as JSON for scripts and other tools.
+
+  DoD: `mdtask export json` writes all tasks as a JSON array to stdout.
 - [ ] EXP- Export tasks to CSV
-  Export all tasks to CSV via `mdtask export csv`.
+  Tasks open in a spreadsheet through a plain CSV export.
+
+  DoD: `mdtask export csv` writes all tasks as CSV to stdout.
 - [ ] EXP- Import tasks from JSON
-  Re-create tasks from a JSON export.
+  A JSON export round-trips back into task files.
+
+  DoD: `mdtask import json <file>` recreates the exported tasks.
 --- END ---
 Save?
 

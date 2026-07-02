@@ -1,6 +1,6 @@
 ---
 name: mdtask
-description: Use this skill for task format and the spec-driven development workflow — the spec→build→document cycle and spec file structure — plus existing-task interactions in .md files (read, edit, rewrite, list, find, filter, summarize, check status). Use when writing specs, implementing tasks from specs, or updating docs after code changes. For adding, creating, or writing a new backlog task, use mdtask-add.
+description: Use this skill for the task format and the spec-driven development reference — the spec→build→document cycle and spec file structure — and for inspecting or editing existing tasks in .md files (read, edit, rewrite, list, find, filter, summarize, check status). Use when writing a spec or looking up the task/spec format. For adding a new backlog task, use mdtask-add; for executing or closing a task end to end, use mdtask-do.
 disable-model-invocation: false
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: false
 
 ## How to use
 
-Use the CLI for task work. In this repo, run `pnpm mdtask <command>`; with a global install, run `mdtask <command>`.
+Use the CLI for task work. Run `mdtask <command>` — or a project-defined wrapper such as `pnpm mdtask <command>` if the project sets one.
 
 Key commands:
 - `list` — open, unblocked tasks
@@ -23,7 +23,7 @@ Key commands:
 - `ids` — assign missing IDs
 - `validate` — check task integrity
 
-Full command list: `pnpm mdtask --help` or `mdtask --help`.
+Full command list: `mdtask --help`.
 
 ## Spec-driven development
 
@@ -31,7 +31,7 @@ No code without a spec. The spec is both the blueprint for the work and the manu
 
 ### Cycle
 
-1. **Spec** — describe what needs to be built as a task in a spec file (`docs/specs/*.md`)
+1. **Spec** — describe what needs to be built as a task in a spec file, in your project's configured spec location (`.mdtaskrc` `path`, or wherever your specs already live — e.g. `docs/specs/*.md`)
 2. **Build** — implement the task
 3. **Document** — after the task is done:
    - Mark the task `[x]` and add `**Implemented:**` bullets inside the task body
