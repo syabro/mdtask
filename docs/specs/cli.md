@@ -310,3 +310,21 @@ Skills already linked by mdtask are re-pointed on re-run; a real directory or a 
   - `mdtask list --blocked` includes blocked open tasks again
   - The list prints a hidden-task note with the count and reveal flag
   - Docs and task-picking skill text now describe the new default
+
+- [ ] CLI-087 Add `--json` output to `list` and `view`
+  Agents and scripts read tasks through a stable JSON contract instead of parsing human-readable output.
+
+  The CLI has no machine-readable output: the only "API" is the human-oriented
+  text of `list` and `view`. Any script or agent integration built on that text
+  freezes it as a de facto contract, after which the human output can no longer
+  change without breaking consumers. The JSON contract must exist before such
+  integrations appear.
+
+  `--json` prints structured task data: parsed metadata (id, status, title,
+  tags, priority, properties) and location (file, line); `view` also includes
+  the task body.
+
+  DoD:
+  - `mdtask list --json` prints a JSON array of tasks with parsed metadata and location
+  - `mdtask view <ID> --json` prints one task object including the body
+  - output is plain valid JSON: no ANSI colors, no decorations, parseable by `JSON.parse`
