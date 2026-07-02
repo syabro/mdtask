@@ -35,6 +35,8 @@ Use `EXMPL-` prefix for example task IDs in documentation and spec task bodies. 
 
 ## Before Committing
 
+Before committing, read `docs/dev/commit-message-guidelines.md` and validate the message against it. If the commit closes an mdtask task, include the task ID after the type.
+
 If `docs/mdtask.md` changed — check if `skills/mdtask/SKILL.md` needs updating (and vice versa).
 The skill is the single source of truth for task format; mdtask.md covers everything else.
 

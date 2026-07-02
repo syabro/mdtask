@@ -20,6 +20,12 @@ Every push runs GitHub Actions CI on Ubuntu with pnpm. The workflow installs dep
 
 License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0/) — free to use, modify, and distribute; competing products prohibited.
 
+## Commit messages
+
+Commit message rules live in `docs/dev/commit-message-guidelines.md`. `AGENTS.md` / `CLAUDE.md` only point to that file, so agents read the full rule on demand before committing.
+
+Commits that close an mdtask task include the task ID after the type, for example `DOCS: EXMPL-123 Document commit message format`.
+
 ## Spec authoring convention
 
 One spec is one spec file. It starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `sdd` skill for the full spec structure.
@@ -68,9 +74,16 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   Use npm trusted publishing (OIDC, no token).
   Keep `just release` as manual fallback.
 
-- [ ] PRJ-053 Define commit message format
+- [x] PRJ-053 Define commit message format
+  Commit messages have a task-aware format without loading the full rules into agent context.
+
   Discuss and agree on a commit message convention with the user.
   Document the format in CLAUDE.md so it's followed in all future commits.
+
+  **Implemented:**
+  - Full commit message rules live in `docs/dev/commit-message-guidelines.md`.
+  - `AGENTS.md` / `CLAUDE.md` keep only a short pointer to avoid loading the full rule every session.
+  - Task IDs are required when a commit closes an mdtask task.
 
 - [x] PRJ-069 Move task specs to docs/specs/ and update config
   Positioning standardizes on "spec" / `docs/specs/` (see docs/positioning.md).
