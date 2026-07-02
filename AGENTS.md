@@ -19,14 +19,14 @@ Never cite a task by its bare ID. Whenever you mention a task (`CLI-059`, `TSK-0
 
 ## Development Workflow
 
-read @skills/sdd/SKILL.md — spec-driven development, spec structure, examples.
+read @skills/mdtask/SKILL.md — task format, spec-driven development, spec structure, examples.
 
 ## Project Structure
 
 - `docs/specs/` — specs (task, files, cli, config, project, test)
-- `skills/` — shippable dev skills (sdd, mdtask-add, mdtask-do, mdtask)
+- `skills/` — shippable dev skills (mdtask, mdtask-add, mdtask-do)
 - `docs/mdtask.md` — goals, architecture
-- `skills/sdd/SKILL.md` — spec-driven development workflow
+- `skills/mdtask/SKILL.md` — task format and spec-driven development workflow
 - `../website/` — Astro landing page (git worktree, `website` branch). Deploy: `cd ../website && just deploy` (wrangler → Cloudflare Pages)
 
 ## Example IDs in docs

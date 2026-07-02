@@ -21,18 +21,12 @@ dev:
     pnpm dev
 
 # Install all project skills to ~/.agents/skills
-install-skills: install-skill-sdd install-skill-mdtask install-skill-mdtask-add install-skill-mdtask-do
+install-skills: install-skill-mdtask install-skill-mdtask-add install-skill-mdtask-do
     @echo "All skills installed"
 
-# Install sdd skill to ~/.agents/skills
-install-skill-sdd:
-    rm -rf ~/.agents/skills/sdd
-    mkdir -p ~/.agents/skills/sdd
-    cp skills/sdd/* ~/.agents/skills/sdd/
-    @echo "Installed sdd skill"
-
-# Install mdtask skill to ~/.agents/skills
+# Install mdtask skill to ~/.agents/skills (sdd was merged into mdtask)
 install-skill-mdtask:
+    rm -rf ~/.agents/skills/sdd
     rm -rf ~/.agents/skills/mdtask
     mkdir -p ~/.agents/skills/mdtask
     cp skills/mdtask/* ~/.agents/skills/mdtask/

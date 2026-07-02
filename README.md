@@ -131,7 +131,7 @@ The `MDTASK_PATH` env variable overrides `path`; the `--path` flag overrides bot
 mdtask is three layers, kept deliberately separate:
 
 1. **The CLI (`mdtask`)** — the task *format*. It reads and edits Markdown checkbox tasks and knows nothing about methodology: a small, fast interpreter over your files.
-2. **The skills** (`skills/`) — the *method*. `sdd` is the spec-driven workflow; `mdtask-add` adds new tasks; `mdtask-do` takes one task end to end (pick → plan → build → document → commit).
+2. **The skills** (`skills/`) — the *method*. `mdtask` is the task format and spec-driven workflow reference; `mdtask-add` adds new tasks; `mdtask-do` takes one task end to end (pick → plan → build → document → commit).
 3. **The loop** — driving a whole *scope* of tasks. That's your coding agent's job, not mdtask's: point the agent at `mdtask-do` and have it repeat until the backlog is empty. mdtask ships no loop or orchestrator.
 
 The skills are plain `SKILL.md` files, loaded by any agent harness — no lock-in to a specific tool. Install them into your agent's skills directory:
@@ -157,7 +157,7 @@ pnpm lint
 
 > **Note:** `npx mdtask` won't work from inside the mdtask source directory — npx conflicts with the local package. Use `pnpm mdtask` for development.
 
-The project develops itself spec-driven: specs live in `docs/specs/`, the workflow is the `sdd` skill — see [skills/sdd/SKILL.md](skills/sdd/SKILL.md).
+The project develops itself spec-driven: specs live in `docs/specs/`, the workflow is the `mdtask` skill — see [skills/mdtask/SKILL.md](skills/mdtask/SKILL.md).
 
 Sources of truth — when changing one, check the others for consistency:
 

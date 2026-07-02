@@ -75,7 +75,7 @@ Run all tests again to confirm nothing broke after review fixes, and lint/typech
 
 ### Step 7 — Update the spec (TWO places — both required)
 
-> Full workflow with examples: the `sdd` skill.
+> Full workflow with examples: the `mdtask` skill's "Spec-driven development" section.
 
 **Place 1 — feature description (above `# Tasks`):** in the spec file where the task lives, add a new `## Section` for a new feature, or update the existing section if the task extends one. Match the section to the feature, not to the task. Describe it from the user's side — what to run, what config to use — concise, how-to-use, not implementation detail.
 

@@ -31,7 +31,7 @@ const REPO_ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)), '..');
 const REPO_VERSION = JSON.parse(
 	readFileSync(join(REPO_ROOT, 'package.json'), 'utf-8'),
 ).version as string;
-const SKILLS = ['sdd', 'mdtask', 'mdtask-add', 'mdtask-do'];
+const SKILLS = ['mdtask', 'mdtask-add', 'mdtask-do'];
 
 describe('mdtask install-skills', () => {
 	let configHome: string; // XDG_CONFIG_HOME
@@ -129,18 +129,18 @@ describe('mdtask install-skills', () => {
 	});
 
 	it('refuses to clobber a real directory and links the rest', async () => {
-		mkdirSync(join(agentDir, 'sdd'));
-		writeFileSync(join(agentDir, 'sdd', 'user.md'), 'mine');
+		mkdirSync(join(agentDir, 'mdtask-do'));
+		writeFileSync(join(agentDir, 'mdtask-do', 'user.md'), 'mine');
 
 		await run(['install-skills', agentDir]);
 
-		// sdd left untouched (still a real dir with the user's file).
-		expect(lstatSync(join(agentDir, 'sdd')).isDirectory()).toBe(true);
-		expect(existsSync(join(agentDir, 'sdd', 'user.md'))).toBe(true);
+		// mdtask-do left untouched (still a real dir with the user's file).
+		expect(lstatSync(join(agentDir, 'mdtask-do')).isDirectory()).toBe(true);
+		expect(existsSync(join(agentDir, 'mdtask-do', 'user.md'))).toBe(true);
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
-		expect(stderr).toContain('skipped sdd');
+		expect(stderr).toContain('skipped mdtask-do');
 		// The others still got linked.
-		for (const name of ['mdtask', 'mdtask-add', 'mdtask-do']) {
+		for (const name of ['mdtask', 'mdtask-add']) {
 			expect(lstatSync(join(agentDir, name)).isSymbolicLink()).toBe(true);
 		}
 		// A partial install is a failure — automation must not see success.
@@ -156,11 +156,22 @@ describe('mdtask install-skills', () => {
 		expect(readlinkSync(join(agentDir, 'mdtask'))).toBe(foreign);
 		const stderr = stderrSpy.mock.calls.map((c) => String(c[0])).join('');
 		expect(stderr).toContain('skipped mdtask');
-		for (const name of ['sdd', 'mdtask-add', 'mdtask-do']) {
+		for (const name of ['mdtask-add', 'mdtask-do']) {
 			expect(lstatSync(join(agentDir, name)).isSymbolicLink()).toBe(true);
 		}
 		expect(exitSpy).toHaveBeenCalledWith(1);
 		rmSync(foreign, { recursive: true, force: true });
+	});
+
+	it('removes a managed legacy sdd symlink during upgrade', async () => {
+		const legacy = join(agentDir, 'sdd');
+		symlinkSync(join(cacheSkillsDir(), 'sdd'), legacy);
+
+		await run(['install-skills', agentDir]);
+
+		expect(() => lstatSync(legacy)).toThrow();
+		expect(lstatSync(join(agentDir, 'mdtask')).isSymbolicLink()).toBe(true);
+		expect(exitSpy).not.toHaveBeenCalledWith(1);
 	});
 
 	describe('local project dependency mode', () => {

@@ -16,9 +16,12 @@ import { dirname, join, sep } from 'node:path';
 
 // Skills bundled in the npm package and installable into an agent's skill
 // directory. The project-local `check` skill is intentionally not shipped.
-export const SHIPPABLE_SKILLS = ['sdd', 'mdtask', 'mdtask-add', 'mdtask-do'];
+export const SHIPPABLE_SKILLS = ['mdtask', 'mdtask-add', 'mdtask-do'];
 
-const LEGACY_SKILLS = ['mdtask-create'];
+// Skill names no longer shipped: `install-skills` removes their stale managed
+// symlinks/copies on upgrade. `mdtask-create` was renamed to `mdtask-add`;
+// `sdd` was merged into `mdtask`.
+const LEGACY_SKILLS = ['mdtask-create', 'sdd'];
 const STAMP_FILE = '.version';
 
 // Compare dotted numeric versions (e.g. "0.1.13"). Returns -1 / 0 / 1.

@@ -32,7 +32,7 @@ Commits that close an mdtask task include the task ID after the type, for exampl
 
 ## Spec authoring convention
 
-One spec is one spec file. It starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `sdd` skill for the full spec structure.
+One spec is one spec file. It starts with prose sections that explain the feature from the user's side. The task journal starts at the bottom with `# Tasks`; story groups inside the journal use `##` headings. This makes the journal boundary stand out from the prose. See the `mdtask` skill's "Spec-driven development" section for the full spec structure.
 
 ## Specs directory
 
@@ -41,6 +41,10 @@ Task/spec files live under `docs/specs/`. `.mdtaskrc` points there, so `mdtask l
 ## Skills directory
 
 Shippable agent skills live in root `skills/`. The same directory is committed as the source of truth and shipped in the npm package.
+
+## Task format skill
+
+`mdtask` is the single reference for task work: the task format (header, metadata, task body), the spec-driven cycle (write the spec as a task, build, then document by marking `[x]` and updating the feature description above `# Tasks`), and spec file structure. The former `sdd` skill was merged into it, so there is one source instead of two skills to cross-reference.
 
 ## Task add skill
 
@@ -299,7 +303,7 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - Active README, AGENTS, CLI spec, and project spec text point users at `mdtask-add`.
   - The `mdtask` skill now delegates new backlog-task additions to `mdtask-add` instead of claiming those triggers.
 
-- [ ] PRJ-085 Merge sdd skill into mdtask skill
+- [x] PRJ-085 Merge sdd skill into mdtask skill
   The sdd skill defines a three-step cycle (spec → build → document) and spec file structure
   (feature description above `# Tasks`). It is separate from the mdtask skill, which defines
   task format. Three skills for task work (mdtask, mdtask-add, sdd) causes agents to skip
@@ -309,3 +313,8 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - mdtask skill includes the sdd cycle and spec structure
   - sdd skill is removed
   - all references to sdd skill updated to point to mdtask
+
+  **Implemented:**
+  - The `mdtask` skill now carries a "Spec-driven development" section (cycle, spec structure, worked example, when to add a section vs update one), so one skill covers task format and the spec workflow.
+  - The `sdd` skill is deleted and dropped from `SHIPPABLE_SKILLS`; `sdd` is now a `LEGACY_SKILLS` entry, so `install-skills` removes a stale `sdd` link on upgrade.
+  - Live references in `README.md`, `docs/specs/cli.md`, `docs/specs/project.md`, `skills/mdtask-do/SKILL.md`, `AGENTS.md`, and the `justfile` point to `mdtask` instead of `sdd`. Historical `sdd` mentions inside completed task bodies and `_archive.md` are left as-is.
