@@ -1,8 +1,8 @@
 # mdtask — positioning
 
-Source of truth for how mdtask is positioned and sold — governs the website, README, and
-skills. Where a surface disagrees with this document, the surface is wrong.
-Last updated: 2026-06-13.
+Source of truth for mdtask's positioning and messaging — the README, website, and skills
+follow it. When one of them disagrees with this document, this document wins.
+Last updated: 2026-07-02.
 
 ---
 
@@ -13,9 +13,9 @@ Last updated: 2026-06-13.
 The spec (how the system works), the tasks (what's done and what's left), and the code
 live in three disconnected places. The pain is in the gaps between them: the spec lags the
 code, the tasks lag both, and you sync them by hand. Each gap already has a specialized
-tool, so any single pain has a faster point solution — pitching one pain loses. mdtask
-sells the seam: all three in one mechanism, in one file. Coding agents make the gaps
-critical: the agent reads the stale spec as truth and builds on top of it.
+tool, so any single pain has a faster point solution. mdtask addresses the seam: all three
+in one mechanism, in one file. Coding agents make the gaps critical: the agent reads the
+stale spec as truth and builds on top of it.
 
 ### 1.2 One-liner
 
@@ -25,17 +25,17 @@ critical: the agent reads the stale spec as truth and builds on top of it.
 ### 1.3 Category
 
 mdtask is a **spec-driven development system**. Not a framework, OS, toolkit, tracker, or
-utility. Comparison set: Spec Kit and OpenSpec. Consequence for the copy: the CLI is not
-the hero, and the copy is not agent-first (see 1.4).
+utility. Comparison set: Spec Kit and OpenSpec. Consequence: the CLI is not the hero, and
+the messaging is not agent-first (see 1.4).
 
 ### 1.4 Audience
 
 Developers — solo and small teams — with a project in a repo. Skills are SKILL.md, loaded
 by any agent harness — no Claude Code lock-in.
 
-Mentioning agents is fine, even prominently. What we avoid is being **agent-first** — copy
-written strictly for agents throughout. The line: mention is fine, "strictly for agents
-everywhere" is not (the Hacker News audience is allergic to AI hype).
+Mentioning agents is fine, even prominently. What mdtask avoids is being **agent-first** —
+messaging written strictly for agents throughout. The line: mention is fine, "strictly for
+agents everywhere" is not.
 
 ---
 
@@ -75,7 +75,7 @@ no-drift promise is the workflow's doing, not the tool's (see 3.6).
 
 ---
 
-## 3. How we sell it
+## 3. Messaging
 
 ### 3.1 Core message
 
@@ -167,7 +167,3 @@ Parallel edits are resolved as ordinary text conflicts in git.
 - The unit is a **spec** — a single Markdown file under **`docs/specs/`**.
 - A **task** is a checkbox line inside a spec.
 - We use "spec" because it fits spec-driven development and reads better.
-
-Migration note (not landing copy): the specs directory now uses `docs/specs/`. Remaining
-"PRD" wording in the README is tracked as a separate mdtask task, not part of this
-document.
