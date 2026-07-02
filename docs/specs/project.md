@@ -14,6 +14,10 @@ Package includes `dist/cli.js`, root `skills/`, `README.md`, and `LICENSE`.
 
 Release workflow: `just release` (default: patch) or `just release minor` / `just release major`. The recipe checks for clean git state, runs tests, builds, bumps version, publishes to npm, commits, tags, and pushes.
 
+## Continuous integration
+
+Every push runs GitHub Actions CI on Ubuntu with pnpm. The workflow installs dependencies, then runs lint and tests.
+
 License: [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0/) — free to use, modify, and distribute; competing products prohibited.
 
 ## Spec authoring convention
@@ -49,8 +53,15 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   Use Gemini, Codex, and general agent to research and propose architecture.
   Documentation only. Code refactoring is separate tasks.
 
-- [ ] PRJ-048 GitHub Actions: run tests on push
+- [x] PRJ-048 GitHub Actions: run tests on push
+  Pushes verify lint and tests in GitHub before changes are trusted.
+
   Add `.github/workflows/ci.yml` that runs `pnpm test` and `pnpm lint` on every push.
+
+  **Implemented:**
+  - GitHub Actions CI runs on every push.
+  - CI installs dependencies with pnpm on Node 22.
+  - CI runs `pnpm lint` and `pnpm test`.
 
 - [ ] PRJ-049 GitHub Actions: npm publish on tag push
   Add `.github/workflows/publish.yml` that publishes to npm on tag push (`v*`).
