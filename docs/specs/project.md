@@ -14,6 +14,10 @@ Package includes `dist/cli.js`, root `skills/`, `README.md`, and `LICENSE`.
 
 Release workflow: `just release` (default: patch) or `just release minor` / `just release major`. The recipe checks for clean git state, runs tests, builds, bumps version, publishes to npm, commits, tags, and pushes.
 
+## README
+
+`README.md` is the public front on GitHub and npm. It follows `docs/positioning.md`: opens with the verbatim one-liner, explains the model (a spec is one Markdown file — prose plus tasks — and a task closes in the same commit as the code and spec update), and describes the three layers (CLI / skills / macro-loop). It carries a command reference and `.mdtaskrc` reference verified against the live CLI, a quick start with real command output, and a "What mdtask doesn't do" section with the honest limits. Terminology is "spec" / `docs/specs/`; internal contributor material (project language, design principles) lives in `docs/mdtask.md`, not the README.
+
 ## Continuous integration
 
 Every push runs GitHub Actions CI on Ubuntu with pnpm. The workflow installs dependencies, then runs lint and tests.
@@ -110,7 +114,9 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   - `mdtask-do` now tells agents to update the task and spec when closing work.
   - `sdd` now describes spec files as the source of work and the manual.
 
-- [ ] PRJ-071 Rewrite README from docs/positioning.md		@blocked_by:PRJ-069
+- [x] PRJ-071 Rewrite README from docs/positioning.md		@blocked_by:PRJ-069
+  The public README pitches mdtask as the spec-driven development system and documents every shipped command accurately.
+
   The README diverges from docs/positioning.md: it leads with the old pitch ("CLI task
   manager where Markdown is the single source of truth"), uses "PRD", and omits the
   one-liner, the core message (specs don't drift), the category, and several shipped commands.
@@ -119,6 +125,12 @@ Shippable agent skills live in root `skills/`. The same directory is committed a
   describe the three layers (CLI / skills / macro-loop); give an accurate command reference
   including `archive`, `install-skills`, blockers, and `.mdtaskrc`; use "spec" / `docs/specs/`
   terminology. Takes the README out of PRJ-070's scope.
+
+  **Implemented:**
+  - README opens with the verbatim positioning one-liner and the drift-free model; "PRD" wording is gone.
+  - Command reference covers every shipped command — list filters, blockers, view shortcuts, `archive`, `set`, `ids`, `validate`, `install-skills` — plus `.mdtaskrc` and `MDTASK_PATH`, all verified against the live CLI.
+  - Quick start shows real `ids` and `list` output; a "What mdtask doesn't do" section states the honest limits.
+  - Internal contributor material (project language, design principles) moved out of the README's scope to `docs/mdtask.md`.
 
 - [x] PRJ-072 Rename the mdtask-next skill to mdtask-do
   "next" reads as "show the next task" — selection. The skill actually runs a task
