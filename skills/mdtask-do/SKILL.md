@@ -20,6 +20,20 @@ disable-model-invocation: false
 
 **`#noqa` tag** — if the picked task carries `#noqa`, skip the two review steps (Step 3 and Step 5). Everything else, including the behavior check and commit, still runs.
 
+### Task boundaries
+
+Do only the work required for the result of the current task.
+
+An implementation change belongs to the current task when it is required for that result and has no independent outcome outside it.
+
+If a change would still be useful without the current task, or changes other product behavior, treat it as a separate task. Stop before doing it and report:
+
+- what was discovered
+- how it affects the current task
+- whether the current task can continue without it
+
+Do not include the separate task without an explicit user decision. A review may check or reject work within the current task, but it does not authorize combining tasks.
+
 ### Step 1 — Pick a task
 
 1. `mdtask list` for open, unblocked tasks. The CLI hides tasks with unresolved `@blocked_by:ID` by default. Skip tasks tagged `#user-required` — they're parked for a human decision (see "When you can't decide" below).
